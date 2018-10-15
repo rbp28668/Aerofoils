@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aerofoil", "Aerofoil.vcxproj", "{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cutter", "Cutter\Cutter.vcxproj", "{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kernel", "Kernel\Kernel.vcxproj", "{058DEE9A-621B-4A0F-A6A2-969266910689}"
+EndProject
+Project("{059D6162-CD51-11D0-AE1F-00A0C90FFFC3}") = "SerialDemo", "SerialDemo\SerialDemo.dsp", "{16062DD9-8BF5-45D1-97FA-43FEC49437E0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+		Template|x86 = Template|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}.Debug|x86.ActiveCfg = Debug|Win32
+		{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}.Debug|x86.Build.0 = Debug|Win32
+		{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}.Release|x86.ActiveCfg = Release|Win32
+		{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}.Release|x86.Build.0 = Release|Win32
+		{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}.Template|x86.ActiveCfg = Release|Win32
+		{77B4C8DD-5FBE-44B6-BEA1-EDF0849693E5}.Template|x86.Build.0 = Release|Win32
+		{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}.Debug|x86.ActiveCfg = Debug|Win32
+		{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}.Debug|x86.Build.0 = Debug|Win32
+		{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}.Release|x86.ActiveCfg = Release|Win32
+		{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}.Release|x86.Build.0 = Release|Win32
+		{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}.Template|x86.ActiveCfg = Template|Win32
+		{42E3B4FC-2BD0-468F-AB3C-3082B9D28872}.Template|x86.Build.0 = Template|Win32
+		{058DEE9A-621B-4A0F-A6A2-969266910689}.Debug|x86.ActiveCfg = Debug|Win32
+		{058DEE9A-621B-4A0F-A6A2-969266910689}.Debug|x86.Build.0 = Debug|Win32
+		{058DEE9A-621B-4A0F-A6A2-969266910689}.Release|x86.ActiveCfg = Release|Win32
+		{058DEE9A-621B-4A0F-A6A2-969266910689}.Release|x86.Build.0 = Release|Win32
+		{058DEE9A-621B-4A0F-A6A2-969266910689}.Template|x86.ActiveCfg = Template|Win32
+		{058DEE9A-621B-4A0F-A6A2-969266910689}.Template|x86.Build.0 = Template|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

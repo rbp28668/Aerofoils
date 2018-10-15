@@ -1,0 +1,43 @@
+19 August 2005
+Fixed DDX error in EllipsePairDlg.cpp where top and bottom values of second ellipse were swapped.
+
+20 August 2005
+Plot flags now initialised in constructor (PlotFlags.cpp)
+
+21 August 2005
+Selectable grid on background setup by File/Set Grid.  Intended to show where plot should be split
+to fit standard 3 or 4 inch balsa sheets.
+
+The system does not try to highlight any structure during printing even if it is highlighted on screen.
+
+Ellipse: if plot upper or plot lower is false then software no longer draws guide lines in excluded part. 
+Also fixed bug where, if only bottom part was drawn, system would hang.
+
+10 Sept 2005
+Bug - ) in generated XML - invalid XML.
+
+No error message if load fails. 
+
+TODO:
+
+Colours on structure.
+
+Labels - in centre of section.
+
+smart looking for section if not in same directory.
+
+Zoom does not redraw screen.
+
+Printout prints at zoomed factor.
+
+Fix CNC stuff
+
+Clone Structure
+
+Stringers on Ellipse 
+
+Arbitrary curves
+
+Straight lines.
+
+Check for saved/modified files.

@@ -1,0 +1,102 @@
+                                                       10 JAN 90
+
+If you have 5 1/4 inch IBM diskettes, the ALL.PD and ALL.DAP files are in the
+root directory of disk 1.  Coordinate data is in the directory COR; the lift
+data is on disk 2.  On 3 1/2 inch diskettes there are three subdirectories
+(folders), COR and DAP and LIFT.
+
+COORDINATE DATA
+The coordinate data (*.COR) are presented in the usual (Eppler's) way:
+Starting at the trailing edge, proceeding over the top surface to the leading
+edge and back over the bottom surface to the trailing edge.
+
+PERFORMANCE DATA
+The performance data is given as a single file: ALL.PD.  This was done
+because the naming restrictions of the operating system make it extremely
+difficult to select unique but descriptive names for every airfoil and
+because disk space for the IBM 360k diskette is at a premium.  However the
+data is rigidly schematized should you want to break the file apart with a
+computer program.  A typical record is as follows:
+
+          Record                          Explanation
+     ------------------               ----------------------
+     Airfoil  AQUILA                  <-- Airfoil name
+     Builder  OSTRANDER               <-- Builder
+     5                                <-- Number of Re's
+     59400.                           <-- First Re
+     13                               <-- Number of data points at this Re
+     0.261 0.0238  -1.86              <-- Data
+     0.352 0.0224  -0.83
+           ...
+           ...
+     1.148 0.0507  10.34              <-- Last point for first Re
+     101100.                          <-- Next Re
+     16                               <-- Number of data points at this Re
+     0.251 0.0196  -1.86              <-- Data
+     0.340 0.0179  -0.84
+           ...
+           ...
+     1.088 0.0152   7.32              <-- Last data point of record
+     Data file name PDAQ              <-- VAX file name
+     Fig. 12.1                        <-- Figure No. in the book
+
+For each airfoil the first line gives the name of the airfoil and any special
+characteristics.  This is followed by the builder, the number of different
+Reynolds numbers, the measured Re and the number of measurements at that Re.
+The Re and number of data points at this Re are repeated for each of the
+Re's.
+The data is given in three columns: lift coefficient, drag coefficient, and
+angle of attack with respect to the chord.  The next-to-last line for each
+airfoil is the file name as it was stored on the VAX computer, and the final
+line gives the figure number in AIRFOILS AT LOW SPEEDS where the data is
+plotted.
+
+The abbreviations for special characteristics are as follows:
+
+     L.E.      Leading edge
+     T.E.      Trailing edge
+     F0        Flap at zero degrees
+     NF3       Flap at -3 degrees (up or reflexed)
+     PF3       Flap at +3 degrees (down)
+     UST       Upper surface trip, followed by the height and width in inches
+               and chord location in per cent
+     LST       Lower surface trip...
+     REPEAT    A repeated measurement, usually taken later in the testing
+               program
+     GF1       Gerney flap - 3 versions GF1, GF2, GF3
+
+PROFILER DATA (Measured coordinates)
+If this is a 5 1/4 inch diskette, the digitized or profiler data are in a
+single file: ALL.DAP.  3 1/2 inch diskettes have the individual files.
+
+Data blocks (files) first give the name of the airfoil and the actual chord
+of the test section in inches.  This is followed by the measured coordinates
+in the same format as the coordinate files.
+
+Two names deserve comment: FX63-2 is a second measurement of the FX63-137 at
+a different location; it is the one used in the book. SD6080TTE is the
+thickened trailing edge version of the SD6080.
+
+LIFT DATA
+If you have 5 1/4 inch diskettes, the lift data is on diskette 2 in a
+directory called LIFT.  For 3 1/2 inch diskettes, the files are in a
+directory called "lift" on the single diskette.  In most cases the file name
+indicates the airfoil and in all cases the extension is the nominal Re
+divided by 1 million; e.g. *.04 are files with Re = 40,000.
+
+Some files have a suffix on the Re to indicate a special characteristic:
+
+     T = Tripped
+     G = Gerney flap
+     B,C,D = successive repeat runs
+     R = Repeat
+
+The file LIFT.LOG lists the files.
+
+The first line of the file is the VAX file name.  The airfoil and the builder
+name are lines 2 and 3 and the fourth line gives both the nominal and actual
+Reynolds number.  The data follows.
+
+The data presents Cl vs Alpha for angles through the stall.  Starting at a
+negative angle, the angle was incremented to well beyond the positive stall,
+and then decremented back to the starting angle.

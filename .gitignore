@@ -1,0 +1,57 @@
+# Gitignore file for generated object files etc.
+
+# Output files fromm build.
+*.exe
+*.obj
+*.res
+*.idb
+
+ipch/*
+
+#Intellisense database and lock file, inc old versions
+*.VC.db
+*.VC.VC.opendb
+*.ncb
+
+#Class wizard file
+*.clw
+
+# Workspace options file
+*.opt
+
+# Build log
+*.plg
+
+# last resource editor state
+*.aps  
+
+# build helper
+*.ipch  
+
+# build helper
+*.lastbuildstate  
+
+# build result. Can be 3rd party
+*.lib  
+
+# build log
+*.log  
+
+# build helper. Can be written yourself.
+*.manifest  
+
+# build helper 
+*.pch  
+
+# build result
+*.pdb  
+
+# build helper
+*.res  
+
+# intellisense dbase
+*.sdf  
+
+# solution user options
+*.suo  
+*.tlog  # build log
