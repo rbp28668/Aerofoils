@@ -7,6 +7,7 @@ class Hardware {
 
 private:
   bool _enabled;
+  bool _limitsEnabled;
 public:
   Hardware();
   void step(byte value);
@@ -15,6 +16,7 @@ public:
   byte getLimits();
   void enableHotWire(bool enabled);
   void enableStatusLed(bool enabled);
+  void enableLimits(bool enabled);
 };
 #endif
 

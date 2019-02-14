@@ -53,14 +53,21 @@ Hardware::Hardware(){
   digitalWrite(RELAY,LOW);
   digitalWrite(LED, LOW);
   _enabled = false;
+  _limitsEnabled = true;
 }
 
 // Expect this to be called in an ISR
 void Hardware::step(byte value){
-  byte limits = getLimits();
-  limits ^= 0x0F;  // Invert the limit pins.
-  limits |= 0xF0;  // make sure we leave dirn alone.
-  value &= limits; // clear any step inputs where endstop hit.
+
+
+  // Normally stop motors going past the limit switches but can turn this off
+  // to drive away from the limit switches e.g. as part of homing an axis.
+  if(_limitsEnabled){
+    byte limits = getLimits();
+    limits ^= 0x0F;  // Invert the limit pins.
+    limits |= 0xF0;  // make sure we leave dirn alone.
+    value &= limits; // clear any step inputs where endstop hit.
+  }
 
   // Set direction bits
   digitalWrite(DIRN_XL, ((value & 0x80) != 0) ? HIGH : LOW);  
@@ -116,6 +123,10 @@ void Hardware::enableHotWire(bool enabled){
 
 void Hardware::enableStatusLed(bool enabled){
     digitalWrite(LED, enabled ? HIGH : LOW);
+}
+
+void Hardware::enableLimits(bool enabled){
+  _limitsEnabled = enabled;
 }
 
 
