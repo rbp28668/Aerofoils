@@ -423,7 +423,7 @@ void CAerofoilView::OnViewPreviewCutPath()
 	pDoc->getPlot().plot(output);
 }
 
-void CAerofoilView::OnTimer(UINT nIDEvent) 
+void CAerofoilView::OnTimer(UINT_PTR  nIDEvent)
 {
 	CRect client;
 	GetClientRect(&client);

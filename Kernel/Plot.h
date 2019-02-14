@@ -65,7 +65,7 @@ public:
 	StructureIterator endStructures() {return structures.end();}
 	PlotStructureIterator endPlotStructures() {return plot_structures.end();}
 	
-	int getStructureCount() const {return structures.size();}
+	int getStructureCount() const {return (int)structures.size();}
 
 	void moveToEnd(CPlotStructure* ps);
 

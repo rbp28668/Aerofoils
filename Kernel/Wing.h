@@ -50,7 +50,7 @@ public:
 
 	const CSpar* getSpar(int idx) const;
 	CSpar* getSpar(int idx);
-	int getSparCount() const {return spars.size();}
+	int getSparCount() const {return (int)spars.size();}
 
 	CSpar* addSpar(const CSpar& spar);
 	void deleteSpar(const CSpar* spar);

@@ -9,6 +9,7 @@
 #include <assert.h>
 #include "ObjectSerializer.h"
 
+
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////
@@ -85,7 +86,7 @@ void CObjectSerializer::startSection(const char* pszName, const void* pObject)
 {
 	assert(this);
 	*ps << "<" << pszName << ">" << endl;
-	*ps << "<id>" << (unsigned long)pObject << "</id>" << endl;
+	*ps << "<id>" << (unsigned long long)pObject << "</id>" << endl;
 	sectionNames.push(pszName);
 }
 
@@ -145,6 +146,11 @@ void CObjectSerializer::write(const char* name, float value)
 	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
 }
 
+void CObjectSerializer::write(const char * name, double value)
+{
+	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
+}
+
 // write a string
 void CObjectSerializer::write(const char* name, const char* text)
 {
@@ -163,7 +169,7 @@ void CObjectSerializer::write(const char* name, bool value)
 void CObjectSerializer::writeReference(const char* name, const void* pObject)
 {
 	assert(this);
-	*ps << "<" << name << ">" << (unsigned long)pObject << "</" << name << ">" << endl;
+	*ps << "<" << name << ">" << (unsigned long long)pObject << "</" << name << ">" << endl;
 }
 
 // read an integer
@@ -188,6 +194,19 @@ void CObjectSerializer::read(const char* name, float& value)
 	{
 		assert(false);
 		throw CSerializeException("Serialization - name mismatch reading float");
+	}
+	*ps >> value;
+	endTag();
+}
+
+void CObjectSerializer::read(const char * name, double & value)
+{
+	assert(this);
+	string element = startTag();
+	if (element.compare(name) != 0)
+	{
+		assert(false);
+		throw CSerializeException("Serialization - name mismatch reading double");
 	}
 	*ps >> value;
 	endTag();

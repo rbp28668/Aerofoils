@@ -247,7 +247,7 @@ void CPlot::serializeTo(CObjectSerializer& os)
 //	}
 //	os.endCollection();
 
-	os.startCollection("structures",structures.size());
+	os.startCollection("structures", (int)structures.size());
 	for(STRUCTURES::iterator si = structures.begin();
 	si != structures.end();
 	++si)
@@ -256,7 +256,7 @@ void CPlot::serializeTo(CObjectSerializer& os)
 	}
 	os.endCollection();
 
-	os.startCollection("plotStructures",plot_structures.size());
+	os.startCollection("plotStructures", (int) plot_structures.size());
 	for(PLOT_STRUCTURES::iterator psi = plot_structures.begin();
 	psi != plot_structures.end();
 	++psi)
@@ -316,7 +316,7 @@ void CPlot::serializeFrom(CObjectSerializer& os)
 	os.endReadCollection();
 
 	count = os.startReadCollection("plotStructures");
-	for(i=0; i<count; ++i)
+	for(int i=0; i<count; ++i)
 	{
 		CPlotStructure* pps = static_cast<CPlotStructure*>(os.createSubtype());
 		pps->serializeFrom(os);

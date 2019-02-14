@@ -611,7 +611,7 @@ void CPathCutter::set_le_intercept(FRAME* frame)
 		ilist[icount].idx = 0;
 		ilist[icount].ru = ru1;
 		ilist[icount].tu = tu1;
-		ilist[icount].fn = cut_le;
+		ilist[icount].fn = &CPathCutter::cut_le;
 		ilist[icount].data = frame;
 		++icount;
     }
@@ -655,7 +655,7 @@ void CPathCutter::set_te_intercept(FRAME* frame)
 		ilist[icount].idx = 0;  /* mark as top surface*/
 		ilist[icount].ru = ru0;
 		ilist[icount].tu = tu0;
-		ilist[icount].fn = cut_te;
+		ilist[icount].fn = &CPathCutter::cut_te;
 		ilist[icount].data = frame;
 		++icount;
 		
@@ -663,7 +663,7 @@ void CPathCutter::set_te_intercept(FRAME* frame)
 		ilist[icount].idx = 1;  /* and bottom surface */
 		ilist[icount].ru = ru1;
 		ilist[icount].tu = tu1;
-		ilist[icount].fn = cut_te;
+		ilist[icount].fn = &CPathCutter::cut_te;
 		ilist[icount].data = frame;
 		++icount;
 		
@@ -706,7 +706,7 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru0;
 			ilist[icount].tu = tu0;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			break;
@@ -718,7 +718,7 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru1;
 			ilist[icount].tu = tu1;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			break;
@@ -733,14 +733,14 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru0;
 			ilist[icount].tu = tu0;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru1;
 			ilist[icount].tu = tu1;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			break;

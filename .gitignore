@@ -6,7 +6,13 @@
 *.res
 *.idb
 
+# Output folders
 ipch/*
+x64/*
+Debug/*
+Release/*
+
+*.tlog
 
 #Intellisense database and lock file, inc old versions
 *.VC.db

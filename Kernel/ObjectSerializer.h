@@ -17,10 +17,11 @@
 #include <stack>
 #include <map>
 #include <iostream>
+#include <exception>
 
 ///////////////////////////////////////////////////////////////////////
 // Class for serialization exceptions
-class CSerializeException : public exception
+class CSerializeException : public std::exception
 {
 public:
 	CSerializeException(const char* msg) : errMsg(msg) {}
@@ -58,6 +59,7 @@ public:
 
 	void write(const char* name, int value);
 	void write(const char* name, float value);
+	void write(const char* name, double value);
 	void write(const char* name, const char* text);
 	void write(const char* name, bool value);
 	void writeReference(const char* name, const void* pObject);
@@ -75,6 +77,7 @@ public:
 
 	void read(const char* name, int& value);
 	void read(const char* name, float& value);
+	void read(const char* name, double& value);
 	void read(const char* name, std::string& text);
 	void read(const char* name, bool& value);
 	void* readReference(const char* name);

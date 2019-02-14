@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,50 +13,12 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About Cutter"
-FONT 8, "MS Sans Serif"
-BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "Cutter Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2002",IDC_STATIC,40,25,119,8
-    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
-END
-
-IDD_CUTTER_DIALOG DIALOGEX 0, 0, 256, 199
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_APPWINDOW
-CAPTION "Cutter"
-FONT 8, "MS Sans Serif"
-BEGIN
-    EDITTEXT        IDC_EDT_PORT,49,22,40,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Listen",IDC_CMD_LISTEN,115,22,50,14
-    DEFPUSHBUTTON   "OK",IDOK,199,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,199,23,50,14
-    LTEXT           "",IDC_LBL_STATUS,18,177,221,8
-    LTEXT           "Port",IDC_STATIC,18,23,14,8
-    GROUPBOX        "Connection",IDC_STATIC,7,7,176,40
-    GROUPBOX        "Status",IDC_STATIC,7,164,242,28
-    LISTBOX         IDC_LST_MESSAGES,7,54,242,108,LBS_NOINTEGRALHEIGHT | 
-                    WS_VSCROLL | WS_TABSTOP
-END
-
-
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -79,15 +41,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "Cutter MFC Application\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "Cutter\0"
-            VALUE "LegalCopyright", "Copyright (C) 2002\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "Cutter.EXE\0"
-            VALUE "ProductName", "Cutter Application\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "FileDescription", "Cutter MFC Application"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Cutter"
+            VALUE "LegalCopyright", "Copyright (C) 2002"
+            VALUE "OriginalFilename", "Cutter.EXE"
+            VALUE "ProductName", "Cutter Application"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -96,7 +56,191 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_ABOUTBOX            "&About Cutter..."
+    IDP_SOCKETS_INIT_FAILED "Windows sockets initialization failed."
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United Kingdom) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 281, 171
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Cutter"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Cutter Version 1.0",IDC_STATIC,7,7,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) R Bruce Porteous 2019",IDC_STATIC,7,21,119,8
+    DEFPUSHBUTTON   "OK",IDOK,224,7,50,14,WS_GROUP
+    EDITTEXT        IDC_EDT_LICENSE,7,43,267,121,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_CUTTER_DIALOG DIALOGEX 0, 0, 579, 435
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Cutter"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDT_PORT,49,21,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Listen",IDC_CMD_LISTEN,115,21,50,14
+    DEFPUSHBUTTON   "Close",IDOK,522,7,50,14
+    LTEXT           "Port",IDC_STATIC,18,24,14,8
+    GROUPBOX        "Network",IDC_STATIC,7,7,176,42
+    GROUPBOX        "Status",IDC_STATIC,7,391,183,37
+    GROUPBOX        "Device Port",IDC_STATIC,188,7,158,41
+    COMBOBOX        IDC_COMBO_SERIAL,201,22,48,73,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Connect",IDC_BTN_CONNECT,273,21,50,14
+    LTEXT           "",IDC_TXT_STATUS,15,406,163,13
+    CONTROL         "LX",IDC_CHK_LX_LIMIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,235,410,25,10
+    CONTROL         "LY",IDC_CHK_LY_LIMIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,269,410,25,10
+    CONTROL         "RX",IDC_CHK_RX_LIMIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,301,410,26,10
+    CONTROL         "RY",IDC_CHK_RY_LIMIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,338,410,26,10
+    GROUPBOX        "Limit Switches",IDC_STATIC,220,390,184,38
+    CONTROL         "",IDC_TAB_MAIN,"SysTabControl32",0x0,7,56,565,323
+END
+
+IDD_HARDWARE DIALOGEX 0, 0, 493, 228
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "",IDC_LBL_STATUS,67,190,380,8
+    PUSHBUTTON      "Home",IDC_BTN_HOME,19,29,50,14
+    GROUPBOX        "Direct Commands",IDC_STATIC,7,13,471,155
+    PUSHBUTTON      "Wire ON",IDC_BTN_WIREON,17,143,50,14
+    PUSHBUTTON      "Wire OFF",IDC_BTN_WIREOFF,81,143,50,14
+    PUSHBUTTON      "Enable Motors",IDC_BTN_ENABLE,167,143,50,14
+    PUSHBUTTON      "Disable Motors",IDC_BTN_DISABLE,229,143,50,14
+    PUSHBUTTON      "Abort",IDC_BTN_ABORT,90,29,50,14
+    PUSHBUTTON      "Status",IDC_BTN_STATUS,160,29,50,14
+    PUSHBUTTON      "Line",IDC_BTN_LINE,373,62,50,14
+    PUSHBUTTON      "Step",IDC_BTN_STEP,371,107,50,14
+    CONTROL         "LX",IDC_CHECK_LXDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,95,98,25,10
+    CONTROL         "LY",IDC_CHECK_LYDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,142,98,25,10
+    CONTROL         "RX",IDC_CHECK_RXDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,189,98,26,10
+    CONTROL         "RY",IDC_CHECK_RYDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,237,98,26,10
+    CONTROL         "LX",IDC_CHECK_LXPULSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,95,114,25,10
+    CONTROL         "LY",IDC_CHECK_LYPULSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,142,114,25,10
+    CONTROL         "RX",IDC_CHECK_RXPULSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,189,114,26,10
+    CONTROL         "RY",IDC_CHECK_RYPULSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,237,114,26,10
+    EDITTEXT        IDC_EDT_LX,34,64,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_LY,99,64,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_RX,165,64,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_RY,230,64,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_STEPS,305,64,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "Line",IDC_STATIC,15,48,414,39
+    LTEXT           "LX",IDC_STATIC,21,66,10,8
+    LTEXT           "LY",IDC_STATIC,87,67,10,8
+    LTEXT           "RX",IDC_STATIC,151,66,11,8
+    LTEXT           "RY",IDC_STATIC,217,66,11,8
+    LTEXT           "Steps",IDC_STATIC,285,67,19,8
+    GROUPBOX        "Step",IDC_STATIC,15,91,413,40
+    LTEXT           "Direction",IDC_STATIC,45,100,29,8
+    LTEXT           "Pulse",IDC_STATIC,45,114,18,8
+    LTEXT           "Status:",IDC_STATIC,31,190,24,8
+END
+
+IDD_GCODE DIALOGEX 0, 0, 487, 289
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "G-Code command",IDC_STATIC,25,19,57,8
+    EDITTEXT        IDC_EDT_COMMAND,25,32,298,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Send",IDC_BTN_SEND,367,33,50,14
+    LTEXT           "None",IDC_LBL_GCODE_ERR,69,61,237,8
+    LTEXT           "Errors:",IDC_STATIC,26,60,23,8
+    CONTROL         "Can Pause?",IDC_CAN_PAUSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,29,85,53,10
+    CONTROL         "Paused",IDC_PAUSED,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,97,85,39,10
+    CONTROL         "Complete",IDC_CHK_COMPLETE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,151,85,46,10
+    GROUPBOX        "Current Position",IDC_STATIC,25,113,252,47
+    LTEXT           "0.00",IDC_LBL_X,51,134,36,8
+    LTEXT           "0.00",IDC_LBL_Y,101,134,36,8
+    LTEXT           "0.00",IDC_LBL_U,151,134,36,8
+    LTEXT           "0.00",IDC_LBL_V,201,134,36,8
+    LTEXT           "X",IDC_STATIC,39,134,8,8
+    LTEXT           "Y",IDC_STATIC,89,134,8,8
+    LTEXT           "U",IDC_STATIC,139,134,8,8
+    LTEXT           "V",IDC_STATIC,189,134,8,8
+    GROUPBOX        "Feed Rate",IDC_STATIC,288,114,172,47
+    LTEXT           "0.00",IDC_STATIC,301,135,16,8
+    CONTROL         "Rate error",IDC_CHK_FEED_ERROR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,345,135,49,10
+    PUSHBUTTON      "Clear Error",IDC_BTN_CLEAR_FR,399,132,50,14
+    CONTROL         "Relative",IDC_CHK_RELATIVE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,32,232,42,10
+    CONTROL         "Inches",IDC_CHK_INCHES,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,104,232,37,10
+    CONTROL         "Mirrored",IDC_CHK_MIRRORED,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,226,232,43,10
+    CONTROL         "Fast move",IDC_CHK_FAST,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,158,233,49,10
+    GROUPBOX        "Offsets",IDC_STATIC,28,169,252,47
+    LTEXT           "0.00",IDC_LBL_XOFFSET,54,190,36,8
+    LTEXT           "0.00",IDC_LBL_YOFFSET,104,190,36,8
+    LTEXT           "0.00",IDC_LBL_UOFFSET,154,190,36,8
+    LTEXT           "0.00",IDC_LBL_VOFFSET,204,190,36,8
+    LTEXT           "X",IDC_STATIC,42,190,8,8
+    LTEXT           "Y",IDC_STATIC,92,190,8,8
+    LTEXT           "U",IDC_STATIC,142,190,8,8
+    LTEXT           "V",IDC_STATIC,192,190,8,8
+END
+
+IDD_CONFIG DIALOGEX 0, 0, 549, 282
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDT_CUTTER_WIDTH,66,7,40,14,ES_AUTOHSCROLL
+    LTEXT           "Cutter Width",IDC_STATIC,7,10,42,8
+    EDITTEXT        IDC_EDT_BLOCK_LEFT,206,7,40,14,ES_AUTOHSCROLL
+    LTEXT           "Left side of block",IDC_STATIC,144,10,55,8
+    EDITTEXT        IDC_EDT_BLOCK_RIGHT,357,7,40,14,ES_AUTOHSCROLL
+    LTEXT           "Right side of block",IDC_STATIC,295,10,59,8
+    EDITTEXT        IDC_EDT_DEFAULT_FEED,67,31,40,14,ES_AUTOHSCROLL
+    LTEXT           "Default feed rate",IDC_STATIC,7,33,56,8
+    LTEXT           "Default COM port",IDC_STATIC,7,156,57,8
+    EDITTEXT        IDC_EDT_DEFAULT_LISTEN,71,203,40,14,ES_AUTOHSCROLL
+    LTEXT           "Default listen port",IDC_STATIC,7,206,58,8
+    PUSHBUTTON      "Save Config",IDC_BTN_SAVE_CONFIG,360,202,50,14
+    CONTROL         "Connect automatically",IDC_CHK_CONNECT_AUTO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,147,155,87,10
+    CONTROL         "Listen automatically",IDC_CHK_LISTEN_AUTO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,147,205,79,10
+    COMBOBOX        IDC_CMB_DEFAULT_COM,65,154,48,62,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Update Cutter",IDC_BTN_UPDATE_CUTTER,356,28,50,14
+    EDITTEXT        IDC_EDT_X_LEAD,65,87,40,14,ES_AUTOHSCROLL
+    LTEXT           "X Screw lead",IDC_STATIC,7,90,42,8
+    LTEXT           "X Steps per rev",IDC_STATIC,149,90,50,8
+    EDITTEXT        IDC_EDT_X_STEPS_PER_REV,208,87,40,14,ES_AUTOHSCROLL
+    LTEXT           "X Micro stepping",IDC_STATIC,297,90,53,8
+    EDITTEXT        IDC_EDT_X_MICRO_STEP,360,87,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_Y_LEAD,65,109,40,14,ES_AUTOHSCROLL
+    LTEXT           "Y Screw lead",IDC_STATIC,7,112,42,8
+    LTEXT           "Y Steps per rev",IDC_STATIC,149,112,50,8
+    EDITTEXT        IDC_EDT_Y_STEPS_PER_REV,208,109,40,14,ES_AUTOHSCROLL
+    LTEXT           "Y Micro stepping",IDC_STATIC,297,112,53,8
+    EDITTEXT        IDC_EDT_Y_MICRO_STEP,360,109,40,14,ES_AUTOHSCROLL
+    LTEXT           "Step frequency",IDC_STATIC,7,134,50,8
+    EDITTEXT        IDC_EDT_STEP_FREQUENCY,65,131,40,14,ES_AUTOHSCROLL
+    LTEXT           "mm",IDC_STATIC,109,90,12,8
+    LTEXT           "mm",IDC_STATIC,109,112,12,8
+    LTEXT           "Hz",IDC_STATIC,109,134,9,8
+    LTEXT           "mm",IDC_STATIC,109,10,12,8
+    LTEXT           "mm",IDC_STATIC,250,9,12,8
+    LTEXT           "mm",IDC_STATIC,403,9,12,8
+    LTEXT           "mm per sec.",IDC_STATIC,114,32,40,8
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -105,50 +249,50 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 228
+        RIGHTMARGIN, 274
         TOPMARGIN, 7
-        BOTTOMMARGIN, 48
+        BOTTOMMARGIN, 164
     END
 
     IDD_CUTTER_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 249
+        RIGHTMARGIN, 572
         TOPMARGIN, 7
-        BOTTOMMARGIN, 192
+        BOTTOMMARGIN, 428
+    END
+
+    IDD_HARDWARE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 486
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 221
+    END
+
+    IDD_GCODE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 480
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 282
+    END
+
+    IDD_CONFIG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 542
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 275
     END
 END
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_ABOUTBOX            "&About Cutter..."
-    IDP_SOCKETS_INIT_FAILED "Windows sockets initialization failed."
-END
-
-#endif    // English (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (U.K.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
-#pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -156,18 +300,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_OLE_RESOURCES\r\n"
@@ -195,8 +339,40 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Cutter.ico"
-#endif    // English (U.K.) resources
+IDR_MAINFRAME           ICON                    "res\\Cutter.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CUTTER_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_HARDWARE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_GCODE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_CONFIG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
