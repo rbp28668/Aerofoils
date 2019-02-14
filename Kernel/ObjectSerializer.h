@@ -1,4 +1,21 @@
-// ObjectSerializer.h: interface for the CObjectSerializer class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// ObjectSerializer.h: interface for the CObjectSerializer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -109,14 +126,14 @@ public:
 	std::stack<std::string> sectionNames;	// to match start and end tags	
 
 	// map objects by their IDs for resolving references
-	typedef	std::map<unsigned long, void*> OBJECT_MAP; 
+	typedef	std::map<uintptr_t, void*> OBJECT_MAP; 
 	OBJECT_MAP objectMap;
 
 	std::string savedTag;	// allow 1 tag lookahead
 
 	std::iostream* ps;	
 	
-	unsigned long currentID;  // holds ID of current object when reading.
+	uintptr_t currentID;  // holds ID of current object when reading.
 };
 
 ///////////////////////////////////////////////////////////////////////
