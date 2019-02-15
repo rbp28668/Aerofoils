@@ -82,8 +82,16 @@
 #define IDC_EDT_Y_STEPS_PER_REV         1065
 #define IDC_EDT_Y_MICRO_STEP            1066
 #define IDC_EDT_STEP_FREQUENCY          1067
-#define IDC_EDIT1                       1068
 #define IDC_EDT_LICENSE                 1068
+#define IDC_EDT_PROGRAM                 1069
+#define IDC_BTN_LOAD                    1070
+#define IDC_BTN_SAVE                    1071
+#define IDC_BTN_RUN                     1072
+#define IDC_EDIT2                       1073
+#define IDC_EDT_CURRENT_LINE            1073
+#define IDC_BTN_START                   1074
+#define IDC_BTN_RESTART                 1075
+#define IDC_BTN_CLEAR                   1076
 
 // Next default values for new objects
 // 
@@ -91,7 +99,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1069
+#define _APS_NEXT_CONTROL_VALUE         1074
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

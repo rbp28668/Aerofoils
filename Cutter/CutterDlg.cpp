@@ -129,6 +129,7 @@ CCutterDlg::CCutterDlg(CWnd* pParent /*=NULL*/)
 	, pCutterHardware(0)
 	, pCNCCutter(0)
 	, pGCodeInterpreter(0)
+	, pProgram(0)
 	, listener(this)
 	, link(this)
 {
@@ -141,18 +142,25 @@ CCutterDlg::CCutterDlg(CWnd* pParent /*=NULL*/)
 	pCutterHardware = new CutterHardware();
 	pCNCCutter = new CNCFoamCutter(pCutterHardware);
 	pGCodeInterpreter = new GCodeInterpreter();
+	pProgram = new GCodeProgram();
+
 	pGCodeInterpreter->setCutter(pCNCCutter);
+	pGCodeInterpreter->setContext(pProgram);
+	pProgram->setInterpreter(pGCodeInterpreter);
+	
 }
 
 CCutterDlg::~CCutterDlg()
 {
+	delete pProgram;
 	delete pGCodeInterpreter;
 	delete pCNCCutter;
 	delete pCutterHardware;
+
+	pProgram = 0;
 	pGCodeInterpreter = 0;
 	pCNCCutter = 0;
 	pCutterHardware = 0;
-	
 }
 
 void CCutterDlg::configLoaded(CutterConfig * pConfig)

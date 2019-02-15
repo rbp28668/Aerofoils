@@ -105,6 +105,7 @@ public:
 
 	void setCutter(Cutter* pCutter);
 	void setContext(ParserContext* pContext);
+	ParserContext* getContext();
 
 	int process(const std::string& line);
 

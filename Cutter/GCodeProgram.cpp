@@ -21,7 +21,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "GCodeProgram.h"
 
 
-GCodeProgram::GCodeProgram(GCodeInterpreter* pi) : pInterpreter(pi)
+GCodeProgram::GCodeProgram(GCodeInterpreter* pi) :
+	pInterpreter(pi),
+	bPaused(false),
+	bComplete(false),
+	bRunning(false),
+	upstreamContext(0)
 {
 }
 
@@ -37,6 +42,11 @@ void GCodeProgram::setInterpreter(GCodeInterpreter* pInterpreter)
 	this->pInterpreter = pInterpreter;
 }
 
+void GCodeProgram::setUpstreamContext(ParserContext * upstreamContext)
+{
+	this->upstreamContext = upstreamContext;
+}
+
 void GCodeProgram::showError(const std::string & line, size_t where, const std::string & msg)
 {
 	assert(this);
@@ -46,27 +56,49 @@ void GCodeProgram::showError(const std::string & line, size_t where, const std::
 	error.append(">>>");
 	error.append(line.substr(where));
 	errors.push_back(error);
+	if (upstreamContext) {
+		upstreamContext->showError(line, where, msg);
+	}
 }
 
 boolean GCodeProgram::canPause() {
+	if (upstreamContext) {
+		upstreamContext->canPause();
+	}
 	return bPausable;
 }
 
 void GCodeProgram::pause()
 {
 	bPaused = true;
+	if (upstreamContext) {
+		upstreamContext->pause();
+	}
+
 }
 
 void GCodeProgram::complete()
 {
 	assert(this);
 	bComplete = true;
+	if (upstreamContext) {
+		upstreamContext->complete();
+	}
+
 }
 
 void GCodeProgram::restart()
 {
 	assert(this);
+	bRunning = true;
+	bComplete = false;
+	bPaused = true;
+	errors.clear();
 	currentLine = lines.begin();
+	if (upstreamContext) {
+		upstreamContext->restart();
+	}
+
 }
 
 void GCodeProgram::clear()
@@ -74,11 +106,23 @@ void GCodeProgram::clear()
 	assert(this);
 	lines.clear();
 	errors.clear();
+	bRunning = false;
+	bComplete = false;
+	bPaused = false;
+	currentLine = lines.end(); // will abort any runnign program.
 }
 
 void GCodeProgram::add(const std::string & line)
 {
 	lines.push_back(line);
+}
+
+std::string GCodeProgram::nextLine()
+{
+	if (currentLine == lines.end()) {
+		return std::string("");
+	}
+	return *currentLine;
 }
 
 void GCodeProgram::start()
@@ -89,30 +133,56 @@ void GCodeProgram::start()
 	pInterpreter->setContext(this);
 	errors.clear();
 	currentLine = lines.begin();
+	bRunning = true;
 	bComplete = false;
-	bPaused = false;
+	bPaused = true;
 }
 
-boolean GCodeProgram::run()
+boolean GCodeProgram::step()
 {
-	assert(this);
-	assert(pInterpreter);
-
-	while (step()) {
-		if (isPaused()) {
-			break;
+	if (currentLine != lines.end()) {
+		pInterpreter->process(*currentLine);
+		++currentLine;
+		if (currentLine == lines.end()) {
+			bComplete = true;
+			bPaused = false;
+			bRunning = false;
 		}
 	}
 	return !bComplete;
 }
 
-boolean GCodeProgram::step()
+void GCodeProgram::reset()
 {
-	if (currentLine == lines.end()) {
-		bComplete = true;
-	} else {
-		pInterpreter->process(*currentLine);
-		++currentLine;
+	bComplete = false;
+	bPaused = false;
+	bRunning = false;
+	currentLine = lines.end();
+}
+
+void GCodeProgram::load(std::istream & is)
+{
+	std::string line;
+	while (std::getline(is, line)) {
+		lines.push_back(line);
 	}
-	return !bComplete;
+	bRunning = false;
+	bComplete = false;
+	bPaused = false;
+}
+
+void GCodeProgram::save(std::ostream & os)
+{
+	for (auto const& line : lines) {
+		os << line << std::endl;
+	}
+}
+
+void GCodeProgram::asString(std::string & str)
+{
+	str = "";
+	for (auto const&l : lines) {
+		str.append(l);
+		str.append("\r\n");
+	}
 }

@@ -25,6 +25,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "aerofoil.h"
 #include "CNCConnectionOutputDevice.h"
 #include "kernel/PointT.h"
+#include "Kernel/PlotStructure.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -165,27 +166,56 @@ void CCNCConnectionOutputDevice::MoveTo(int iStream, const PointT& pt)
 {
 	assert(this);
 	assert(iStream == 0 || iStream == 1);
-	ostringstream oss;
-	oss << "<m>";
-	oss << "<s>" << iStream << "</s>";
-	oss << "<x>" << pt.fx << "</x>";
-	oss << "<y>" << pt.fy << "</y>";
-	oss << "</m>" << ends;
-	send(oss.str());
+
+	if (iStream == 0) { 
+		x = pt.fx;
+		y = pt.fy;
+		hasLeft = true; 
+	} 
+	if (iStream == 1) {
+		u = pt.fx;
+		v = pt.fy;
+		hasRight = true;
+	}
+	if (hasLeft && hasRight) {
+		sendMove("G00");
+	}
 }
 
 void CCNCConnectionOutputDevice::LineTo(int iStream, const PointT& pt)
 {
 	assert(this);
 	assert(iStream == 0 || iStream == 1);
+
+	if (iStream == 0) {
+		x = pt.fx;
+		y = pt.fy;
+		hasLeft = true;
+	}
+	if (iStream == 1) {
+		u = pt.fx;
+		v = pt.fy;
+		hasRight = true;
+	}
+	if (hasLeft && hasRight) {
+		sendMove("G01");
+	}
+}
+
+void CCNCConnectionOutputDevice::sendMove(const char* pszCommand) {
+
 	ostringstream oss;
-	oss << "<l>";
-	oss << "<s>" << iStream << "</s>";
-	oss << "<x>" << pt.fx << "</x>";
-	oss << "<y>" << pt.fy << "</y>";
-	oss << "</l>" << ends;
+	oss.precision(2);
+	oss << std::fixed;
+	oss << pszCommand << " " 
+		<< "X" << x << " "
+		<< "Y" << y << " "
+		<< "U" << u << " "
+		<< "V" << v << " "
+		<< ends;
 	send(oss.str());
 }
+
 
 void CCNCConnectionOutputDevice::Label(int iStream, const char* psz)
 {
@@ -193,45 +223,48 @@ void CCNCConnectionOutputDevice::Label(int iStream, const char* psz)
 	assert(iStream == 0 || iStream == 1);
 	assert(psz);
 	ostringstream oss;
-	oss << "<t>" << psz << "</t>" << ends; // t for text !
+	oss << "(" << psz << ")" << ends; //  treat as comment
 	send(oss.str());
 }
 
 void CCNCConnectionOutputDevice::Home()
 {
 	assert(this);
-	send("<h/>");
+	send("G28"); // home command
 }
 
 void CCNCConnectionOutputDevice::Flush()
 {
 	assert(this);
-	send("<f/>");
 }
 
 
-void CCNCConnectionOutputDevice::startObject(CPlotStructure*)
+void CCNCConnectionOutputDevice::startObject(CPlotStructure* ps)
 {
 	assert(this);
-	send("<object>");
+	ostringstream oss;
+	oss << "( START" << ps->getDescriptiveText() << ")" << ends; //  treat as comment
+	send(oss.str());
 }
 
-void CCNCConnectionOutputDevice::endObject(CPlotStructure*)
+void CCNCConnectionOutputDevice::endObject(CPlotStructure* ps)
 {
 	assert(this);
-	send("</object>");
+	ostringstream oss;
+	oss << "( END" << ps->getDescriptiveText() << ")" << ends; //  treat as comment
+	send(oss.str());
 }
 
 void CCNCConnectionOutputDevice::startPlot() 
 {
 	assert(this);
-	send("<plot>");
+	send("G21 G39 G53 G90"); // mm, mirror off, cancel workshift, absolute
 }
 
 void CCNCConnectionOutputDevice::endPlot() 
 {
 	assert(this);
-	send("</plot>");
+	send("M05 M02"); // wire off, end of program
 }
 
 void CCNCConnectionOutputDevice::send(const string& msg)

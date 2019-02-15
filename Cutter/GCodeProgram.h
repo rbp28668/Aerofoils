@@ -17,6 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 #include <vector>
+#include <iostream>
 #include "ParserContext.h"
 
 class GCodeInterpreter;
@@ -29,15 +30,18 @@ private:
 	std::vector<std::string>  lines;
 	std::vector<std::string>  errors;
 	std::vector<std::string>::iterator currentLine;
+	boolean bRunning; // set by start
 	boolean bPaused;
 	boolean bComplete;
 	boolean bPausable;
+	ParserContext* upstreamContext;
 
 public:
 	GCodeProgram(GCodeInterpreter* pInterpreter = 0);
 	virtual ~GCodeProgram();
 
 	void setInterpreter(GCodeInterpreter* pInterpreter);
+	void setUpstreamContext(ParserContext* upstreamContext);
 
 	// Parser Context
 	virtual void showError(const std::string& line, size_t where, const std::string& msg);
@@ -54,10 +58,16 @@ public:
 	inline boolean isPaused() { return bPaused; }
 	inline boolean isComplete() { return bComplete; }
 	inline void setPausable(boolean pausable) { bPausable = pausable; }
+	inline boolean isRunning() { return bRunning; }
+	inline void unpause() { bPaused = false; }
+	std::string nextLine();
 
-	void start();	// before run or step.
-	boolean run();  // until paused or complete, true if there's still stuff to do
+	void start();	 // before run or step.
 	boolean step();  // one program line, true if there's still stuff to do 
+	void reset();    // ready for start or run
+	void load(std::istream& is);
+	void save(std::ostream& os);
 
+	void asString(std::string& str);
 };
 

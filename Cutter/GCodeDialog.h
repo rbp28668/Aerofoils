@@ -21,19 +21,27 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 // CGCodeDialog dialog
 class GCodeInterpreter;
+class GCodeProgram;
 class Cutter;
 
 class CGCodeDialog : public CDialogEx, ParserContext
 {
 	DECLARE_DYNAMIC(CGCodeDialog)
 	GCodeInterpreter* pInterpreter;
+	GCodeProgram* pProgram;
 	Cutter* pCutter;
+	bool isStepping;
+
+	void getProgramFromEdit();
+	void showData();
+	void updateButtons();
 
 public:
 	CGCodeDialog(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CGCodeDialog();
 
-	void setInterpreter(GCodeInterpreter* pInterpreter, Cutter* pCutter);
+	void setModelObjects(GCodeInterpreter* pInterpreter, GCodeProgram* pProgram,  Cutter* pCutter);
+
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_GCODE };
@@ -50,7 +58,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedButtonSend();
 	CButton canPauseCheckbox;
 	CButton isPausedCheckbox;
 	CButton isCompleteCheckbox;
@@ -61,7 +68,6 @@ public:
 	CStatic lblU;
 	CStatic lblV;
 	CButton feedRateError;
-	afx_msg void OnBnClickedBtnClearFr();
 	CButton relative;
 	CButton inches;
 	CButton mirrored;
@@ -70,4 +76,23 @@ public:
 	CStatic yOffset;
 	CStatic uOffset;
 	CStatic vOffset;
+	CEdit programEditor;
+
+	afx_msg void OnBnClickedButtonSend();
+	afx_msg void OnBnClickedBtnClearFr();
+	afx_msg void OnBnClickedBtnRun();
+	afx_msg void OnBnClickedBtnStart();
+	afx_msg void OnBnClickedBtnStep();
+	afx_msg void OnBnClickedBtnRestart();
+	afx_msg void OnBnClickedBtnClear();
+	afx_msg void OnBnClickedBtnLoad();
+	afx_msg void OnBnClickedBtnSave();
+	
+	CButton runButton;
+	CButton startButton;
+	CButton stepButton;
+	CButton restartButton;
+	virtual BOOL OnInitDialog();
+	CEdit currentLine;
+	CButton clearButton;
 };

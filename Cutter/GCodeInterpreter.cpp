@@ -65,6 +65,11 @@ void GCodeInterpreter::setContext(ParserContext* pContext) {
 	this->pContext = pContext;
 }
 
+ParserContext * GCodeInterpreter::getContext()
+{
+	return pContext;
+}
+
 
 int GCodeInterpreter::process(const std::string & line)
 {

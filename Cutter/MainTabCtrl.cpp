@@ -63,7 +63,7 @@ void CMainTabCtrl::init(CCutterDlg* pApp)
 	tabs[1]->Create(IDD_HARDWARE, GetParent());
 	tabs[2]->Create(IDD_CONFIG, GetParent());
 
-	pGCodeDialog->setInterpreter(pApp->getInterpreter(), pApp->getCutter());
+	pGCodeDialog->setModelObjects(pApp->getInterpreter(), pApp->getProgram(), pApp->getCutter());
 	pHardwareDialog->setHardware(pApp->getHardware());
 	pConfigDialog->initialize(pApp);
 

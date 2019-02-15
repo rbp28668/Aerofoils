@@ -53,6 +53,8 @@ public:
 	virtual void startPlot();
 	virtual void endPlot();
 
+	void sendMove(const char* pszCommand);
+
 private:
 
 	class CCNCSocket : public CAsyncSocket
@@ -89,11 +91,19 @@ private:
 	const char* translate(int nErr);
 
 	CCNCSocket link; 
-
 	static bool socketsInitialised;
 
 	typedef std::map<int,char*> ERRORS;
 	ERRORS errors;
+
+	double x;
+	double y;
+	double u;
+	double v;
+
+	bool hasLeft;
+	bool hasRight;
+
 
 };
 
