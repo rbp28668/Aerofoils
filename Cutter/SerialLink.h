@@ -31,11 +31,19 @@ class SerialLink
 	char readBuffer[256];
 
 public:
+	enum ErrorT {
+		SUCCESS=0,
+		CANNOT_CONNECT,
+		BUILD_DCB,
+		COMMS_SET_STATE,
+		COMMS_SET_TIMEOUTS
+	};
+
 	SerialLink();
 	SerialLink(const char* pszPort);
 	virtual ~SerialLink(void);
 
-	void connect(const char* pszPort);
+	ErrorT connect(const char* pszPort);
 	void disconnect();
 	boolean isConnected();
 

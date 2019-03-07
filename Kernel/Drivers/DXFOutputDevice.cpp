@@ -99,6 +99,13 @@ void CDXFOutputDevice::Flush()
 	assert(this);
 }
 
+PointT CDXFOutputDevice::position(int iStream)
+{
+	assert(this);
+	assert(iStream == 0 || iStream == 1);
+	return last[iStream];
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void CDXFOutputDevice::writeHeader()

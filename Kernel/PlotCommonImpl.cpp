@@ -23,7 +23,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "PlotCommonImpl.h"
 #include "Aerofoil.h"
-#include "Wing.h"
 
 const float CPlotCommonImpl::CLOSE = 1.0e-3f;     /* limit of resolution in mm per step */
 const int CPlotCommonImpl::MAX_ITER = 10;			/* max number of runs thro' the iteration */
@@ -34,39 +33,16 @@ const float CPlotCommonImpl::WEENY = 1.0e-6f;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPlotCommonImpl::CPlotCommonImpl(CWing* pw)
-: wing(pw)
+CPlotCommonImpl::CPlotCommonImpl()
 {
-	assert(pw);
 }
 
-CPlotCommonImpl::CPlotCommonImpl() 
-:wing(0)
-{}
 
 CPlotCommonImpl::~CPlotCommonImpl()
 {
 
 }
 
-float CPlotCommonImpl::getSpan() const
-{
-	assert(this);
-	assert(wing);
-	return wing->getSpan();
-}
-
-CStructure* CPlotCommonImpl::getStructure()
-{
-	assert(this);
-	return wing;
-}
-
-const CStructure* CPlotCommonImpl::getStructure() const
-{
-	assert(this);
-	return wing;
-}
 
 /***********************************************************/
 /** FIND_CORE_TE  searches along the spline curve from    **/

@@ -21,11 +21,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include "Cutter.h"
 #include "CutterDlg.h"
 #include "ComPortEnumerator.h"
 #include "CutterConfig.h"
 #include "afxwin.h"
+#include "../Kernel/Cutter.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -111,10 +111,14 @@ void CCutterDlg::connectHardware(const char* port)
 		pCutterHardware->disconnect();
 	}
 
-	btnConnect.SetWindowTextA("Disconnect");
-	pCutterHardware->connect(port);
-	cmbSerialPort.SelectString(-1,port);
-	cmbSerialPort.EnableWindow(FALSE);
+	int err = pCutterHardware->connect(port);
+	if (err) {
+		AfxMessageBox("Unable to connect", MB_OK | MB_ICONEXCLAMATION);
+	} else {
+		btnConnect.SetWindowTextA("Disconnect");
+		cmbSerialPort.SelectString(-1,port);
+		cmbSerialPort.EnableWindow(FALSE);
+	}
 }
 
 void CCutterDlg::disconnectHardware()

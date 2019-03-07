@@ -15,10 +15,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>.
-*/#ifndef _PLOTFOIL_H
+*/
+
+#ifndef _PLOTFOIL_H
 #define _PLOTFOIL_H
 
 #include "PlotFlags.h"
+#include "PlotStructure.h"
 #include "PlotCommonImpl.h"
 
 class PointT;
@@ -26,13 +29,19 @@ class COutputDevice;
 class CWing;
 class CSpar;
 
-class CPathPlotter : public CPlotCommonImpl
+class CPathPlotter : public CPlotStructure, private CPlotCommonImpl
 {
+	CWing* wing;	// the wing this is plotting.
+
 public:
 	CPathPlotter(CWing* pWing);
 	explicit CPathPlotter(); // for serialization
 
-	
+	float getSpan() const;
+	CWing* getWing() { return wing; }
+	virtual CStructure* getStructure();
+	virtual const CStructure* getStructure() const;
+
 	virtual void plot(COutputDevice* pdev);
 	virtual std::string getDescriptiveText() const;
 
@@ -40,16 +49,16 @@ public:
 	virtual void serializeFrom(CObjectSerializer& os);
 
 private:
-	void plot_skin(const CWing& wing) const;
-	void plot_chord(const CWing& wing) const;
-	void plot_markers(const CWing& wing) const;
-	void plot_le(const CWing& wing) const;
-	void plot_te(const CWing& wing) const;
-	void plot_labels(const CWing& wing) const;
-	void plot_spar(const CWing& wing, const CSpar& spar) const;
-	void plot_full_depth_spar_side(const CWing& wing, float rx,float tx, bool submerged) const;
-	void plot_full_depth_spar(const CWing& wing, const CSpar& spar) const;
-	void plot_all_spars(const CWing& wing) const;
+	void plot_skin(COutputDevice* pdev,const CWing& wing) const;
+	void plot_chord(COutputDevice* pdev, const CWing& wing) const;
+	void plot_markers(COutputDevice* pdev, const CWing& wing) const;
+	void plot_le(COutputDevice* pdev, const CWing& wing) const;
+	void plot_te(COutputDevice* pdev, const CWing& wing) const;
+	void plot_labels(COutputDevice* pdev, const CWing& wing) const;
+	void plot_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const;
+	void plot_full_depth_spar_side(COutputDevice* pdev, const CWing& wing, float rx,float tx, bool submerged) const;
+	void plot_full_depth_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const;
+	void plot_all_spars(COutputDevice* pdev, const CWing& wing) const;
 
 	CPlotFlags plot_flags;
 

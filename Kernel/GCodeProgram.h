@@ -17,6 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 #include <vector>
+#include <list>
 #include <iostream>
 #include "ParserContext.h"
 
@@ -28,12 +29,12 @@ class GCodeProgram :
 private:
 	GCodeInterpreter* pInterpreter;
 	std::vector<std::string>  lines;
-	std::vector<std::string>  errors;
 	std::vector<std::string>::iterator currentLine;
-	boolean bRunning; // set by start
-	boolean bPaused;
-	boolean bComplete;
-	boolean bPausable;
+	std::list<std::string>  errors;
+	bool bRunning; // set by start
+	bool bPaused;
+	bool bComplete;
+	bool bPausable;
 	ParserContext* upstreamContext;
 
 public:
@@ -41,11 +42,13 @@ public:
 	virtual ~GCodeProgram();
 
 	void setInterpreter(GCodeInterpreter* pInterpreter);
+	void unsetInterpreter();
 	void setUpstreamContext(ParserContext* upstreamContext);
+	void unsetUpstreamContext();
 
 	// Parser Context
 	virtual void showError(const std::string& line, size_t where, const std::string& msg);
-	virtual boolean canPause();
+	virtual bool canPause();
 	virtual void pause();
 	virtual void complete();
 	virtual void restart();
@@ -53,21 +56,26 @@ public:
 	// Managing program
 	void clear(); 
 	void add(const std::string& line);
+	void load(std::istream& is);
+	void save(std::ostream& os);
+	void asString(std::string& str);
 
 	// Running program
-	inline boolean isPaused() { return bPaused; }
-	inline boolean isComplete() { return bComplete; }
-	inline void setPausable(boolean pausable) { bPausable = pausable; }
-	inline boolean isRunning() { return bRunning; }
+	inline bool isPaused() { return bPaused; }
+	inline bool isComplete() { return bComplete; }
+	inline void setPausable(bool pausable) { bPausable = pausable; }
+	inline bool isRunning() { return bRunning; }
 	inline void unpause() { bPaused = false; }
 	std::string nextLine();
 
 	void start();	 // before run or step.
-	boolean step();  // one program line, true if there's still stuff to do 
+	bool step();  // one program line, true if there's still stuff to do 
 	void reset();    // ready for start or run
-	void load(std::istream& is);
-	void save(std::ostream& os);
 
-	void asString(std::string& str);
+	// Error reporting
+	void clearErrors();
+	bool hasError();
+	std::string popError();
+	
 };
 

@@ -30,6 +30,13 @@ PointT::PointT(float x, float y)
 {
 }
 
+PointT::PointT(const PointT & pt)
+	: fx(pt.fx), fy(pt.fy)
+{
+}
+
+
+
 PointT::~PointT()
 {
 

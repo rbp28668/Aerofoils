@@ -18,9 +18,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "stdafx.h"
 #include <assert.h>
-#include "Cutter.h"
 #include "LinkSocket.h"
 #include "SocketEventHandler.h"
+#include "../Kernel/Cutter.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

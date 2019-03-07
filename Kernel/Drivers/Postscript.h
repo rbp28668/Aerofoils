@@ -35,6 +35,8 @@ public:
 	virtual void Label(int iStream, const char* psz);
 	virtual void Home();
 	virtual void Flush();
+	virtual PointT position(int iStream);
+
 	
 private:
 

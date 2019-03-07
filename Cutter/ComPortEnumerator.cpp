@@ -55,7 +55,7 @@ void ComPortEnumerator::detect(std::vector< tstring >& ports, size_t upperLimit 
 	{
 		TCHAR strPort[32] = { 0 };
 //		_stprintf(strPort, _T("\\\\.\\COM%d"), i);
-		_stprintf(strPort, _T("COM%d"), i);
+		_stprintf(strPort, _T("COM%zd"), i);
 
 		COMMCONFIG cfg;
 		DWORD dwSize = cfg.dwSize = sizeof(cfg);

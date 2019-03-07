@@ -150,7 +150,7 @@ void CNCFoamCutter::setStepFrequency(double hz)
 	this->stepFrequency = hz;
 }
 
-boolean CNCFoamCutter::hasFeedRateError()
+bool CNCFoamCutter::hasFeedRateError()
 {
 	return feedRateError;
 }

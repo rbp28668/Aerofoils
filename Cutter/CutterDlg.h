@@ -37,8 +37,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "CutterHardware.h"
 #include "CNCFoamCutter.h"
-#include "GCodeInterpreter.h"
-#include "GCodeProgram.h"
+#include "../Kernel/GCodeInterpreter.h"
+#include "../Kernel/GCodeProgram.h"
 
 struct CutterConfig;
 

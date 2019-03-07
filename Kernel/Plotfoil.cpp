@@ -70,16 +70,35 @@ static CObjectFactory<CPathPlotter> factory("pathPlotter");
 /************************************************************/
 /************************************************************/
 CPathPlotter::CPathPlotter(CWing* pw)
-: CPlotCommonImpl(pw)
+: wing(pw)
 {
 	assert(this);
 	assert(pw);
 }
 
 CPathPlotter::CPathPlotter()
-: CPlotCommonImpl()
+: wing(0)
 {
 	assert(this);
+}
+
+float CPathPlotter::getSpan() const
+{
+	assert(this);
+	assert(wing);
+	return wing->getSpan();
+}
+
+CStructure* CPathPlotter::getStructure()
+{
+	assert(this);
+	return wing;
+}
+
+const CStructure* CPathPlotter::getStructure() const
+{
+	assert(this);
+	return wing;
 }
 
 
@@ -98,7 +117,7 @@ CPathPlotter::CPathPlotter()
 /** as the plot moves round the aerofoil and the tip value  **/
 /** of u is calculated from the root value of u.      **/
 /************************************************************/
-void CPathPlotter::plot_skin(const CWing& wing) const
+void CPathPlotter::plot_skin(COutputDevice* pdev, const CWing& wing) const
 {
 	PointT tangent;
 	float r_skin,t_skin;
@@ -149,7 +168,7 @@ void CPathPlotter::plot_skin(const CWing& wing) const
 	r_here = rootTransform->transform(r_here);
 	t_here = tipTransform->transform(t_here);
 	
-	interp_move_to(r_here,t_here);
+	interp_move_to(pdev, r_here,t_here);
 	
 	delta=0.001f;
 	
@@ -173,7 +192,7 @@ void CPathPlotter::plot_skin(const CWing& wing) const
 		r_here = rootTransform->transform(r_here);
 		t_here = tipTransform->transform(t_here);
 		
-		interp_line_to(r_here,t_here);
+		interp_line_to(pdev,r_here,t_here);
     }
 	
 	r_here = root->Point(ru1,tangent);
@@ -187,14 +206,14 @@ void CPathPlotter::plot_skin(const CWing& wing) const
 	r_here = rootTransform->transform(r_here);
 	t_here = tipTransform->transform(t_here);
 	
-	interp_line_to(r_here,t_here);
+	interp_line_to(pdev,r_here,t_here);
 	return;
 }
 
 /************************************************************/
 /** PLOT_CHORD plots a chord line for each section.    **/
 /************************************************************/
-void CPathPlotter::plot_chord(const CWing& wing) const
+void CPathPlotter::plot_chord(COutputDevice* pdev, const CWing& wing) const
 {
 	const CTransform* rootTransform = wing.getRootTransform();
 	const CTransform* tipTransform = wing.getTipTransform();
@@ -203,12 +222,12 @@ void CPathPlotter::plot_chord(const CWing& wing) const
 	PointT r_here = rootTransform->transform( PointT(0.0f, 0.0f));
 	PointT t_here = tipTransform->transform( PointT(0.0f, 0.0f));
 	
-	interp_move_to(r_here,t_here);
+	interp_move_to(pdev, r_here,t_here);
 	
 	r_here = rootTransform->transform( PointT(1.0f, 0.0f));
 	t_here = tipTransform->transform( PointT(1.0f, 0.0f));
 	
-	interp_line_to(r_here,t_here);
+	interp_line_to(pdev, r_here,t_here);
 	
 	return;
 }
@@ -216,7 +235,7 @@ void CPathPlotter::plot_chord(const CWing& wing) const
 /************************************************************/
 /** PLOT_MARKERS plots vertical markers every 10 %      **/
 /************************************************************/
-void CPathPlotter::plot_markers(const CWing& wing) const
+void CPathPlotter::plot_markers(COutputDevice* pdev, const CWing& wing) const
 {
 	int i;
 	float x;
@@ -248,8 +267,8 @@ void CPathPlotter::plot_markers(const CWing& wing) const
 		pt_tt = tipTransform->transform(pt_tt);
 		pt_tb = tipTransform->transform(pt_tb);
 		
-		interp_move_to(pt_rb,pt_tb);
-		interp_line_to(pt_rt,pt_tt);
+		interp_move_to(pdev, pt_rb,pt_tb);
+		interp_line_to(pdev, pt_rt,pt_tt);
     }
 	return;
 }
@@ -258,7 +277,7 @@ void CPathPlotter::plot_markers(const CWing& wing) const
 /************************************************************/
 /** PLOT_LE plots the leading edge.                        **/
 /************************************************************/
-void CPathPlotter::plot_le(const CWing& wing) const
+void CPathPlotter::plot_le(COutputDevice* pdev, const CWing& wing) const
 {
 	float u0,u1;
 	PointT rt,rb,tt,tb;
@@ -291,8 +310,8 @@ void CPathPlotter::plot_le(const CWing& wing) const
 		tt = tipTransform->transform(tt);
 		tb = tipTransform->transform(tb);
 		
-		interp_move_to(rt,tt);
-		interp_line_to(rb,tb);
+		interp_move_to(pdev, rt,tt);
+		interp_line_to(pdev, rb,tb);
 	}
 	
 	return;
@@ -301,7 +320,7 @@ void CPathPlotter::plot_le(const CWing& wing) const
 /************************************************************/
 /** PLOT_TE plots the trailing edge.                       **/
 /************************************************************/
-void CPathPlotter::plot_te(const CWing& wing) const
+void CPathPlotter::plot_te(COutputDevice* pdev, const CWing& wing) const
 {
 	float u0,u1;
 	PointT rt,rb,tt,tb;
@@ -331,8 +350,8 @@ void CPathPlotter::plot_te(const CWing& wing) const
 		tt = tipTransform->transform(tt);
 		tb = tipTransform->transform(tb);
 		
-		interp_move_to(rt,tt);
-		interp_line_to(rb,tb);
+		interp_move_to(pdev, rt,tt);
+		interp_line_to(pdev, rb,tb);
 	}
 	return;
 }
@@ -340,7 +359,7 @@ void CPathPlotter::plot_te(const CWing& wing) const
 /************************************************************/
 /** PLOT_LABELS labels the aerofoils that are drawn.    **/
 /************************************************************/
-void CPathPlotter::plot_labels(const CWing& wing) const
+void CPathPlotter::plot_labels(COutputDevice* pdev, const CWing& wing) const
 {
 	float u,delta;
 	float root_lowest,tip_lowest;
@@ -399,21 +418,21 @@ void CPathPlotter::plot_labels(const CWing& wing) const
 			<< " to " << tip_name 
 			<< " at " << getSectionPos()/wing.getSpan() * 100.0 << "%" << ends;
 		
-		LabelAt(r_here, text.str(), true);
+		LabelAt(pdev, r_here, text.str(), true);
     }
 	else
     {
 		text << root_name << " Chord: " << rootTransform->getChord() << ends; 
 		//  sprintf(text,"%s Chord: %2.1f%s",root_name,
 		//      root->chord/get_unit_scale(),get_units_text());
-		LabelAt(r_here, text.str(), true);
+		LabelAt(pdev, r_here, text.str(), true);
 		
 		text.seekp(0);
 		text << tip_name << " Chord: " << tipTransform->getChord() << ends; 
 		//    sprintf(text,"%s Chord: %2.1f%s",tip_name,
 		//      tip->chord/get_unit_scale(),get_units_text());
 		
-		LabelAt(t_here, text.str(), false);
+		LabelAt(pdev, t_here, text.str(), false);
 		
     }
 	return;
@@ -427,7 +446,7 @@ void CPathPlotter::plot_labels(const CWing& wing) const
 /** local gradient of the surface/skin thickness at the   **/
 /** spar but ignores second order corrections.        **/
 /************************************************************/
-void CPathPlotter::plot_spar(const CWing& wing, const CSpar& spar) const
+void CPathPlotter::plot_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const
 {
 	float ru,tu;
 	PointT here;
@@ -526,7 +545,7 @@ void CPathPlotter::plot_spar(const CWing& wing, const CSpar& spar) const
 	tt=t_here;
 	rt = rootTransform->transform(rt);
 	tt = tipTransform->transform(tt);
-	interp_move_to(rt,tt);
+	interp_move_to(pdev, rt,tt);
 	
 	
 	/* down to bottom right corner: */
@@ -538,7 +557,7 @@ void CPathPlotter::plot_spar(const CWing& wing, const CSpar& spar) const
 	tt=t_here;
 	rt = rootTransform->transform(rt);
 	tt = tipTransform->transform(tt);
-	interp_line_to(rt,tt);
+	interp_line_to(pdev, rt,tt);
 	
 	/* along to bottom left corner: */
 	r_here.fx += r_width*r_tangent.fx;
@@ -549,7 +568,7 @@ void CPathPlotter::plot_spar(const CWing& wing, const CSpar& spar) const
 	tt=t_here;
 	rt = rootTransform->transform(rt);
 	tt = tipTransform->transform(tt);
-	interp_line_to(rt,tt);
+	interp_line_to(pdev, rt,tt);
 	
 	/* and finally up to top left corner: */
 	r_here.fx += r_height*r_tangent.fy;
@@ -560,7 +579,7 @@ void CPathPlotter::plot_spar(const CWing& wing, const CSpar& spar) const
 	tt=t_here;
 	rt = rootTransform->transform(rt);
 	tt = tipTransform->transform(tt);
-	interp_line_to(rt,tt);
+	interp_line_to(pdev, rt,tt);
 	
 	return;
 }
@@ -571,7 +590,7 @@ void CPathPlotter::plot_spar(const CWing& wing, const CSpar& spar) const
 /** local gradient of the surface/skin thickness at the   **/
 /** spar but ignores second order corrections.        **/
 /************************************************************/
-void CPathPlotter::plot_full_depth_spar_side(const CWing& wing, float rx,float tx, bool submerged) const
+void CPathPlotter::plot_full_depth_spar_side(COutputDevice* pdev, const CWing& wing, float rx,float tx, bool submerged) const
 {
 	float rut,tut;          /* root & tip u (top) */
 	float rub,tub;          /* ditto (bottom) */
@@ -661,7 +680,7 @@ void CPathPlotter::plot_full_depth_spar_side(const CWing& wing, float rx,float t
 	tt.fy=tyt;
 	rt = rootTransform->transform(rt);
 	tt = tipTransform->transform(tt);
-	interp_move_to(rt,tt);
+	interp_move_to(pdev, rt,tt);
 	
 	/* and draw down to the bottom of the spar side */
 	rt.fx=rx;
@@ -670,7 +689,7 @@ void CPathPlotter::plot_full_depth_spar_side(const CWing& wing, float rx,float t
 	tt.fy=tyb;
 	rt = rootTransform->transform(rt);
 	tt = tipTransform->transform(tt);
-	interp_line_to(rt,tt);
+	interp_line_to(pdev, rt,tt);
 	return;
 }
 
@@ -681,13 +700,13 @@ void CPathPlotter::plot_full_depth_spar_side(const CWing& wing, float rx,float t
 /** local gradient of the surface/skin thickness at the   **/
 /** spar but ignores second order corrections.        **/
 /************************************************************/
-void CPathPlotter::plot_full_depth_spar(const CWing& wing, const CSpar& spar) const
+void CPathPlotter::plot_full_depth_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const
 {
-	plot_full_depth_spar_side(wing,
+	plot_full_depth_spar_side(pdev, wing,
 		spar.getRootX(), 
 		spar.getTipX(),
 		spar.isSubmerged() );
-	plot_full_depth_spar_side(wing,
+	plot_full_depth_spar_side(pdev, wing,
 		spar.getRootX() + spar.getRootWidth(),
 		spar.getTipX() + spar.getTipWidth(),
 		spar.isSubmerged() );
@@ -698,7 +717,7 @@ void CPathPlotter::plot_full_depth_spar(const CWing& wing, const CSpar& spar) co
 /************************************************************/
 /** PLOT_ALL_SPARS plots all defined spars.        **/
 /************************************************************/
-void CPathPlotter::plot_all_spars(const CWing& wing) const
+void CPathPlotter::plot_all_spars(COutputDevice* pdev, const CWing& wing) const
 {
 	
 	for(int i=0; i<wing.getSparCount(); ++i)
@@ -708,10 +727,10 @@ void CPathPlotter::plot_all_spars(const CWing& wing) const
 		{
 		case CSpar::top:
 		case CSpar::bottom:
-			plot_spar(wing,*spar);
+			plot_spar(pdev, wing,*spar);
 			break;
 		case CSpar::full_depth:
-			plot_full_depth_spar(wing, *spar);
+			plot_full_depth_spar(pdev, wing, *spar);
 			break;
 		default:
 			throw new KernelError(KernelError::IDS_ERR_INVALID_SPAR_TYPE);
@@ -730,7 +749,6 @@ void CPathPlotter::plot(COutputDevice* pdev)
 	assert(this);
 	assert(pdev);
 	
-	setDevice(pdev);
 	plot_flags = *(wing->getPlotFlags());
 	setInterpolate(plot_flags.plot_section);
 
@@ -756,7 +774,7 @@ void CPathPlotter::plot(COutputDevice* pdev)
 	t_here = tip->Point(0.0f);
 	t_here = tipTransform->transform(t_here);
 	
-	interp_move_to(r_here,t_here);
+	interp_move_to(pdev, r_here,t_here);
 	
 	/* Now plot the aerofoils */
 	delta=0.001f;
@@ -768,42 +786,42 @@ void CPathPlotter::plot(COutputDevice* pdev)
 		t_here = tip->Point(u);
 		t_here = tipTransform->transform(t_here);
 		
-		interp_line_to(r_here,t_here);
+		interp_line_to(pdev, r_here,t_here);
     }
 	
 	if(plot_flags.plot_skin && (wing->getSkinThickness() >0.0f))
     {
-		plot_skin(*wing);
+		plot_skin(pdev, *wing);
     }
 	
 	if(plot_flags.plot_chord)
     {
-		plot_chord(*wing);
+		plot_chord(pdev, *wing);
     }
 	
 	if(plot_flags.plot_markers)
     {
-		plot_markers(*wing);
+		plot_markers(pdev, *wing);
     }
 	
 	if(plot_flags.plot_le)
     {
-		plot_le(*wing);
+		plot_le(pdev, *wing);
     }
 	
 	if(plot_flags.plot_te)
     {
-		plot_te(*wing);
+		plot_te(pdev, *wing);
     }
 	
 	if(plot_flags.plot_labels)
     {
-		plot_labels(*wing);
+		plot_labels(pdev, *wing);
     }
 	
 	if(plot_flags.plot_spars)
     {
-		plot_all_spars(*wing);
+		plot_all_spars(pdev, *wing);
     }
 	
 	return;

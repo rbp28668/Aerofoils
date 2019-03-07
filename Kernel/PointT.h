@@ -30,11 +30,12 @@ class PointT
 {
 public:
 	PointT(float x = 0.0f, float y = 0.0f);
+	PointT(const PointT& pt);
 	~PointT();
 
 	float fx;
 	float fy;
-
+	inline PointT operator+= (const PointT& other) { fx += other.fx; fy += other.fy; return *this; }
 };
 
 #endif // !defined(AFX_POINTT_H__A4E22B61_B474_11D6_AF75_002018BA082E__INCLUDED_)

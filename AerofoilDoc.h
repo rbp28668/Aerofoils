@@ -107,9 +107,6 @@ private:
 	float place_x;	// where to put the next section.
 	float place_y;
 
-	std::string cncHost;
-	unsigned int cncPort;
-	bool cncIsSetup;
 
 // Generated message map functions
 protected:
@@ -132,6 +129,7 @@ protected:
 	afx_msg void OnFileDxf();
 	afx_msg void OnFileLaserjet();
 	afx_msg void OnFilePostscript();
+	afx_msg void OnFileGcode();
 	afx_msg void OnEditPosition();
 	afx_msg void OnUpdateItemIsSelected(CCmdUI* pCmdUI);
 	afx_msg void OnEditDelete();

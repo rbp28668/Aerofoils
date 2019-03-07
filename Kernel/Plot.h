@@ -1,3 +1,4 @@
+
 /* Aerofoil
 Aerofoil plotting and CNC cutter driver
 Kernel / core algorithms
@@ -28,6 +29,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include <list>
 #include "OutputDevice.h"
+#include "PointT.h"
 
 class CStructure;
 class CWing;
@@ -36,7 +38,6 @@ class CPointStructure;
 
 class CPlotStructure;
 class CPathPlotter;
-class CPathCutter;
 class CEllipsePlotter;
 class CPointPlotter;
 
@@ -60,7 +61,6 @@ public:
 
 	// Add plotters
 	CPathPlotter* addPathPlotter(CWing* pWing);
-	CPathCutter* addPathCutter(CWing* pWing);
 	CEllipsePlotter* addEllipsePlotter(CEllipsePair* pep);
 	CPointPlotter* addPointPlotter(CPointStructure* pps);
 
@@ -98,6 +98,7 @@ private:
 		virtual void Label(int iStream, const char* psz) {};
 		virtual void Home() {};
 		virtual void Flush() {};
+		virtual PointT position(int iStream) { return PointT(); }
 
 		float getMinDist() const {return d2min;}
 	private:

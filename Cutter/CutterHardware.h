@@ -40,7 +40,7 @@ public:
 	CutterHardware();
 	CutterHardware(const char* pszPort);
 
-	void connect(const char* pszPort);
+	int connect(const char* pszPort);
 	void disconnect();
 	boolean isConnected();
 

@@ -16,7 +16,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
 
-#include "ParserContext.h"
+#include "../Kernel/ParserContext.h"
 #include "afxwin.h"
 
 // CGCodeDialog dialog
@@ -48,7 +48,7 @@ public:
 #endif
 
 	virtual void showError(const std::string& line, size_t where, const std::string& msg);
-	virtual boolean canPause();
+	virtual bool canPause();
 	virtual void pause();
 	virtual void complete();
 	virtual void restart();

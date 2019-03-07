@@ -18,12 +18,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "stdafx.h"
-#include "Cutter.h"
 #include "HardwareDialog.h"
 #include "afxdialogex.h"
 #include "resource.h"
 #include "CutterHardware.h"
-
+#include "../Kernel/Cutter.h"
 
 // CHardwareDialog dialog
 

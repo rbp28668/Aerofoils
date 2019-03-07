@@ -262,6 +262,11 @@
       <OutputFile>.\Release\Cutter.exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'">
+    <Link>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CNCFoamCutter.cpp" />
     <ClCompile Include="ComPortEnumerator.cpp" />
@@ -271,13 +276,10 @@
     <ClCompile Include="CutterApp.cpp" />
     <ClCompile Include="CutterDlg.cpp" />
     <ClCompile Include="GCodeDialog.cpp" />
-    <ClCompile Include="GCodeInterpreter.cpp" />
-    <ClCompile Include="GCodeProgram.cpp" />
     <ClCompile Include="HardwareDialog.cpp" />
     <ClCompile Include="LinkSocket.cpp" />
     <ClCompile Include="ListenerSocket.cpp" />
     <ClCompile Include="MainTabCtrl.cpp" />
-    <ClCompile Include="ObjectSerializer.cpp" />
     <ClCompile Include="SerialLink.cpp" />
     <ClCompile Include="SocketEventHandler.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -297,22 +299,16 @@
   <ItemGroup>
     <ClInclude Include="ComPortEnumerator.h" />
     <ClInclude Include="ConfigDialog.h" />
-    <ClInclude Include="Cutter.h" />
     <ClInclude Include="CutterConfig.h" />
     <ClInclude Include="CutterHardware.h" />
     <ClInclude Include="CutterApp.h" />
     <ClInclude Include="CutterDlg.h" />
     <ClInclude Include="GCodeDialog.h" />
-    <ClInclude Include="GCodeInterpreter.h" />
-    <ClInclude Include="GCodeProgram.h" />
     <ClInclude Include="HardwareDialog.h" />
     <ClInclude Include="LinkSocket.h" />
     <ClInclude Include="ListenerSocket.h" />
     <ClInclude Include="CNCFoamCutter.h" />
     <ClInclude Include="MainTabCtrl.h" />
-    <ClInclude Include="ObjectSerializer.h" />
-    <ClInclude Include="ParserContext.h" />
-    <ClInclude Include="Position.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SerialLink.h" />
     <ClInclude Include="SocketEventHandler.h" />
@@ -326,6 +322,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kernel\Kernel.vcxproj">
+      <Project>{058dee9a-621b-4a0f-a6a2-969266910689}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

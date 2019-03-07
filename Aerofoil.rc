@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,20 +13,18 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -50,7 +48,7 @@ BEGIN
     END
 END
 
-IDR_AEROFOTYPE MENU PRELOAD DISCARDABLE 
+IDR_AEROFOTYPE MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -69,9 +67,6 @@ BEGIN
         MENUITEM "&DXF Output",                 ID_FILE_DXF
         MENUITEM "Pos&tscript Output",          ID_FILE_POSTSCRIPT
         MENUITEM "&LaserJet Output",            ID_FILE_LASERJET
-        MENUITEM SEPARATOR
-        MENUITEM "CNC S&etup",                  ID_FILE_CNCSETUP
-        MENUITEM "CNC O&utput",                 ID_FILE_CNCOUTPUT
         MENUITEM SEPARATOR
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -115,7 +110,6 @@ BEGIN
         MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM SEPARATOR
-        MENUITEM "&Preview Cut Path",           ID_VIEW_PREVIEW_CUT_PATH
     END
     POPUP "&Window"
     BEGIN
@@ -130,7 +124,7 @@ BEGIN
     END
 END
 
-IDR_WING_FLOATING MENU DISCARDABLE 
+IDR_WING_FLOATING MENU
 BEGIN
     POPUP ""
     BEGIN
@@ -143,7 +137,7 @@ BEGIN
     END
 END
 
-IDR_ELLIPSE_FLOATING MENU DISCARDABLE 
+IDR_ELLIPSE_FLOATING MENU
 BEGIN
     POPUP ""
     BEGIN
@@ -156,7 +150,7 @@ BEGIN
     END
 END
 
-IDR_PLOTPOINT_FLOATING MENU DISCARDABLE 
+IDR_PLOTPOINT_FLOATING MENU
 BEGIN
     POPUP ""
     BEGIN
@@ -174,19 +168,20 @@ END
 // String Table
 //
 
-STRINGTABLE PRELOAD DISCARDABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "Aerofoil"
     IDR_AEROFOTYPE          "\nAerofoil\nAerofoil\nAerofoil Plot Files (*.plt)\n.PLT\nAerofoil.Document\nAerofoil Document"
+    IDR_CUTTERTYPE          """\nCutter\nCutter\nCutter Files (*.cut)\n.cut\nCutter.Document\n Wing cutter file"""
 END
 
-STRINGTABLE PRELOAD DISCARDABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "Aerofoil"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -196,7 +191,7 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_NEW             "Create a new document\nNew"
     ID_FILE_OPEN            "Open an existing document\nOpen"
@@ -209,13 +204,13 @@ BEGIN
     ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_MRU_FILE1       "Open this document"
     ID_FILE_MRU_FILE2       "Open this document"
@@ -235,13 +230,13 @@ BEGIN
     ID_FILE_MRU_FILE16      "Open this document"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
     ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
@@ -251,7 +246,7 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CLEAR           "Erase the selection\nErase"
     ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
@@ -266,13 +261,13 @@ BEGIN
     ID_EDIT_REDO            "Redo the previously undone action\nRedo"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCSIZE          "Change the window size"
     AFX_IDS_SCMOVE          "Change the window position"
@@ -283,19 +278,19 @@ BEGIN
     AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
     AFX_IDS_MDICHILD        "Activate this window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_WING_NEW             "Create a new wing"
     ID_WING_NEW_SECTION     "Creates a new wing section"
@@ -312,7 +307,7 @@ BEGIN
     ID_ELLIPSE_FLAGS        "Edit plot flags for an ellipse pair."
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_DXF             "Output plot as DXF file."
     ID_FILE_POSTSCRIPT      "Output plot to a postscript file or device"
@@ -329,7 +324,7 @@ BEGIN
     ID_EDIT_DELETE          "Delete this section"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_STRUCTURE       "Edit the underlying structure"
     ID_VIEW_PREVIEW_CUT_PATH "Preview the cutter path."
@@ -345,18 +340,152 @@ BEGIN
     ID_FILE_SETGRID         "Setup a background grid."
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.K.) resources
+// English (United Kingdom) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 #pragma code_page(1252)
-#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_CUTTER_POPUPS MENU
+BEGIN
+    POPUP "Structure"
+    BEGIN
+        MENUITEM "New Wing",                    ID_STRUCTURE_NEWWING
+        MENUITEM "New Ellipse",                 ID_STRUCTURE_NEWELLIPSE
+        MENUITEM "New Point",                   ID_STRUCTURE_NEWPOINT
+        MENUITEM "New GCode",                   ID_STRUCTURE_NEWGCODE
+        MENUITEM "New DXF",                     ID_STRUCTURE_NEWDXF
+    END
+    POPUP "Cutting"
+    BEGIN
+        MENUITEM "Home",                        ID_CUTTING_HOME
+    END
+    POPUP "Wing"
+    BEGIN
+        MENUITEM "Edit",                        ID_WING_EDIT
+        MENUITEM "New Core",                    ID_WING_NEWCORE
+        MENUITEM "Plot Flags",                  ID_WING_PLOTFLAGS
+        MENUITEM "Delete",                      ID_WING_DELETE
+    END
+    POPUP "Ellipse"
+    BEGIN
+        MENUITEM "Edit",                        ID_ELLIPSE_EDIT
+        MENUITEM "New Cut",                     ID_ELLIPSE_NEWCUT
+        MENUITEM "Delete",                      ID_ELLIPSE_DELETE
+    END
+    POPUP "Point"
+    BEGIN
+        MENUITEM "Edit",                        ID_POINT_EDIT
+        MENUITEM "New Cut ",                    ID_POINT_NEWCUT
+        MENUITEM "Delete",                      ID_POINT_DELETE
+    END
+    POPUP "GCode"
+    BEGIN
+        MENUITEM "Edit",                        ID_GCODE_EDIT
+        MENUITEM "New Cut",                     ID_GCODE_NEWCUT
+        MENUITEM "Delete",                      ID_GCODE_DELETE
+    END
+    POPUP "DXF"
+    BEGIN
+        MENUITEM "New Cut",                     ID_DXF_NEWCUT
+        MENUITEM "Delete",                      ID_DXF_DELETE
+    END
+    POPUP "Wing Cut"
+    BEGIN
+        MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        MENUITEM "Move Up",                     ID_CUT_MOVEUP
+        MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
+        MENUITEM "Delete",                      ID_WINGCUT_D
+    END
+    POPUP "Ellipse Cut"
+    BEGIN
+        MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        MENUITEM "Move Up",                     ID_CUT_MOVEUP
+        MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
+        MENUITEM "Delete",                      ID_ELLIPSECUT_DELETE
+    END
+    POPUP "Point Cut"
+    BEGIN
+        MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        MENUITEM "Move Up",                     ID_CUT_MOVEUP
+        MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
+        MENUITEM "Delete",                      ID_POINTCUT_DELETE
+    END
+    POPUP "GCodeCut"
+    BEGIN
+        MENUITEM "Move Up",                     ID_CUT_MOVEUP
+        MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
+        MENUITEM "Delete",                      ID_GCODECUT_DELETE
+    END
+    POPUP "Dxf Cut"
+    BEGIN
+        MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        MENUITEM "Move Up",                     ID_CUT_MOVEUP
+        MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
+        MENUITEM "Delete",                      ID_DXFCUT_DELETE
+    END
+    POPUP "Home Cut"
+    BEGIN
+        MENUITEM "Move Up",                     ID_CUT_MOVEUP
+        MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
+        MENUITEM "Delete",                      ID_HOMECUT_DELETE
+    END
+END
+
+IDR_CUTTERTYPE MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Set P&lot Size",              ID_FILE_PLOT_SIZE
+        MENUITEM "Set &Grid",                   ID_FILE_SETGRID
+        MENUITEM "GCode Output",                ID_FILE_GCODE
+        MENUITEM SEPARATOR
+        MENUITEM "CNC S&etup",                  ID_FILE_CNCSETUP
+        MENUITEM "CNC O&utput",                 ID_FILE_CNCOUTPUT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Zoom...",                     ID_VIEW_ZOOM
+        MENUITEM SEPARATOR
+        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Preview Cut Path",           ID_VIEW_PREVIEW_CUT_PATH
+        MENUITEM "Draw Moves",                  ID_VIEW_DRAWMOVES
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&New Window",                 ID_WINDOW_NEW
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "&Tile",                       ID_WINDOW_TILE_HORZ
+        MENUITEM "&Arrange Icons",              ID_WINDOW_ARRANGE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About Aerofoil...",          ID_APP_ABOUT
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -365,23 +494,27 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Aerofoil.ico"
-IDR_AEROFOTYPE          ICON    DISCARDABLE     "res\\AerofoilDoc.ico"
+IDR_MAINFRAME           ICON                    "res\\Aerofoil.ico"
+
+IDR_AEROFOTYPE          ICON                    "res\\AerofoilDoc.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
-IDB_SPLASH              BITMAP  DISCARDABLE     "Splsh16.bmp"
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+IDB_SPLASH              BITMAP                  "Splsh16.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+IDR_MAINFRAME TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
@@ -402,7 +535,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
@@ -421,15 +554,14 @@ BEGIN
 END
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 5,1,0,0
- PRODUCTVERSION 5,1,0,0
+ FILEVERSION 6,0,0,0
+ PRODUCTVERSION 6,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -442,29 +574,23 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "080904b0"
         BEGIN
-            VALUE "Comments", "Aerofoil Plotting Program\0"
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "Aerofoil MFC Application\0"
-            VALUE "FileVersion", "5, 1, 0, 0\0"
-            VALUE "InternalName", "Aerofoil\0"
-            VALUE "LegalCopyright", "Copyright (C) Bruce Porteous 2002-2005\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "Aerofoil.EXE\0"
-            VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Aerofoil Application\0"
-            VALUE "ProductVersion", "5, 1, 0, 0\0"
-            VALUE "SpecialBuild", "\0"
+            VALUE "Comments", "Aerofoil Plotting Program"
+            VALUE "FileDescription", "Aerofoil MFC Application"
+            VALUE "FileVersion", "6.0.0.0"
+            VALUE "InternalName", "Aerofoil"
+            VALUE "LegalCopyright", "Copyright (C) Bruce Porteous 2002-2019"
+            VALUE "OriginalFilename", "Aerofoil.EXE"
+            VALUE "ProductName", "Aerofoil Application"
+            VALUE "ProductVersion", "6.0.0.0"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 1200
+        VALUE "Translation", 0x809, 1200
     END
 END
-
-#endif    // !_MAC
 
 
 #ifdef APSTUDIO_INVOKED
@@ -473,18 +599,18 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_OLE_RESOURCES\r\n"
@@ -511,14 +637,13 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 255, 103
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUTBOX DIALOG 0, 0, 255, 103
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About Aerofoil"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "Aerofoil Version 1.0",IDC_LBL_VER,45,18,149,8,
-                    SS_NOPREFIX
+    LTEXT           "Aerofoil Version 1.0",IDC_LBL_VER,45,18,149,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2002-2005",IDC_LBL_COPYRIGHT,45,32,163,8
     DEFPUSHBUTTON   "OK",IDOK,198,7,50,14,WS_GROUP
     GROUPBOX        "System Information",IDC_STATIC,7,50,165,46
@@ -528,8 +653,8 @@ BEGIN
     LTEXT           "Disk",IDC_DISK_SPACE,82,78,85,8
 END
 
-IDD_SECTION_POS DIALOG DISCARDABLE  0, 0, 190, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_SECTION_POS DIALOG 0, 0, 190, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Section Position"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -539,8 +664,8 @@ BEGIN
     LTEXT           "Position",IDC_STATIC,7,17,26,14
 END
 
-IDD_EDIT_WING DIALOG DISCARDABLE  0, 0, 360, 181
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_EDIT_WING DIALOG 0, 0, 360, 181
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Edit Wing"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -548,8 +673,7 @@ BEGIN
     EDITTEXT        IDC_EDT_LE,64,37,69,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDT_TE,64,54,69,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDT_SKIN,64,72,69,14,ES_AUTOHSCROLL
-    LISTBOX         IDC_LST_SPARS,153,18,69,57,LBS_SORT | 
-                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LST_SPARS,153,18,69,57,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Add",IDC_CMD_ADD_SPAR,234,16,50,14
     PUSHBUTTON      "Edit",IDC_CMD_SPAR_EDIT,233,38,50,14
     PUSHBUTTON      "Delete",IDC_CMD_SPAR_DELETE,233,62,50,14
@@ -568,8 +692,8 @@ BEGIN
     LTEXT           "Skin",IDC_STATIC,7,76,15,8
 END
 
-IDD_EDIT_SECTION DIALOG DISCARDABLE  0, 0, 311, 122
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_EDIT_SECTION DIALOG 0, 0, 311, 122
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Edit Section"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -590,44 +714,32 @@ BEGIN
     GROUPBOX        "Section",IDC_STATIC,7,7,238,33
 END
 
-IDD_WING_FLAGS DIALOG DISCARDABLE  0, 0, 227, 65
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_WING_FLAGS DIALOG 0, 0, 227, 65
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Edit Wing Flags"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "Plot Leading Edge",IDC_CHK_PLOT_LE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,74,10
-    CONTROL         "Plot Trailing Edge",IDC_CHK_PLOT_TE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,20,71,10
-    CONTROL         "Plot Skin",IDC_CHK_PLOT_SKIN,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,33,44,10
-    CONTROL         "Plot Spars",IDC_CHK_PLOT_SPARS,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,46,48,10
-    CONTROL         "Plot Labels",IDC_CHK_PLOT_LABELS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,93,7,51,10
-    CONTROL         "Plot Markers",IDC_CHK_PLOT_MARKERS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,93,20,55,10
-    CONTROL         "Plot Chord",IDC_CHK_PLOT_CHORD,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,93,33,49,10
-    CONTROL         "Plot Section",IDC_CHK_PLOT_SECTION,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,93,45,54,10
+    CONTROL         "Plot Leading Edge",IDC_CHK_PLOT_LE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,74,10
+    CONTROL         "Plot Trailing Edge",IDC_CHK_PLOT_TE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,71,10
+    CONTROL         "Plot Skin",IDC_CHK_PLOT_SKIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,33,44,10
+    CONTROL         "Plot Spars",IDC_CHK_PLOT_SPARS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,46,48,10
+    CONTROL         "Plot Labels",IDC_CHK_PLOT_LABELS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,93,7,51,10
+    CONTROL         "Plot Markers",IDC_CHK_PLOT_MARKERS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,93,20,55,10
+    CONTROL         "Plot Chord",IDC_CHK_PLOT_CHORD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,93,33,49,10
+    CONTROL         "Plot Section",IDC_CHK_PLOT_SECTION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,93,45,54,10
     DEFPUSHBUTTON   "OK",IDOK,170,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,170,24,50,14
 END
 
-IDD_EDIT_SPAR DIALOG DISCARDABLE  0, 0, 250, 162
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_EDIT_SPAR DIALOG 0, 0, 250, 162
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Edit Spar"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "Top",IDC_RAD_TOP,"Button",BS_AUTORADIOBUTTON | WS_GROUP,
-                    19,20,29,10
-    CONTROL         "Bottom",IDC_RAD_BOTTOM,"Button",BS_AUTORADIOBUTTON,19,
-                    34,38,10
-    CONTROL         "Full-Depth",IDC_RAD_FULL_DEPTH,"Button",
-                    BS_AUTORADIOBUTTON,19,48,48,10
-    CONTROL         "Submerged",IDC_CHK_SUBMERGED,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,105,17,52,10
+    CONTROL         "Top",IDC_RAD_TOP,"Button",BS_AUTORADIOBUTTON | WS_GROUP,19,20,29,10
+    CONTROL         "Bottom",IDC_RAD_BOTTOM,"Button",BS_AUTORADIOBUTTON,19,34,38,10
+    CONTROL         "Full-Depth",IDC_RAD_FULL_DEPTH,"Button",BS_AUTORADIOBUTTON,19,48,48,10
+    CONTROL         "Submerged",IDC_CHK_SUBMERGED,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,105,17,52,10
     EDITTEXT        IDC_EDT_ROOT_X,56,94,40,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDT_ROOT_WIDTH,55,113,40,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDT_ROOT_HEIGHT,55,130,40,14,ES_AUTOHSCROLL
@@ -648,42 +760,32 @@ BEGIN
     LTEXT           "Height",IDC_STATIC,149,132,22,8
 END
 
-IDD_ZOOM DIALOG DISCARDABLE  0, 0, 148, 110
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ZOOM DIALOG 0, 0, 148, 110
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Zoom"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "200%",IDC_RADZOOM200,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,19,26,33,10
-    CONTROL         "100%",IDC_RAD_ZOOM100,"Button",BS_AUTORADIOBUTTON,19,40,
-                    33,10
-    CONTROL         "50%",IDC_RADZOOM50,"Button",BS_AUTORADIOBUTTON,19,54,29,
-                    10
-    CONTROL         "25%",IDC_RADZOOM25,"Button",BS_AUTORADIOBUTTON,19,68,29,
-                    10
-    CONTROL         "Fit",IDC_RADZOOMFIT,"Button",BS_AUTORADIOBUTTON,19,82,
-                    23,10
+    CONTROL         "200%",IDC_RADZOOM200,"Button",BS_AUTORADIOBUTTON | WS_GROUP,19,26,33,10
+    CONTROL         "100%",IDC_RAD_ZOOM100,"Button",BS_AUTORADIOBUTTON,19,40,33,10
+    CONTROL         "50%",IDC_RADZOOM50,"Button",BS_AUTORADIOBUTTON,19,54,29,10
+    CONTROL         "25%",IDC_RADZOOM25,"Button",BS_AUTORADIOBUTTON,19,68,29,10
+    CONTROL         "Fit",IDC_RADZOOMFIT,"Button",BS_AUTORADIOBUTTON,19,82,23,10
     DEFPUSHBUTTON   "OK",IDOK,91,7,50,14,WS_GROUP
     PUSHBUTTON      "Cancel",IDCANCEL,91,24,50,14
     GROUPBOX        "Zoom to",IDC_STATIC,7,7,61,96
 END
 
-IDD_PAGE_SIZE DIALOG DISCARDABLE  0, 0, 192, 164
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PAGE_SIZE DIALOG 0, 0, 192, 164
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Page Size"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "A4",IDC_RAD_A4,"Button",BS_AUTORADIOBUTTON | WS_GROUP,
-                    24,24,25,10
-    CONTROL         "A4 (Landscape)",IDC_RAD_A4L,"Button",BS_AUTORADIOBUTTON,
-                    24,40,66,10
+    CONTROL         "A4",IDC_RAD_A4,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,24,25,10
+    CONTROL         "A4 (Landscape)",IDC_RAD_A4L,"Button",BS_AUTORADIOBUTTON,24,40,66,10
     CONTROL         "A3",IDC_RAD_A3,"Button",BS_AUTORADIOBUTTON,24,56,25,10
-    CONTROL         "A3 (Landscape)",IDC_RAD_A3L,"Button",BS_AUTORADIOBUTTON,
-                    24,72,66,10
-    CONTROL         "Custom",IDC_RAD_CUSTOM,"Button",BS_AUTORADIOBUTTON,24,
-                    88,39,10
-    EDITTEXT        IDC_EDT_WIDTH,51,111,40,14,ES_AUTOHSCROLL | WS_DISABLED | 
-                    WS_GROUP
+    CONTROL         "A3 (Landscape)",IDC_RAD_A3L,"Button",BS_AUTORADIOBUTTON,24,72,66,10
+    CONTROL         "Custom",IDC_RAD_CUSTOM,"Button",BS_AUTORADIOBUTTON,24,88,39,10
+    EDITTEXT        IDC_EDT_WIDTH,51,111,40,14,ES_AUTOHSCROLL | WS_DISABLED | WS_GROUP
     EDITTEXT        IDC_EDT_HEIGHT,51,128,40,14,ES_AUTOHSCROLL | WS_DISABLED
     DEFPUSHBUTTON   "OK",IDOK,135,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,135,24,50,14
@@ -692,19 +794,18 @@ BEGIN
     GROUPBOX        "Set paper size",IDC_STATIC,7,7,110,149
 END
 
-IDD_SELECT_STRUCTURE DIALOG DISCARDABLE  0, 0, 324, 111
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_SELECT_STRUCTURE DIALOG 0, 0, 324, 111
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select Structure"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LISTBOX         IDC_LST_STRUCTURES,7,7,243,98,LBS_SORT | 
-                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LST_STRUCTURES,7,7,243,98,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     DEFPUSHBUTTON   "OK",IDOK,267,7,50,14,WS_DISABLED
     PUSHBUTTON      "Cancel",IDCANCEL,267,24,50,14
 END
 
-IDD_ELLIPSE_PAIR DIALOG DISCARDABLE  0, 0, 346, 122
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ELLIPSE_PAIR DIALOG 0, 0, 346, 122
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ellipse Pair"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -735,26 +836,22 @@ BEGIN
     GROUPBOX        "Second",IDC_STATIC,163,7,119,107
 END
 
-IDD_PLOT_FLAGS DIALOG DISCARDABLE  0, 0, 186, 82
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PLOT_FLAGS DIALOG 0, 0, 186, 82
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Plot Flags"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "Invert Plot",IDC_CHK_INVERT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,7,48,10
-    CONTROL         "Reflect Plot left<-->right",IDC_CHK_REFLECT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,20,89,10
-    CONTROL         "Is on left of cutter",IDC_RAD_LEFT,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP,15,48,71,10
-    CONTROL         "Is on right of cutter",IDC_RADIO2,"Button",
-                    BS_AUTORADIOBUTTON,15,60,75,10
+    CONTROL         "Invert Plot",IDC_CHK_INVERT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,48,10
+    CONTROL         "Reflect Plot left<-->right",IDC_CHK_REFLECT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,89,10
+    CONTROL         "Is on left of cutter",IDC_RAD_LEFT,"Button",BS_AUTORADIOBUTTON | WS_GROUP,15,48,71,10
+    CONTROL         "Is on right of cutter",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,15,60,75,10
     DEFPUSHBUTTON   "OK",IDOK,129,7,50,14,WS_GROUP
     PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
     GROUPBOX        "Root Output Stream",IDC_STATIC,7,36,105,40
 END
 
-IDD_PLOT_POINT DIALOG DISCARDABLE  0, 0, 191, 102
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PLOT_POINT DIALOG 0, 0, 191, 102
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Plot Point"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -775,13 +872,12 @@ BEGIN
     LTEXT           "Span",IDC_STATIC,7,23,18,8
 END
 
-IDD_PLOT_ORDER DIALOG DISCARDABLE  0, 0, 230, 133
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+IDD_PLOT_ORDER DIALOG 0, 0, 230, 133
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Plot Order"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LISTBOX         IDC_LST_STRUCTURES,7,7,96,119,LBS_NOINTEGRALHEIGHT | 
-                    WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LST_STRUCTURES,7,7,96,119,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Top",IDC_CMD_TOP,115,35,32,14,WS_DISABLED
     PUSHBUTTON      "Up",IDC_CMD_UP,116,54,32,14,WS_DISABLED
     PUSHBUTTON      "Down",IDC_CMD_DOWN,115,74,32,14,WS_DISABLED
@@ -791,8 +887,8 @@ BEGIN
     GROUPBOX        "Move Item",IDC_STATIC,108,21,50,92
 END
 
-IDD_CNC_CONNECTION DIALOG DISCARDABLE  0, 0, 186, 46
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_CNC_CONNECTION DIALOG 0, 0, 186, 46
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "CNC Connection"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -804,50 +900,85 @@ BEGIN
     LTEXT           "Port",IDC_STATIC,7,24,14,8
 END
 
-IDD_ELLIPSE_FLAGS DIALOG DISCARDABLE  0, 0, 134, 50
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ELLIPSE_FLAGS DIALOG 0, 0, 134, 50
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ellipse Flags"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "Plot Upper",IDC_CHK_PLOT_UPPER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,7,49,10
-    CONTROL         "Plot Lower",IDC_CHK_PLOT_LOWER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,20,49,10
-    CONTROL         "Plot Markers",IDC_CHK_PLOT_MARKERS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,34,55,10
+    CONTROL         "Plot Upper",IDC_CHK_PLOT_UPPER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,49,10
+    CONTROL         "Plot Lower",IDC_CHK_PLOT_LOWER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,49,10
+    CONTROL         "Plot Markers",IDC_CHK_PLOT_MARKERS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,34,55,10
     DEFPUSHBUTTON   "OK",IDOK,77,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,77,24,50,14
 END
 
-IDD_BACKGROUND_GRID DIALOG DISCARDABLE  0, 0, 253, 190
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_BACKGROUND_GRID DIALOG 0, 0, 253, 190
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Background Grid"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "3 inch",IDC_RAD_HORIZ_3,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,16,22,35,10
-    CONTROL         "4 inch",IDC_RAD_HORIZ_4,"Button",BS_AUTORADIOBUTTON,16,
-                    38,35,10
-    CONTROL         "Other",IDC_RAD_HORIZ_ANY,"Button",BS_AUTORADIOBUTTON,16,
-                    53,33,10
+    CONTROL         "3 inch",IDC_RAD_HORIZ_3,"Button",BS_AUTORADIOBUTTON | WS_GROUP,16,22,35,10
+    CONTROL         "4 inch",IDC_RAD_HORIZ_4,"Button",BS_AUTORADIOBUTTON,16,38,35,10
+    CONTROL         "Other",IDC_RAD_HORIZ_ANY,"Button",BS_AUTORADIOBUTTON,16,53,33,10
     EDITTEXT        IDC_EDT_HORIZ_MM,54,50,40,14,ES_AUTOHSCROLL
-    CONTROL         "Plot Horizontal Lines",IDC_CHK_HORIZ,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,16,73,80,10
-    CONTROL         "3 inch",IDC_RAD_VERT_3,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,16,114,35,10
-    CONTROL         "4 inch",IDC_RAD_VERT_4,"Button",BS_AUTORADIOBUTTON,16,
-                    130,35,10
-    CONTROL         "Other",IDC_RAD_VERT_ANY,"Button",BS_AUTORADIOBUTTON,16,
-                    144,33,10
+    CONTROL         "Plot Horizontal Lines",IDC_CHK_HORIZ,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,73,80,10
+    CONTROL         "3 inch",IDC_RAD_VERT_3,"Button",BS_AUTORADIOBUTTON | WS_GROUP,16,114,35,10
+    CONTROL         "4 inch",IDC_RAD_VERT_4,"Button",BS_AUTORADIOBUTTON,16,130,35,10
+    CONTROL         "Other",IDC_RAD_VERT_ANY,"Button",BS_AUTORADIOBUTTON,16,144,33,10
     EDITTEXT        IDC_EDT_VERT_MM,54,141,40,14,ES_AUTOHSCROLL
-    CONTROL         "Plot Vertical Lines",IDC_CHK_VERT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,16,165,72,10
+    CONTROL         "Plot Vertical Lines",IDC_CHK_VERT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,165,72,10
     DEFPUSHBUTTON   "OK",IDOK,196,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,196,24,50,14
     GROUPBOX        "Horizontal Lines",IDC_STATIC,7,7,177,81
     LTEXT           "mm",IDC_STATIC,100,53,12,8
     GROUPBOX        "Vertical Lines",IDC_STATIC,7,98,177,84
     LTEXT           "mm",IDC_STATIC,100,144,12,8
+END
+
+IDD_CUT_TRANSFORM DIALOGEX 0, 0, 307, 109
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Transform"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    CONTROL         "Invert Plot",IDC_CHK_INVERT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,16,48,10
+    CONTROL         "Reflect Plot left<-->right",IDC_CHK_REFLECT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,29,89,10
+    CONTROL         "Is on left of cutter",IDC_RAD_LEFT,"Button",BS_AUTORADIOBUTTON | WS_GROUP,136,19,71,10
+    CONTROL         "Is on right of cutter",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,136,31,75,10
+    DEFPUSHBUTTON   "OK",IDOK,250,7,50,14,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,250,24,50,14
+    GROUPBOX        "Root Output Stream",IDC_STATIC,128,7,105,40
+    EDITTEXT        IDC_EDT_ROOT_XOFFSET,73,59,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_ROOT_YOFFSET,73,78,40,14,ES_AUTOHSCROLL
+    LTEXT           "Root X Offset",IDC_STATIC,15,62,44,8
+    LTEXT           "Root Y Offset",IDC_STATIC,15,81,44,8
+    EDITTEXT        IDC_EDT_TIP_XOFFSET,223,59,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_TIP_YOFFSET,223,78,40,14,ES_AUTOHSCROLL
+    LTEXT           "Tip X Offset",IDC_STATIC,165,62,38,8
+    LTEXT           "Tip Y Offset",IDC_STATIC,165,81,38,8
+    PUSHBUTTON      ">>>",IDC_BTN_COPY,126,68,30,14
+END
+
+IDD_GCODE_EDIT DIALOGEX 0, 0, 421, 251
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit G-Code"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,297,230,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,364,230,50,14
+    EDITTEXT        IDC_EDT_GCODE,7,7,407,194,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_EDT_ERROR,7,207,407,14,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_WING_CUT_FLAGS DIALOGEX 0, 0, 151, 59
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit Wing Flags"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    CONTROL         "Cut Leading Edge",IDC_CHK_CUT_LE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,73,10
+    CONTROL         "Cut Trailing Edge",IDC_CHK_CUT_TE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,70,10
+    CONTROL         "Cut Spars",IDC_CHK_CUT_SPARS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,34,47,10
+    DEFPUSHBUTTON   "OK",IDOK,94,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,94,24,50,14
 END
 
 
@@ -857,7 +988,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -987,8 +1118,54 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 183
     END
+
+    IDD_CUT_TRANSFORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 300
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 102
+    END
+
+    IDD_GCODE_EDIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 414
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 244
+    END
+
+    IDD_WING_CUT_FLAGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 144
+        VERTGUIDE, 93
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 52
+    END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CUT_TRANSFORM AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_GCODE_EDIT AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_WING_CUT_FLAGS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -996,14 +1173,14 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     CG_IDS_PHYSICAL_MEM     "%lu KB"
     CG_IDS_DISK_SPACE       "%lu KB Free on %c:"
     CG_IDS_DISK_SPACE_UNAVAIL "Unavailable"
 END
 
-#endif    // English (U.K.) resources
+#endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

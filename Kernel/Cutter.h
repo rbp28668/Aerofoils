@@ -33,7 +33,7 @@ public:
 	virtual void disableMotors() = 0;
 	virtual void setFeedRate(double rate) = 0;
 	virtual double getFeedRate() = 0;
-	virtual boolean hasFeedRateError() = 0;
+	virtual bool hasFeedRateError() = 0;
 	virtual void resetFeedRateError() = 0;
 
 	virtual Position<double> getCurrentPosition() = 0;

@@ -166,7 +166,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <OutputFile>$(OutDir)\Aerofoil.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -252,12 +252,16 @@
     <ClCompile Include="BackgroundGridDlg.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="CNCConnectionDlg.cpp" />
-    <ClCompile Include="CNCConnectionOutputDevice.cpp" />
     <ClCompile Include="CoordMap.cpp" />
+    <ClCompile Include="CutterDoc.cpp" />
+    <ClCompile Include="CutterFrame.cpp" />
     <ClCompile Include="CutterSimulationOutputDevice.cpp" />
+    <ClCompile Include="CutterTreeView.cpp" />
+    <ClCompile Include="CutterView.cpp" />
     <ClCompile Include="EllipseFlagsDlg.cpp" />
     <ClCompile Include="EllipsePairDlg.cpp" />
     <ClCompile Include="EllipseUIProxy.cpp" />
+    <ClCompile Include="GCodeEditDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PaperSizeDlg.cpp" />
     <ClCompile Include="PlotFlagsDlg.cpp" />
@@ -279,9 +283,11 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="TransformDialog.cpp" />
     <ClCompile Include="VersionInfo.CPP" />
     <ClCompile Include="WindowsOutputDevice.cpp" />
     <ClCompile Include="WindowsUIProxy.cpp" />
+    <ClCompile Include="WingCoreFlagsDlg.cpp" />
     <ClCompile Include="WingDlg.cpp" />
     <ClCompile Include="WingFlagsDlg.cpp" />
     <ClCompile Include="WingUIProxy.cpp" />
@@ -298,12 +304,16 @@
     <ClInclude Include="BackgroundGridDlg.hpp" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CNCConnectionDlg.h" />
-    <ClInclude Include="CNCConnectionOutputDevice.h" />
     <ClInclude Include="CoordMap.h" />
+    <ClInclude Include="CutterDoc.h" />
+    <ClInclude Include="CutterFrame.h" />
     <ClInclude Include="CutterSimulationOutputDevice.h" />
+    <ClInclude Include="CutterTreeView.h" />
+    <ClInclude Include="CutterView.h" />
     <ClInclude Include="EllipseFlagsDlg.h" />
     <ClInclude Include="EllipsePairDlg.h" />
     <ClInclude Include="EllipseUIProxy.h" />
+    <ClInclude Include="GCodeEditDialog.h" />
     <ClInclude Include="Kernel\ParametricCurve2D.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="PaperSizeDlg.h" />
@@ -318,9 +328,11 @@
     <ClInclude Include="SparDlg.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="TransformDialog.h" />
     <ClInclude Include="VersionInfo.HPP" />
     <ClInclude Include="WindowsOutputDevice.h" />
     <ClInclude Include="WindowsUIProxy.h" />
+    <ClInclude Include="WingCoreFlagsDlg.h" />
     <ClInclude Include="WingDlg.h" />
     <ClInclude Include="WingFlagsDlg.h" />
     <ClInclude Include="WingUIProxy.h" />

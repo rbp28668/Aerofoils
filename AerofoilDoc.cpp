@@ -40,16 +40,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "EllipseUIProxy.h"
 #include "PlotPointUIProxy.h"
 #include "PlotOrderDlg.h"
-#include "CNCConnectionDlg.h"
-#include "CNCConnectionOutputDevice.h"
+
 #include "BackgroundGridDlg.hpp"
 
 #include "kernel\drivers\DXFOutputDevice.h"
 #include "kernel\drivers\LaserJet.h"
 #include "kernel\drivers\Postscript.h"
+#include "Kernel\GCodeOutputFile.h"
 
 #include "kernel\plotfoil.h" // CPathPlotter
-#include "kernel\cutpath.h"  // CPathCutter
 #include "kernel\wing.h"
 #include "kernel\ObjectSerializer.h"
 #include "kernel\EllipsePair.h"
@@ -71,7 +70,6 @@ using namespace std;
 IMPLEMENT_DYNCREATE(CAerofoilDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
-	//{{AFX_MSG_MAP(CAerofoilDoc)
 	ON_COMMAND(ID_WING_FLAGS, OnWingFlags)
 	ON_UPDATE_COMMAND_UI(ID_WING_FLAGS, OnUpdateWingFlags)
 	ON_COMMAND(ID_WING_NEW, OnWingNew)
@@ -98,8 +96,6 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_COMMAND(ID_POINT_NEW, OnPointNew)
 	ON_COMMAND(ID_EDIT_PLOTORDER, OnEditPlotorder)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PLOTORDER, OnUpdateEditPlotorder)
-	ON_COMMAND(ID_FILE_CNCOUTPUT, OnFileCncoutput)
-	ON_COMMAND(ID_FILE_CNCSETUP, OnFileCncsetup)
 	ON_COMMAND(ID_EDIT_DELETESTRUCTURE, OnEditDeletestructure)
 	ON_UPDATE_COMMAND_UI(ID_ELLIPSE_FLAGS, OnUpdateEllipseSelected)
 	ON_UPDATE_COMMAND_UI(ID_ELLIPSE_NEW_SECTION, OnUpdateEllipseSelected)
@@ -107,7 +103,6 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_STRUCTURE, OnUpdateItemIsSelected)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PLOTFLAGS, OnUpdateItemIsSelected)
 	ON_COMMAND(ID_FILE_SETGRID, OnFileSetgrid)
-	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -118,10 +113,6 @@ CAerofoilDoc::CAerofoilDoc()
 , currentEllipse(0)
 , selected(0)
 , plotOrderDialog(0)
-, cncHost("localhost")
-, cncPort(8193)
-, cncIsSetup(false)
-
 {
 	setDocSize(210,297);	// A4
 }
@@ -471,12 +462,7 @@ void CAerofoilDoc::OnWingNewCore()
 {
 	assert(this);
 	assert(currentWing != 0);	
-
-	CPathCutter* ppc = getPlot().addPathCutter(currentWing);
-	ppc->setPosition(place_x,place_y);
-	ppc->setUIProxy(new CWingUIProxy());
-	updatePlacePosition();
-	RedrawNow();
+    // Now a NOP - TODO delete in due course.
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -617,6 +603,7 @@ void CAerofoilDoc::OnFilePostscript()
 	}
 }
 
+
 void CAerofoilDoc::OnEditPosition() 
 {
 	assert(this);
@@ -685,37 +672,6 @@ void CAerofoilDoc::OnUpdateEditPlotorder(CCmdUI* pCmdUI)
 	pCmdUI->Enable((plotOrderDialog) ?	FALSE : TRUE);
 }
 
-void CAerofoilDoc::OnFileCncoutput() 
-{
-	if(!cncIsSetup)
-		OnFileCncsetup();
-
-	if(cncIsSetup)
-	{
-		try
-		{
-			CCNCConnectionOutputDevice dev(cncHost.c_str(),cncPort);
-			getPlot().plot(dev);
-		}
-		catch(exception& e)
-		{
-			::MessageBox(0,e.what(),"Error during plot",MB_OK | MB_ICONEXCLAMATION);
-		}
-	}
-}
-
-void CAerofoilDoc::OnFileCncsetup() 
-{
-	CCNCConnectionDlg dlg;
-	dlg.m_host = cncHost.c_str();
-	dlg.m_port = cncPort;
-	if(dlg.DoModal() == IDOK)
-	{
-		cncHost = dlg.m_host;
-		cncPort = dlg.m_port;
-		cncIsSetup = true;
-	}
-}
 
 void CAerofoilDoc::OnEditDeletestructure() 
 {
@@ -747,3 +703,5 @@ void CAerofoilDoc::OnFileSetgrid()
 
 	
 }
+
+

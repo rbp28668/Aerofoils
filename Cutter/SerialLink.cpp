@@ -46,7 +46,7 @@ SerialLink::~SerialLink(void)
 	disconnect();
 }
 
-void SerialLink::connect(const char * pszPort)
+SerialLink::ErrorT SerialLink::connect(const char * pszPort)
 {
 	assert(this);
 	assert(pszPort);
@@ -59,8 +59,7 @@ void SerialLink::connect(const char * pszPort)
 		FILE_FLAG_OVERLAPPED,
 		0);
 	if (hComm == INVALID_HANDLE_VALUE) {
-		std::cerr << "Unable to open serial port " << pszPort << std::endl;
-		exit(3);
+		return CANNOT_CONNECT;
 	}
 
 
@@ -69,8 +68,7 @@ void SerialLink::connect(const char * pszPort)
 
 	dcb.DCBlength = sizeof(dcb);
 	if (!BuildCommDCBA("4800,n,8,1", &dcb)) {
-		std::cerr << "Unable to build device control block " << std::endl;
-		exit(3);
+		return BUILD_DCB;
 	}
 	dcb.fOutxCtsFlow = 0;
 	dcb.fOutxDsrFlow = 0;
@@ -83,8 +81,7 @@ void SerialLink::connect(const char * pszPort)
 
 
 	if (!SetCommState(hComm, &dcb)) {
-		std::cerr << "Unable to set comms state " << ::GetLastError() << std::endl;
-		exit(4);
+		return COMMS_SET_STATE;
 	}
 
 	// Set timeouts - see https://docs.microsoft.com/en-gb/windows/desktop/api/winbase/nf-winbase-getcommtimeouts
@@ -96,15 +93,14 @@ void SerialLink::connect(const char * pszPort)
 	timeouts.WriteTotalTimeoutConstant = 100;   // + 100mS per message
 
 	if (!::SetCommTimeouts(hComm, &timeouts)) {
-		std::cerr << "Unable to set comms timeouts " << ::GetLastError() << std::endl;
-		exit(5);
-
+		return COMMS_SET_TIMEOUTS;
 	}
 	// Create event for use by overlapped IO
 	hEventRead = ::CreateEvent(NULL, TRUE, TRUE, NULL); // Manual reset, initially signalled.
 	hEventWrite = ::CreateEvent(NULL, TRUE, TRUE, NULL); // Manual reset, initially signalled.
 
 	connected = true;
+	return SUCCESS;
 }
 
 void SerialLink::disconnect()

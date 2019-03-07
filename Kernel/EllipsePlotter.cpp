@@ -80,8 +80,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 	PointT h0,h1;
 	double rads;
 	
-	setDevice(pdev);
-	
+
 	const CEllipse *first = ellipses->getFirst();
 	const CEllipse *second = ellipses->getSecond();
 	
@@ -100,7 +99,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
 		
-		interp_move_to(h0,h1);
+		interp_move_to(pdev, h0,h1);
 
 		for(theta = DELTA;theta <= 180.0f; theta+=DELTA)
 		{
@@ -113,7 +112,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 			h0.fy = y0+first->getY();
 			h1.fx = x1+second->getX();
 			h1.fy = y1+second->getY();
-			interp_line_to(h0,h1);
+			interp_line_to(pdev,h0,h1);
 		}
 	}
 	
@@ -130,7 +129,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
 		
-		interp_move_to(h0,h1);
+		interp_move_to(pdev,h0,h1);
 
 		for(theta = 180.0f + DELTA;theta <= 360.0f; theta+=DELTA)
 		{
@@ -143,7 +142,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 			h0.fy = y0+first->getY();
 			h1.fx = x1+second->getX();
 			h1.fy = y1+second->getY();
-			interp_line_to(h0,h1);
+			interp_line_to(pdev,h0,h1);
 		}
 	}
 	
@@ -157,7 +156,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_move_to(h0,h1);
+		interp_move_to(pdev,h0,h1);
 		
 		x0 = -first->getB()/2.0f;
 		x1 = -second->getB()/2.0f;
@@ -166,7 +165,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_line_to(h0,h1);
+		interp_line_to(pdev,h0,h1);
 		
 		x0 = x1 = 0.0f;
 		if(ellipses->getPlotFlags()->plot_upper)
@@ -182,7 +181,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_move_to(h0,h1);
+		interp_move_to(pdev,h0,h1);
 		
 		x0 = x1 = 0.0f;
 		if(ellipses->getPlotFlags()->plot_lower)
@@ -198,7 +197,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_line_to(h0,h1);
+		interp_line_to(pdev,h0,h1);
     }
 	
 	return;

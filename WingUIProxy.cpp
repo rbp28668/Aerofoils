@@ -26,7 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "WingDlg.h"
 #include "AerofoilDoc.h"
 #include "kernel/ObjectSerializer.h"
-#include "kernel/PlotCommonImpl.h"
+#include "kernel/Plotfoil.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -67,7 +67,7 @@ bool CWingUIProxy::Edit(CPlotStructure* toEdit)
 	assert(this);
 	assert(toEdit);
 
-	CPlotCommonImpl* ps = static_cast<CPlotCommonImpl*>(toEdit);
+	CPathPlotter* ps = static_cast<CPathPlotter*>(toEdit);
 	CWingDlg dlg(ps->getWing());
 	return dlg.DoModal() == IDOK;
 }
@@ -78,7 +78,7 @@ void CWingUIProxy::SetSelectedStructure(CAerofoilDoc* pDoc, CPlotStructure* sel)
 	assert(pDoc);
 	assert(sel);
 
-	CPlotCommonImpl* ps = static_cast<CPlotCommonImpl*>(sel);
+	CPathPlotter* ps = static_cast<CPathPlotter*>(sel);
 	pDoc->selectWing(ps->getWing());
 
 }

@@ -127,6 +127,13 @@ void CPostscriptOutputDevice::Flush()
 	assert(this);
 }
 
+PointT CPostscriptOutputDevice::position(int iStream)
+{
+	assert(this);
+	assert(iStream == 0 || iStream == 1);
+	return last[iStream];
+}
+
 
 /************************************************************
 * CPostscriptOutputDevice::StartDocument
@@ -136,7 +143,7 @@ void CPostscriptOutputDevice::StartDocument()
 {
   
     os << "%%!PS-Adobe-2.0\n";
-    os << "%%%%Creator: LaserPlot 0.0\n";
+    os << "%%%%Creator: Aerofoil 6.0\n";
     os << "%%%%EndComments\n";
   
     os << "/Times-Roman findfont 10 scalefont setfont\n";

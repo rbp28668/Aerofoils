@@ -39,12 +39,6 @@
     <ClCompile Include="ComPortEnumerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GCodeInterpreter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GCodeProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CNCFoamCutter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,9 +58,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CutterConfig.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -103,21 +94,6 @@
     <ClInclude Include="ComPortEnumerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GCodeInterpreter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cutter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Position.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ParserContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GCodeProgram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CNCFoamCutter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -137,9 +113,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutterConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectSerializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

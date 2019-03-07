@@ -23,7 +23,7 @@ class ParserContext
 public:
 	virtual ~ParserContext() {}
 	virtual void showError(const std::string& line, size_t where, const std::string& msg) = 0;
-	virtual boolean canPause() = 0;
+	virtual bool canPause() = 0;
 	virtual void pause() = 0;
 	virtual void complete() = 0;
 	virtual void restart() = 0;

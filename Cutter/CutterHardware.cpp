@@ -74,10 +74,10 @@ CutterHardware::CutterHardware(const char * pszPort) :
 {
 }
 
-void CutterHardware::connect(const char * pszPort)
+int CutterHardware::connect(const char * pszPort)
 {
 	assert(this);
-	serialLink.connect(pszPort);
+	return serialLink.connect(pszPort);
 }
 
 void CutterHardware::disconnect()

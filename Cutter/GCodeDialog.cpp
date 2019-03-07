@@ -18,15 +18,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "stdafx.h"
-#include "Cutter.h"
 #include "GCodeDialog.h"
 #include "afxdialogex.h"
 #include "resource.h"
-#include "GCodeInterpreter.h"
-#include "GCodeProgram.h"
-#include "Cutter.h"
 #include "sstream"
 #include "fstream"
+#include "../Kernel/Cutter.h"
+#include "../Kernel/GCodeInterpreter.h"
+#include "../Kernel/GCodeProgram.h"
+#include "../Kernel/Cutter.h"
 
 // CGCodeDialog dialog
 
@@ -155,7 +155,7 @@ void CGCodeDialog::showError(const std::string & line, size_t where, const std::
 	errorText.SetWindowTextA(error.c_str());
 }
 
-boolean CGCodeDialog::canPause()
+bool CGCodeDialog::canPause()
 {
 	return canPauseCheckbox.GetCheck() == BST_CHECKED;
 }

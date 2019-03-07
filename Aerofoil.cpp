@@ -25,6 +25,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ChildFrm.h"
 #include "AerofoilDoc.h"
 #include "AerofoilView.h"
+#include "CutterFrame.h"
+#include "CutterDoc.h"
+#include "CutterView.h"
 #include "VersionInfo.hpp"
 #include "kernel\ObjectSerializer.h"
 #include <dos.h>
@@ -89,9 +92,8 @@ BOOL CAerofoilApp::InitInstance()
 
 
 	// Change the registry key under which our settings are stored.
-	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization.
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T("Airofoil Cutter and Plotter"));
 
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 
@@ -106,6 +108,13 @@ BOOL CAerofoilApp::InitInstance()
 		RUNTIME_CLASS(CAerofoilView));
 	AddDocTemplate(pDocTemplate);
 
+	pDocTemplate = new CMultiDocTemplate(
+		IDR_CUTTERTYPE,
+		RUNTIME_CLASS(CutterDoc),
+		RUNTIME_CLASS(CutterFrame), // custom MDI child frame
+		RUNTIME_CLASS(CutterView));
+	AddDocTemplate(pDocTemplate);
+
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
 	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
@@ -114,6 +123,7 @@ BOOL CAerofoilApp::InitInstance()
 
 	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;
+	cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing; // stop "new" on startup
 	ParseCommandLine(cmdInfo);
 
 	// Dispatch commands specified on the command line
@@ -155,6 +165,8 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+public:
 };
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
@@ -173,8 +185,6 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 // App command to run the dialog
@@ -248,3 +258,8 @@ BOOL CAerofoilApp::PreTranslateMessage(MSG* pMsg)
 
 	return CWinApp::PreTranslateMessage(pMsg);
 }
+
+
+
+
+

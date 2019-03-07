@@ -18,7 +18,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "stdafx.h"
-#include "Cutter.h"
 #include "MainTabCtrl.h"
 #include "resource.h"
 
@@ -27,6 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ConfigDialog.h"
 #include "CNCFoamCutter.h"
 #include "CutterDlg.h"
+#include "../Kernel/Cutter.h"
 
 // CMainTabCtrl
 

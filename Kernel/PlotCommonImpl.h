@@ -31,27 +31,19 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #define max(a,b) ((a>b)?a:b)
 #endif
 
-#include "PlotStructure.h"
 
 class CAerofoil;
-class COutputDevice;
-class CWing;
 
-class CPlotCommonImpl: public CPlotStructure
+class CPlotCommonImpl
 {
 
 public:
-	float getSpan() const;
-	CWing* getWing() {return wing;}
-	virtual CStructure* getStructure();
-	virtual const CStructure* getStructure() const;
 
 protected:
 
-	CPlotCommonImpl(CWing* pWing);
-	explicit CPlotCommonImpl();
-	
+	CPlotCommonImpl();
 	virtual ~CPlotCommonImpl();
+
 	void find_core_te(const CAerofoil& foil,float skin,float *nu0,float *nu1) const;
 
 	const static float CLOSE;  /* limit of resolution in mm per step */
@@ -59,7 +51,6 @@ protected:
 	const static int FORWARD_ITER;  /* 1 part in 16000 */
 	const static float WEENY; /* very small...*/
 
-	CWing* wing;	// the wing this is plotting.
 };
 
 #endif // !defined(AFX_PLOTCOMMONIMPL_H__EF095243_B4C9_11D6_AF75_002018BA082E__INCLUDED_)

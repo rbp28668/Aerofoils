@@ -41,15 +41,18 @@ public:
 	virtual void Flush() = 0;
 
 	// These are optional but can provide hints to the output device.
-	virtual void startObject(CPlotStructure*) {}
-	virtual void endObject(CPlotStructure*) {}
+	virtual void startObject(const char* description) {}
+	virtual void endObject(const char* description) {}
 	virtual void startPlot() {}
 	virtual void endPlot() {}
+	virtual void passthrough(const char* data) {}
 
 	// Information about the device;
 	bool isCNC() const {return _isCNC;}
 	//virtual PointT getResolutionPixPerMM() const;
 
+	// Get current position;
+	virtual PointT position(int iStream) = 0;
 
 protected:
 	enum {MoveToCode, LineToCode, LabelCode, HomeCode, FlushCode};

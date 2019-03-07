@@ -17,8 +17,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 #include "stdafx.h"
-#include "Cutter.h"
 #include "SocketEventHandler.h"
+#include "../Kernel/Cutter.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE

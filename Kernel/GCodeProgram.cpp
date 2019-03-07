@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
 #include<assert.h>
 #include "GCodeInterpreter.h"
 #include "GCodeProgram.h"
@@ -42,9 +41,20 @@ void GCodeProgram::setInterpreter(GCodeInterpreter* pInterpreter)
 	this->pInterpreter = pInterpreter;
 }
 
+void GCodeProgram::unsetInterpreter()
+{
+	assert(this);
+	this->pInterpreter = 0;
+}
+
 void GCodeProgram::setUpstreamContext(ParserContext * upstreamContext)
 {
 	this->upstreamContext = upstreamContext;
+}
+
+void GCodeProgram::unsetUpstreamContext()
+{
+	this->upstreamContext = 0;
 }
 
 void GCodeProgram::showError(const std::string & line, size_t where, const std::string & msg)
@@ -61,7 +71,7 @@ void GCodeProgram::showError(const std::string & line, size_t where, const std::
 	}
 }
 
-boolean GCodeProgram::canPause() {
+bool GCodeProgram::canPause() {
 	if (upstreamContext) {
 		upstreamContext->canPause();
 	}
@@ -138,8 +148,10 @@ void GCodeProgram::start()
 	bPaused = true;
 }
 
-boolean GCodeProgram::step()
+bool GCodeProgram::step()
 {
+	assert(this);
+	assert(pInterpreter);
 	if (currentLine != lines.end()) {
 		pInterpreter->process(*currentLine);
 		++currentLine;
@@ -154,14 +166,37 @@ boolean GCodeProgram::step()
 
 void GCodeProgram::reset()
 {
+	assert(this);
 	bComplete = false;
 	bPaused = false;
 	bRunning = false;
 	currentLine = lines.end();
 }
 
+void GCodeProgram::clearErrors()
+{
+	errors.clear();
+}
+
+bool GCodeProgram::hasError()
+{
+	return !errors.empty();
+}
+
+std::string GCodeProgram::popError()
+{
+	std::string err = std::string();
+	if (!errors.empty()) {
+		err = errors.front();
+		errors.pop_front();
+	}
+	return err;
+}
+
 void GCodeProgram::load(std::istream & is)
 {
+	assert(this);
+	assert(is.good());
 	std::string line;
 	while (std::getline(is, line)) {
 		lines.push_back(line);
@@ -173,6 +208,8 @@ void GCodeProgram::load(std::istream & is)
 
 void GCodeProgram::save(std::ostream & os)
 {
+	assert(this);
+	assert(os.good());
 	for (auto const& line : lines) {
 		os << line << std::endl;
 	}
@@ -180,6 +217,7 @@ void GCodeProgram::save(std::ostream & os)
 
 void GCodeProgram::asString(std::string & str)
 {
+	assert(this);
 	str = "";
 	for (auto const&l : lines) {
 		str.append(l);

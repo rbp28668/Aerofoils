@@ -46,7 +46,7 @@ private:
 		Units units;
 		MoveSpeed moveSpeed;
 		MoveType moveType;
-		boolean mirrored;
+		bool mirrored;
 		long dwellTimeMS;
 		Position<double> offsets;
 
@@ -104,15 +104,17 @@ public:
 	~GCodeInterpreter();
 
 	void setCutter(Cutter* pCutter);
+	void unsetCutter();
 	void setContext(ParserContext* pContext);
-	ParserContext* getContext();
+	void unsetContext();
+	ParserContext* getContext() const;
 
 	int process(const std::string& line);
 
-	inline boolean isInches() { return pCurrentState->units == INCH; }
-	inline boolean isFast() { return pCurrentState->moveSpeed == FASTEST; }
-	inline boolean isRelative() { return pCurrentState->moveType == RELATIVE_MOVE; }
-	inline boolean isMirrored() { return pCurrentState->mirrored; }
+	inline bool isInches() { return pCurrentState->units == INCH; }
+	inline bool isFast() { return pCurrentState->moveSpeed == FASTEST; }
+	inline bool isRelative() { return pCurrentState->moveType == RELATIVE_MOVE; }
+	inline bool isMirrored() { return pCurrentState->mirrored; }
 	inline Position<double> offsets() { return pCurrentState->offsets; }
 
 private:

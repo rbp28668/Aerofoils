@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 struct CutterConfig;
 class CCutterDlg;
+class Cutter;
 
 // CConfigDialog dialog
 

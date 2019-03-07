@@ -37,6 +37,7 @@ public:
 	virtual ~CWindowsOutputDevice();
 
 	void setSelection(CPlotStructure* sel);
+	void setDrawMoves(bool drawMoves) { this->drawMoves = drawMoves; }
 
 	// COutputDevice
 	virtual void MoveTo(int iStream, const PointT& pt);
@@ -44,6 +45,8 @@ public:
 	virtual void Label(int iStream, const char* psz);
 	virtual void Home();
 	virtual void Flush();
+	virtual PointT position(int iStream);
+
 
 	virtual void startObject(CPlotStructure*);
 	virtual void endObject(CPlotStructure*);
@@ -58,6 +61,8 @@ private:
 	CPlotStructure* selected;
 	CPen* penGrey;
 	CPen* penBlack;
+	bool drawMoves;
+
 };
 
 #endif // !defined(AFX_WINDOWSOUTPUTDEVICE_H__D83773A4_BA49_11D6_AF75_002018BA082E__INCLUDED_)

@@ -219,19 +219,36 @@
     </Bscmake>
     <Lib>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Debug\Kernel.lib</OutputFile>
+      <OutputFile>$(OutDir)\Kernel.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aerofoil.cpp" />
+    <ClCompile Include="Bounds.cpp" />
+    <ClCompile Include="CNCConnectionOutputDevice.cpp" />
+    <ClCompile Include="CNCSocket.cpp" />
+    <ClCompile Include="Cut.cpp" />
     <ClCompile Include="Cutpath.cpp" />
+    <ClCompile Include="CutStructure.cpp" />
     <ClCompile Include="Drivers\DXFOutputDevice.cpp" />
     <ClCompile Include="Drivers\LASERJET.CPP" />
     <ClCompile Include="Drivers\Postscript.cpp" />
+    <ClCompile Include="DummyCutter.cpp" />
+    <ClCompile Include="DXFObject.cpp" />
+    <ClCompile Include="DXFObjectCutter.cpp" />
+    <ClCompile Include="DXFParser.cpp" />
     <ClCompile Include="Ellipse.cpp" />
+    <ClCompile Include="EllipseCutter.cpp" />
     <ClCompile Include="EllipseFlags.cpp" />
     <ClCompile Include="EllipsePair.cpp" />
     <ClCompile Include="EllipsePlotter.cpp" />
+    <ClCompile Include="GCodeInterpreter.cpp" />
+    <ClCompile Include="GCodeOutputDevice.cpp" />
+    <ClCompile Include="GCodeOutputFile.cpp" />
+    <ClCompile Include="GCodeProgram.cpp" />
+    <ClCompile Include="GCodeSnippet.cpp" />
+    <ClCompile Include="GCodeSnippetCutter.cpp" />
+    <ClCompile Include="HomeCutter.cpp" />
     <ClCompile Include="KernelError.cpp" />
     <ClCompile Include="ObjectSerializer.cpp" />
     <ClCompile Include="OutputDevice.cpp" />
@@ -240,6 +257,8 @@
     <ClCompile Include="PlotFlags.cpp" />
     <ClCompile Include="Plotfoil.cpp" />
     <ClCompile Include="PlotStructure.cpp" />
+    <ClCompile Include="PlottingCutter.cpp" />
+    <ClCompile Include="PointCutter.cpp" />
     <ClCompile Include="PointPlotter.cpp" />
     <ClCompile Include="PointStructure.cpp" />
     <ClCompile Include="PointT.cpp" />
@@ -253,31 +272,54 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aerofoil.h" />
+    <ClInclude Include="Bounds.h" />
+    <ClInclude Include="CNCConnectionOutputDevice.h" />
+    <ClInclude Include="CNCSocket.h" />
+    <ClInclude Include="Cut.h" />
     <ClInclude Include="Cutpath.h" />
+    <ClInclude Include="CutStructure.h" />
+    <ClInclude Include="Cutter.h" />
     <ClInclude Include="Drivers\DXFOutputDevice.h" />
     <ClInclude Include="Drivers\LASERJET.H" />
     <ClInclude Include="Drivers\Postscript.h" />
+    <ClInclude Include="DummyCutter.h" />
+    <ClInclude Include="DXFObject.h" />
+    <ClInclude Include="DXFObjectCutter.h" />
+    <ClInclude Include="DXFParser.h" />
     <ClInclude Include="Ellipse.h" />
+    <ClInclude Include="EllipseCutter.h" />
     <ClInclude Include="EllipseFlags.h" />
     <ClInclude Include="EllipsePair.h" />
     <ClInclude Include="EllipsePlotter.h" />
+    <ClInclude Include="GCodeInterpreter.h" />
+    <ClInclude Include="GCodeOutputDevice.h" />
+    <ClInclude Include="GCodeOutputFile.h" />
+    <ClInclude Include="GCodeProgram.h" />
+    <ClInclude Include="GCodeSnippet.h" />
+    <ClInclude Include="GCodeSnippetCutter.h" />
+    <ClInclude Include="HomeCutter.h" />
     <ClInclude Include="KernelError.h" />
     <ClInclude Include="ObjectSerializer.h" />
     <ClInclude Include="OutputDevice.h" />
     <ClInclude Include="ParametricCurve2D.h" />
+    <ClInclude Include="ParserContext.h" />
     <ClInclude Include="Plot.h" />
     <ClInclude Include="PlotCommonImpl.h" />
     <ClInclude Include="PlotFlags.h" />
     <ClInclude Include="Plotfoil.h" />
     <ClInclude Include="PlotStructure.h" />
+    <ClInclude Include="PlottingCutter.h" />
+    <ClInclude Include="PointCutter.h" />
     <ClInclude Include="PointPlotter.h" />
     <ClInclude Include="PointStructure.h" />
     <ClInclude Include="PointT.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="RectT.h" />
     <ClInclude Include="Spar.h" />
     <ClInclude Include="Spline.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="trim.h" />
     <ClInclude Include="UIProxy.h" />
     <ClInclude Include="Wing.h" />
   </ItemGroup>

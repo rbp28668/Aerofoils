@@ -14,9 +14,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>.
+
 */
+
+
 // CutterSimulationOutputDevice.h: interface for the CCutterSimulationOutputDevice class.
-//
+// CutterSimulationOutputDevice simlates the movement of cutters over time to help
+// debug issues with cutter setup.
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_CUTTERSIMULATIONOUTPUTDEVICE_H__E1094EC3_C71D_11D6_9558_00047660C89A__INCLUDED_)
@@ -42,6 +46,7 @@ public:
 	virtual void Label(int iStream, const char* psz);
 	virtual void Home();
 	virtual void Flush();
+	virtual PointT position(int iStream) { return PointT(); }
 
 	virtual void startObject(CPlotStructure*);
 	virtual void endObject(CPlotStructure*);

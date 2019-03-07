@@ -17,9 +17,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "Cutter.h"
-#include "Position.h"
-
+#include "../Kernel/Position.h"
+#include "../Kernel/Cutter.h"
 class CutterHardware;
 
 class CNCFoamCutter : public Cutter {
@@ -41,7 +40,7 @@ class CNCFoamCutter : public Cutter {
 
 	CutterHardware* pHardware;
 	double feedRate;		// desired feedrate in mm per sec.
-	boolean feedRateError;  // set true if not able to meet set feedrate.
+	bool feedRateError;  // set true if not able to meet set feedrate.
 
 	// Parameters for calculating motor position from a given position on the edges]
 	// of the foam block.  set up by calling updateBlockInfo()
@@ -83,7 +82,7 @@ public:
 	virtual double getFeedRate();
 	virtual void setFeedRate(double feedRate);
 	// Set if we can't achieve desired feed rate.
-	virtual boolean hasFeedRateError();
+	virtual bool hasFeedRateError();
 	virtual void resetFeedRateError();
 
 	virtual Position<double> getCurrentPosition();// { return currentPosition; }

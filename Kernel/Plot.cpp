@@ -67,19 +67,7 @@ CPlot::CPlot()
 
 CPlot::~CPlot()
 {
-//	for(WINGS::iterator wi = wings.begin();
-//	wi != wings.end();
-//	++wi)
-//	{
-//		delete (*wi);
-//	}
-//
-//	for(ELLIPSES::iterator ei = ellipses.begin();
-//	ei != ellipses.end();
-//	++ei)
-//	{
-//		delete (*ei);
-//	}
+
 
 	for(STRUCTURES::iterator si = structures.begin();
 	si != structures.end();
@@ -105,9 +93,9 @@ void CPlot::plot(COutputDevice& pdev)
 	++iter)
 	{
 		CPlotStructure* pps = *iter;
-		pdev.startObject(pps);
+		pdev.startObject(pps->getDescriptiveText().c_str());
 		pps->plot(&pdev);
-		pdev.endObject(pps);
+		pdev.endObject(pps->getDescriptiveText().c_str());
 	}
 	pdev.Flush();
 	pdev.endPlot();
@@ -153,13 +141,6 @@ CPathPlotter* CPlot::addPathPlotter(CWing* pWing)
 	return pp;
 }
 
-CPathCutter* CPlot::addPathCutter(CWing* pWing)
-{
-	assert(this);
-	CPathCutter* ppc = new CPathCutter(pWing);
-	plot_structures.push_back(ppc);
-	return ppc;
-}
 
 CEllipsePlotter* CPlot::addEllipsePlotter(CEllipsePair* pep)
 {
@@ -246,24 +227,6 @@ void CPlot::serializeTo(CObjectSerializer& os)
 {
 	os.startSection("plot",this);
 
-//	os.startCollection("wings",wings.size());
-//	for(WINGS::iterator wi = wings.begin();
-//	wi != wings.end();
-//	++wi)
-//	{
-//		(*wi)->serializeTo(os);
-//	}
-//	os.endCollection();
-//
-//	os.startCollection("ellipses",ellipses.size());
-//	for(ELLIPSES::iterator ei = ellipses.begin();
-//	ei != ellipses.end();
-//	++ei)
-//	{
-//		(*ei)->serializeTo(os);
-//	}
-//	os.endCollection();
-
 	os.startCollection("structures", (int)structures.size());
 	for(STRUCTURES::iterator si = structures.begin();
 	si != structures.end();
@@ -282,20 +245,6 @@ void CPlot::serializeTo(CObjectSerializer& os)
 	}
 	os.endCollection();
 
-	// Need to write these out after the plot structures as
-	// plot-points don't have any underlying structure per se.
-	// Hence when we read them back, we've got to have already
-	// read the plot structures (which include the plot points)
-	// so we can reference them and set up the list.
-//	os.startCollection("points",points.size());
-//	for(PLOT_POINTS::iterator ppi = points.begin();
-//	ppi != points.end();
-//	++ppi)
-//	{
-//		os.writeReference("point",(*ppi));
-//	}
-//	os.endCollection();
-
 	os.endSection();
 }
 
@@ -305,23 +254,6 @@ void CPlot::serializeFrom(CObjectSerializer& os)
 
 	os.startReadSection("plot",this);
 
-//	int count = os.startReadCollection("wings");
-//	for(int i=0; i<count; ++i)
-//	{
-//		CWing* pWing = new CWing();
-//		pWing->serializeFrom(os);
-//		wings.push_back(pWing);
-//	}
-//	os.endReadCollection();
-//
-//	count = os.startReadCollection("ellipses");
-//	for(i=0; i<count; ++i)
-//	{
-//		CEllipsePair* pep = new CEllipsePair();
-//		pep->serializeFrom(os);
-//		ellipses.push_back(pep);
-//	}
-//	os.endReadCollection();
 
 	int count = os.startReadCollection("structures");
 	for(int i=0; i<count; ++i)
@@ -341,19 +273,6 @@ void CPlot::serializeFrom(CObjectSerializer& os)
 	}
 	os.endReadCollection();
 
-	// set up the plot points list now that the plot structures
-	// have been read in.
-//	if(os.ifExists("points"))
-//	{
-//		count = os.startReadCollection("points");
-//		for(i=0; i<count; ++i)
-//		{
-//			CPlotPoint* ppp = static_cast<CPlotPoint*>(os.readReference("point"));
-//			points.push_back(ppp);
-//
-//		}
-//		os.endReadCollection();
-//	}
 
 	os.endReadSection();
 

@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #ifndef _CUTPATH_H
 #define _CUTPATH_H
 
+#include "CutStructure.h"
 #include "PlotCommonImpl.h"
 #include "PlotFlags.h"
 
@@ -28,7 +29,7 @@ class COutputDevice;
 class CWing;
 class CObjectSerializer;
 
-class CPathCutter  : public CPlotCommonImpl
+class CPathCutter  : public CutStructure, private CPlotCommonImpl
 {
 
 public:
@@ -39,10 +40,11 @@ public:
 
 	float set_tool_offset(float fNewOffset);
 	float get_tool_offset(void);
-	void set_root_side(int left);
 
-	virtual void plot(COutputDevice* pdev);
+	virtual void cut(COutputDevice* pdev, double toolOffset);
 	virtual std::string getDescriptiveText() const;
+	virtual CStructure* getStructure();
+	virtual const CStructure* getStructure() const;
 
 	virtual void serializeTo(CObjectSerializer& os);
 	virtual void serializeFrom(CObjectSerializer& os);
@@ -57,7 +59,7 @@ private:
 	  int   idx;            /* index (mainly for spars) */
 	  float ru;             /* root U for this intercept */
 	  float tu;             /* tip .... */
-	  void (CPathCutter::*fn)(INTERCEPT*, FRAME*);   /* run this fn at the intercept */
+	  void (CPathCutter::*fn)(COutputDevice* pdev, INTERCEPT*, FRAME*);   /* run this fn at the intercept */
 	  void* data;           /* and pass it this ptr. */
 	};
 
@@ -74,12 +76,12 @@ private:
 
 
 	void find_forward_PointT(const CAerofoil& foil, float *u);
-	void plot_segment(const CWing& wing,INTERCEPT* start, INTERCEPT* finish, float delta);
+	void plot_segment(COutputDevice* pdev, const CWing& wing,INTERCEPT* start, INTERCEPT* finish, float delta);
 	void sort_intercepts(void);
 
-	void cut_le(INTERCEPT* /*icept*/,FRAME* frame);
-	void cut_te(INTERCEPT* icept,FRAME* frame);
-	void cut_spar(INTERCEPT* icept,FRAME* frame);
+	void cut_le(COutputDevice* pdev, INTERCEPT* /*icept*/,FRAME* frame);
+	void cut_te(COutputDevice* pdev, INTERCEPT* icept,FRAME* frame);
+	void cut_spar(COutputDevice* pdev, INTERCEPT* icept,FRAME* frame);
 
 	void set_le_intercept(FRAME* frame);
 	void set_te_intercept(FRAME* frame);
@@ -91,6 +93,7 @@ private:
 	bool blToolOffsetSet;
 	INTERCEPT ilist[32];
 	int icount;
+	CWing* pWing;
 };
 
 #endif

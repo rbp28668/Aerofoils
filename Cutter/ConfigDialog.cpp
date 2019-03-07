@@ -18,14 +18,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "stdafx.h"
-#include "Cutter.h"
 #include "ConfigDialog.h"
 #include "afxdialogex.h"
 #include "resource.h"
 #include "CutterConfig.h"
 #include "ComPortEnumerator.h"
 #include "CutterDlg.h"
-
+#include "../Kernel/Cutter.h"
 // CConfigDialog dialog
 
 IMPLEMENT_DYNAMIC(CConfigDialog, CDialogEx)

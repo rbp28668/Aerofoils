@@ -40,11 +40,13 @@ CWindowsOutputDevice::CWindowsOutputDevice(float sx, float sy, CDC* pdc, float z
 , penBlack(0)
 , penGrey(0)
 {
-	
+	penGrey = new CPen(PS_SOLID, 0, RGB(128, 128, 128));
+	penBlack = new CPen(PS_SOLID, 0, RGB(0,0,0));
 }
 
 CWindowsOutputDevice::~CWindowsOutputDevice()
 {
+	delete penBlack;
 	delete penGrey;
 }
 
@@ -53,7 +55,6 @@ void CWindowsOutputDevice::setSelection(CPlotStructure* sel)
 	selected = sel;
 	if(sel)
 	{
-		penGrey = new CPen(PS_SOLID,0,RGB(128,128,128));
 		//penBlack = plotDC->SelectObject(penGrey);
 	}
 }
@@ -64,10 +65,20 @@ void CWindowsOutputDevice::MoveTo(int iStream, const PointT& pt)
 	assert(this);
 	assert(iStream == 0 || iStream == 1);
 
+	if (drawMoves) {
+		plotDC->SelectObject(penGrey);
+		if (iStream != lastStream)	// then device pos incorrect
+		{
+			plotDC->MoveTo(map.toDevice(last[iStream]));
+		}
+		plotDC->LineTo(map.toDevice(pt));
+	}
+	else {
+		plotDC->MoveTo(map.toDevice(pt));
+	}
 	lastStream = iStream;
 	last[iStream] = pt;
 
-	plotDC->MoveTo(map.toDevice(pt));
 }
 
 void CWindowsOutputDevice::LineTo(int iStream, const PointT& pt)
@@ -83,6 +94,10 @@ void CWindowsOutputDevice::LineTo(int iStream, const PointT& pt)
 	lastStream = iStream;
 	last[iStream] = pt;
 
+	if (drawMoves) {
+		plotDC->SelectObject(penBlack);
+	}
+
 	plotDC->LineTo(map.toDevice(pt));
 }
 
@@ -92,6 +107,9 @@ void CWindowsOutputDevice::Label(int iStream, const char* psz)
 	assert(iStream == 0 || iStream == 1);
 
 	POINT pt = map.toDevice(last[iStream]);
+	if (drawMoves) {
+		plotDC->SelectObject(penBlack);
+	}
 	plotDC->TextOut(pt.x, pt.y ,CString(psz));
 }
 
@@ -106,6 +124,13 @@ void CWindowsOutputDevice::Home()
 void CWindowsOutputDevice::Flush()
 {
 	assert(this);
+}
+
+PointT CWindowsOutputDevice::position(int iStream)
+{
+	assert(this);
+	assert(iStream == 0 || iStream == 1);
+	return last[iStream];
 }
 
 

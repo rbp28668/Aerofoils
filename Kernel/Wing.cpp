@@ -158,7 +158,7 @@ void CWing::serializeTo(CObjectSerializer& os)
 	
 	flags.serializeTo(os);
 
-	os.startCollection("spars",spars.size());
+	os.startCollection("spars",(int)spars.size());
 	for(SPARS::iterator iter = spars.begin();
 	iter != spars.end();
 	++iter)

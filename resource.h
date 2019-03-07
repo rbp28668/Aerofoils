@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by Aerofoil.rc
 //
 #define IDD_ABOUTBOX                    100
@@ -10,6 +10,7 @@
 #define IDR_MAINFRAME                   128
 #define IDR_AEROFOTYPE                  129
 #define IDD_SECTION_POS                 130
+#define IDR_CUTTERTYPE                  130
 #define IDD_EDIT_WING                   131
 #define IDD_EDIT_SECTION                132
 #define IDD_WING_FLAGS                  133
@@ -28,6 +29,11 @@
 #define IDD_CNC_CONNECTION              145
 #define IDD_ELLIPSE_FLAGS               146
 #define IDD_BACKGROUND_GRID             148
+#define IDR_CUTTER_POPUPS               149
+#define IDD_CUT_TRANSFORM               153
+#define IDD_GCODE_EDIT                  155
+#define IDD_WING_FLAGS1                 156
+#define IDD_WING_CUT_FLAGS              156
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -117,10 +123,20 @@
 #define IDC_RAD_HORIZ_ANY               1080
 #define IDC_RAD_HORIZ_4                 1081
 #define IDC_CHK_VERT                    1082
+#define IDC_EDT_ROOT_XOFFSET            1082
 #define IDC_EDT_VERT_MM                 1083
+#define IDC_EDT_ROOT_YOFFSET            1083
 #define IDC_RAD_VERT_3                  1084
+#define IDC_EDT_TIP_XOFFSET             1084
 #define IDC_RAD_VERT_4                  1085
+#define IDC_EDT_TIP_YOFFSET             1085
 #define IDC_RAD_VERT_ANY                1086
+#define IDC_BTN_COPY                    1086
+#define IDC_EDT_GCODE                   1087
+#define IDC_EDT_ERROR                   1088
+#define IDC_CHK_CUT_LE                  1089
+#define IDC_CHK_CUT_TE                  1090
+#define IDC_CHK_CUT_SPARS               1091
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -163,15 +179,76 @@
 #define ID_EDIT_DELETESTRUCTURE         32811
 #define ID_EDIT_PLOT_FLAGS              32813
 #define ID_FILE_SETGRID                 32814
+#define ID_Menu                         32815
+#define ID_GCODEOUTPOUT_ID              32816
+#define ID_FILE_GCODE                   32817
+#define ID_STRUCTURE_NEWWING            32818
+#define ID_STRUCTURE_NEWELLIPSE         32819
+#define ID_STRUCTURE_NEWPOINT           32820
+#define ID_CUTTING_CORE                 32821
+#define ID_CUTTING_ELLIPSE              32822
+#define ID_CUTTING_POINT                32823
+#define ID_CUTTING_G                    32824
+#define ID_CUTTING_DXF                  32825
+#define ID_CUTTING_HOME                 32826
+#define ID_CUTTING_GCODE                32827
+#define ID_WING_EDIT32828               32828
+#define ID_WING_DELETE                  32829
+#define ID_ELLIPSE_EDIT32830            32830
+#define ID_ELLIPSE_DELETE               32831
+#define ID_POINT_EDIT32832              32832
+#define ID_POINT_DELETE                 32833
+#define ID_Menu32834                    32834
+#define ID_WING_NEWCORE                 32835
+#define ID_ELLIPSE_NEWCUT               32836
+#define ID_POINT_NEWCUT                 32837
+#define ID_DXF_NEWCUT                   32838
+#define ID_DXF_DELETE                   32839
+#define ID_GCODE_EDIT                   32840
+#define ID_GCODE_NEWCUT                 32841
+#define ID_GCODE_DELETE                 32842
+#define ID_WINGCUT_EDIT                 32843
+#define ID_WINGCUT_D                    32844
+#define ID_ELLIPSECUT_EDIT              32845
+#define ID_ELLIPSECUT_DELETE            32846
+#define ID_POINTCUT_EDIT                32847
+#define ID_POINTCUT_DELETE              32848
+#define ID_GCODECUT_EDIT                32849
+#define ID_GCODECUT_DELETE              32850
+#define ID_DXFCUT_EDIT                  32851
+#define ID_DXFCUT_DELETE                32852
+#define ID_HOMECUT_DELETE               32853
+#define ID_STRUCTURE_NEWGCODE           32854
+#define ID_STRUCTURE_NEWDXF             32855
+#define ID_WINGCUT_MOVEUP               32856
+#define ID_WINGCUT_MOVEDOWN             32857
+#define ID_ELLIPSECUT_MOVEUP            32858
+#define ID_ELLIPSECUT_MOVEDOWN          32859
+#define ID_POINTCUT_MOVEUP              32860
+#define ID_POINTCUT_MOVEDOWN            32861
+#define ID_GCODECUT_MOVEUP              32862
+#define ID_GCODECUT_MOVEDOWN            32863
+#define ID_DXFCUT_MOVEUP                32864
+#define ID_DXFCUT_MOVEDOWN              32865
+#define ID_HOMECUT_MOVEUP               32866
+#define ID_HOMECUT_MOVEDOWN             32867
+#define ID_CUT_MOVEUP                   32868
+#define ID_CUT_MOVEDOWN                 32869
+#define ID_WINGCUT_TRANSFORM            32870
+#define ID_CUT_TRANSFORM                32871
+#define ID_ELLIPSECUT_TRANSFORM         32872
+#define ID_POINTCUT_TRANSFORM           32873
+#define ID_VIEW_DRAWMOVES               32874
+#define ID_WING_PLOTFLAGS               32875
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        149
-#define _APS_NEXT_COMMAND_VALUE         32815
-#define _APS_NEXT_CONTROL_VALUE         1082
-#define _APS_NEXT_SYMED_VALUE           106
+#define _APS_NEXT_RESOURCE_VALUE        158
+#define _APS_NEXT_COMMAND_VALUE         32876
+#define _APS_NEXT_CONTROL_VALUE         1092
+#define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

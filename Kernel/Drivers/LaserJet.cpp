@@ -124,6 +124,13 @@ void CLaserJetOutputDevice::Flush()
 	assert(this);
 }
 
+PointT CLaserJetOutputDevice::position(int iStream)
+{
+	assert(this);
+	assert(iStream == 0 || iStream == 1);
+	return last[iStream];
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

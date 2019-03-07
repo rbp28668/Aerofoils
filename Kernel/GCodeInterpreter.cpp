@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
 #include <assert.h>
 #include <ctype.h>
 #include "Cutter.h"
@@ -59,14 +58,27 @@ void GCodeInterpreter::setCutter(Cutter * pCutter)
 	this->pCutter = pCutter;
 }
 
+void GCodeInterpreter::unsetCutter()
+{
+}
+
 void GCodeInterpreter::setContext(ParserContext* pContext) {
 	assert(this);
 	assert(pContext);
 	this->pContext = pContext;
 }
 
-ParserContext * GCodeInterpreter::getContext()
+void GCodeInterpreter::unsetContext()
 {
+	assert(this);
+	assert(pContext); // assume error if not already set.
+	pContext = 0;
+}
+
+ParserContext * GCodeInterpreter::getContext() const
+{
+	assert(this);
+	assert(pContext);
 	return pContext;
 }
 
@@ -82,10 +94,12 @@ int GCodeInterpreter::process(const std::string & line)
 	while (idx < length) {
 		char ch = line[idx++];
 
-		switch (toupper(ch)) {
-		case ' ':
+		if (isspace(ch)) {
 			idx = skipSpaces(line, idx, length);
-			break;
+			continue;
+		}
+
+		switch (toupper(ch)) {
 		case '(':
 			idx = skipComment(line, idx, length);
 			break;
