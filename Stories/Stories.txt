@@ -1,0 +1,24 @@
+
+
+As a user I want to be able to open/save cutter files so that I can save a cut and reload it.
+
+As a user I want to be able to delete a structure and have all dependent cuts removed.
+As a user I want to have labels on items in the cut tree updated so that the labels reflect the state of the objects.
+As a user I want to be able to move items up and down the cut list so that I can control the order of cutting.
+As a user I want to edit plot flags on a wing so that the system will plot leading edge, trailing edge and spars.
+
+As a user I want to be able to plot ellipse pairs so that I can cut fuselages etc.
+
+As a user I want to include GCode snippets in the cut and have them passed through to the output so that I can control things directly
+As a user I want to see GCode snippets plotted on the screen starting at the current position so that I can see the cut path when using gcode.
+As a user I want to have GCode validated when I enter it so that I am confident the gcode is correct.
+
+As a user I want to see scroll bars in the cut display so that I can see the complete display.
+As a user I want to see move-to commands displayed in a different colour (e.g. grey) so that I can distinguish between cuts proper and moving between cuts.
+As a user I want to have the zoom dialog work so that I can zoom in and look at detail or get the big picture view.
+As a user I want to be able to turn a background grid on or off on the cut display so that I can easily see positions of items.
+
+Bug - if there is a port preselected in the cutter and the hardware isn't connected the program aborts (exit 3)
+Bug - First U,V coordinate has invalid values.
+Bug - >>> in transform dialog doesn't work.
+Bug - cut view not redrawn after edit.

@@ -26,7 +26,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-static CObjectFactory<CWing> factory("wing");
+const std::string CWing::TYPE("wing");
+static CObjectFactory<CWing> factory(CWing::TYPE.c_str());
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -100,6 +101,11 @@ string CWing::getDescriptiveText() const
 	return ost.str();
 }
 
+std::string CWing::getType() const
+{
+	return TYPE;
+}
+
 const CSpar* CWing::getSpar(int idx) const
 {
 	assert(this);
@@ -144,7 +150,7 @@ void CWing::deleteSpar(const CSpar* spar)
 void CWing::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("wing",this);
+	os.startSection(TYPE.c_str(),this);
 	os.write("le",le);
 	os.write("te",te);
 	os.write("span",span);
@@ -173,7 +179,7 @@ void CWing::serializeTo(CObjectSerializer& os)
 void CWing::serializeFrom(CObjectSerializer& os)
 {
 	assert(this);
-	os.startReadSection("wing",this);
+	os.startReadSection(TYPE.c_str(),this);
 	os.read("le",le);
 	os.read("te",te);
 	os.read("span",span);

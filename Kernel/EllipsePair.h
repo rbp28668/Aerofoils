@@ -35,11 +35,14 @@ class CObjectSerializer;
 class CEllipsePair : public CStructure
 {
 public:
+	static const std::string TYPE;
+
 	CEllipsePair();
 	explicit CEllipsePair(const CEllipsePair& pair);
 	virtual ~CEllipsePair();
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 
 	const CEllipse* getFirst() const {return &first;}
 	CEllipse* getFirst() {return &first;}

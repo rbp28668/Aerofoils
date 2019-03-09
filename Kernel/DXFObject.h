@@ -35,6 +35,9 @@ class DXFObject :
 	std::vector<DXFItem*> items;
 
 public:
+	static const std::string TYPE;
+
+	DXFObject();
 	DXFObject(const char* pszPath);
 	~DXFObject();
 
@@ -42,6 +45,7 @@ public:
 	virtual void serializeFrom(CObjectSerializer& os);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 
 	// DXFItemReceiver 
 	virtual void add(DXFItem* item);

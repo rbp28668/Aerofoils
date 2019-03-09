@@ -230,6 +230,7 @@
     <ClCompile Include="Cut.cpp" />
     <ClCompile Include="Cutpath.cpp" />
     <ClCompile Include="CutStructure.cpp" />
+    <ClCompile Include="CutterGeometry.cpp" />
     <ClCompile Include="Drivers\DXFOutputDevice.cpp" />
     <ClCompile Include="Drivers\LASERJET.CPP" />
     <ClCompile Include="Drivers\Postscript.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="Cutpath.h" />
     <ClInclude Include="CutStructure.h" />
     <ClInclude Include="Cutter.h" />
+    <ClInclude Include="CutterGeometry.h" />
     <ClInclude Include="Drivers\DXFOutputDevice.h" />
     <ClInclude Include="Drivers\LASERJET.H" />
     <ClInclude Include="Drivers\Postscript.h" />

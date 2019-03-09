@@ -149,6 +149,9 @@
     <ClCompile Include="PlottingCutter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CutterGeometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aerofoil.h">
@@ -302,6 +305,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlottingCutter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CutterGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

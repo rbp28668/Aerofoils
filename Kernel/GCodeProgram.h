@@ -22,6 +22,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ParserContext.h"
 
 class GCodeInterpreter;
+class CObjectSerializer;
 
 class GCodeProgram :
 	public ParserContext
@@ -77,5 +78,8 @@ public:
 	bool hasError();
 	std::string popError();
 	
+	// Serializing
+	void serializeTo(CObjectSerializer & os);
+	void serializeFrom(CObjectSerializer & os);
 };
 

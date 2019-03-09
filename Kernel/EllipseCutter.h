@@ -27,6 +27,8 @@ class EllipseCutter :
 	CEllipsePair* pEllipses;
 
 public:
+	static const std::string TYPE;
+
 	explicit EllipseCutter();
 	EllipseCutter(CEllipsePair * pep);
 	~EllipseCutter();
@@ -34,8 +36,11 @@ public:
 	virtual void cut(COutputDevice *pdev, double toolOffset);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
 

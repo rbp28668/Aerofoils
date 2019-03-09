@@ -29,6 +29,8 @@ class PointCutter :
 	bool fast;
 
 public:
+	static const std::string TYPE;
+
 	explicit PointCutter();
 	PointCutter(CPointStructure* pps);
 	~PointCutter();
@@ -38,7 +40,7 @@ public:
 
 	virtual void cut(COutputDevice *pdev, double toolOffset);
 	virtual std::string getDescriptiveText() const;
-
+	virtual std::string getType() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 

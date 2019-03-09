@@ -19,6 +19,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "HomeCutter.h"
 #include "OutputDevice.h"
+#include "ObjectSerializer.h"
+
+const std::string HomeCutter::TYPE("homeCutter");
+static CObjectFactory<HomeCutter> factory(HomeCutter::TYPE.c_str());
 
 HomeCutter::HomeCutter()
 {
@@ -41,6 +45,11 @@ std::string HomeCutter::getDescriptiveText() const
 	return std::string("Home");
 }
 
+std::string HomeCutter::getType() const
+{
+	return TYPE;
+}
+
 CStructure * HomeCutter::getStructure()
 {
 	return nullptr;
@@ -49,4 +58,16 @@ CStructure * HomeCutter::getStructure()
 const CStructure * HomeCutter::getStructure() const
 {
 	return nullptr;
+}
+
+void HomeCutter::serializeTo(CObjectSerializer & os)
+{
+	os.startSection(TYPE.c_str(), this);
+	os.endSection();
+}
+
+void HomeCutter::serializeFrom(CObjectSerializer & os)
+{
+	os.startReadSection(TYPE.c_str(), this);
+	os.endReadSection();
 }

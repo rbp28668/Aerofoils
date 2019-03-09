@@ -37,6 +37,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 class CWing : public CStructure
 {
 public:
+
+	static const std::string TYPE;
+
 	CWing(const char* rootSection, float rootThickness, const char* tipSection, float tipThickness);
 	explicit CWing(const CWing& rhs);
 	explicit CWing();
@@ -46,6 +49,7 @@ public:
 	CWing& operator = (const CWing& rhs);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 
 	const CAerofoil* getRoot() const {return &root;}
 	CAerofoil* getRoot() {return &root;}

@@ -23,7 +23,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ObjectSerializer.h"
 #include "OutputDevice.h"
 
-static CObjectFactory<PointCutter> factory("pointCutter");
+const std::string PointCutter::TYPE("pointCutter");
+static CObjectFactory<PointCutter> factory(PointCutter::TYPE.c_str());
 
 PointCutter::PointCutter()
 	: pStructure(0)
@@ -75,6 +76,11 @@ std::string PointCutter::getDescriptiveText() const
 	return ss.str();
 }
 
+std::string PointCutter::getType() const
+{
+	return TYPE;
+}
+
 CStructure* PointCutter::getStructure()
 {
 	assert(this);
@@ -93,7 +99,7 @@ void PointCutter::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
 	assert(pStructure);
-	os.startSection("pointCutter", this);
+	os.startSection(TYPE.c_str(), this);
 	CutStructure::serializeTo(os);
 	os.writeReference("structure", pStructure);
 	os.endSection();
@@ -102,7 +108,7 @@ void PointCutter::serializeTo(CObjectSerializer& os)
 void PointCutter::serializeFrom(CObjectSerializer& os)
 {
 	assert(this);
-	os.startReadSection("pointCutter", this);
+	os.startReadSection(TYPE.c_str(), this);
 	CutStructure::serializeFrom(os);
 	pStructure = static_cast<CPointStructure*>(os.readReference("structure"));
 	os.endReadSection();

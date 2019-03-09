@@ -32,6 +32,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 class CPointStructure : public CStructure  
 {
 public:
+	static const std::string TYPE;
+
 	CPointStructure();
 	explicit CPointStructure(const CPointStructure& point);
 	virtual ~CPointStructure();
@@ -40,6 +42,7 @@ public:
 	virtual void serializeFrom(CObjectSerializer& os);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 
 	PointT getRoot() const {return root;}
 	PointT getTip() const {return tip;}

@@ -22,6 +22,17 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "GCodeProgram.h"
 #include "GCodeInterpreter.h"
 #include "DummyCutter.h"
+#include "ObjectSerializer.h"
+
+const std::string GCodeSnippet::TYPE("gcodeSnippet");
+static CObjectFactory<GCodeSnippet> factory(GCodeSnippet::TYPE.c_str());
+
+GCodeSnippet::GCodeSnippet()
+{
+	assert(this);
+
+	pProgram = new GCodeProgram();
+}
 
 GCodeSnippet::GCodeSnippet(const char* content)
 {
@@ -40,15 +51,29 @@ GCodeSnippet::~GCodeSnippet()
 
 void GCodeSnippet::serializeTo(CObjectSerializer & os)
 {
+	os.startSection(TYPE.c_str(), this);
+	CStructure::serializeTo(os);
+	pProgram->serializeTo(os);
+	os.endSection();
 }
 
 void GCodeSnippet::serializeFrom(CObjectSerializer & os)
 {
+	os.startReadSection(TYPE.c_str(), this);
+	CStructure::serializeFrom(os);
+	pProgram->serializeFrom(os);
+	os.endReadSection();
+
 }
 
 std::string GCodeSnippet::getDescriptiveText() const
 {
 	return std::string("GCode Snippet");
+}
+
+std::string GCodeSnippet::getType() const
+{
+	return TYPE;
 }
 
 void GCodeSnippet::programText(std::string& str) const

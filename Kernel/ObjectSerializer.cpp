@@ -156,6 +156,12 @@ void CObjectSerializer::write(const char* name, int value)
 	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
 }
 
+void CObjectSerializer::write(const char * name, unsigned int value)
+{
+	assert(this);
+	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
+}
+
 // write a float
 void CObjectSerializer::write(const char* name, float value)
 {
@@ -186,7 +192,7 @@ void CObjectSerializer::write(const char* name, bool value)
 void CObjectSerializer::writeReference(const char* name, const void* pObject)
 {
 	assert(this);
-	*ps << "<" << name << ">" << (unsigned long long)pObject << "</" << name << ">" << endl;
+	*ps << "<" << name << ">" << (uintptr_t)pObject << "</" << name << ">" << endl;
 }
 
 // read an integer
@@ -197,6 +203,18 @@ void CObjectSerializer::read(const char* name, int& value)
 	if(element.compare(name) != 0)	
 	{
 		throw CSerializeException("Serialization - name mismatch reading integer");
+	}
+	*ps >> value;
+	endTag();
+}
+
+void CObjectSerializer::read(const char * name, unsigned int & value)
+{
+	assert(this);
+	string element = startTag();
+	if (element.compare(name) != 0)
+	{
+		throw CSerializeException("Serialization - name mismatch reading unsigned integer");
 	}
 	*ps >> value;
 	endTag();
@@ -282,7 +300,7 @@ void* CObjectSerializer::readReference(const char* name)
 		throw CSerializeException("Serialization - name mismatch reading reference");
 	}
 
-	unsigned long id;
+	uintptr_t id;
 	*ps >> id;
 
 	void* pObject = 0;

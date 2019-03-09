@@ -26,8 +26,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #define DELTA 0.1f   /* angle increment for plotting */
 #define PI 3.14159265358979323846264338
 
-static CObjectFactory<EllipseCutter> factory("ellipseCutter");
-
+const std::string EllipseCutter::TYPE("ellipseCutter");
+static CObjectFactory<EllipseCutter> factory(EllipseCutter::TYPE.c_str());
 
 
 EllipseCutter::EllipseCutter()
@@ -131,6 +131,11 @@ std::string EllipseCutter::getDescriptiveText() const
 	return pEllipses->getDescriptiveText();
 }
 
+std::string EllipseCutter::getType() const
+{
+	return TYPE;
+}
+
 CStructure * EllipseCutter::getStructure()
 {
 	return pEllipses;
@@ -139,4 +144,20 @@ CStructure * EllipseCutter::getStructure()
 const CStructure * EllipseCutter::getStructure() const
 {
 	return pEllipses;
+}
+
+void EllipseCutter::serializeTo(CObjectSerializer & os)
+{
+	os.startSection(TYPE.c_str(), this);
+	CutStructure::serializeTo(os);
+	os.writeReference("ellipseRef", pEllipses);
+	os.endSection();
+}
+
+void EllipseCutter::serializeFrom(CObjectSerializer & os)
+{
+	os.startReadSection(TYPE.c_str(), this);
+	CutStructure::serializeFrom(os);
+	pEllipses = static_cast<CEllipsePair*>(os.readReference("ellipseRef"));
+	os.endReadSection();
 }

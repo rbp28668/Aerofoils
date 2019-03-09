@@ -43,9 +43,8 @@ IMPLEMENT_DYNCREATE(CutterDoc, CDocument)
 CutterDoc::CutterDoc()
 	: cncHost("localhost")
 	, cncPort(8193)
-	, cncIsSetup(false) 
+	, cncIsSetup(false)
 {
-	setDocSize(500, 200);
 	grid.setHorizontalSize(10);
 	grid.setVerticalSize(10);
 	grid.enableHorizontal(true);
@@ -167,7 +166,11 @@ BOOL CutterDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	{
 		std::fstream ifs(lpszPathName, std::ios_base::in);
 		CObjectSerializer serializer(&ifs);
+		serializer.startReadSection("cutter", this);
+		grid.serializeFrom(serializer);
+		geometry.serializeFrom(serializer);
 		cut.serializeFrom(serializer);
+		serializer.endReadSection();
 	}
 	catch (CSerializeException& se)
 	{
@@ -193,7 +196,11 @@ BOOL CutterDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	{
 		std::fstream ofs(lpszPathName, std::ios_base::out);
 		CObjectSerializer serializer(&ofs);
+		serializer.startSection("cutter", this);
+		grid.serializeTo(serializer);
+		geometry.serializeTo(serializer);
 		cut.serializeTo(serializer);
+		serializer.endSection();
 	}
 	catch (...)
 	{
@@ -252,12 +259,9 @@ void CutterDoc::RedrawNow()
 	return;
 }
 
-void CutterDoc::setDocSize(float width, float height)
+void CutterDoc::geometryUpdated()
 {
 	assert(this);
-	size_x = width;
-	size_y = height;
-
 
 	POSITION pos = GetFirstViewPosition();
 	while (pos)

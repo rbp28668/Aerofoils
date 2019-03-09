@@ -19,6 +19,17 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "DXFObjectCutter.h"
 #include "DXFObject.h"
+#include "ObjectSerializer.h"
+
+const std::string DXFObjectCutter::TYPE("dxfObjectCutter");
+static CObjectFactory<DXFObjectCutter> factory(DXFObjectCutter::TYPE.c_str());
+
+DXFObjectCutter::DXFObjectCutter()
+	: pDxfObject(0)
+{
+	assert(this);
+}
+
 
 DXFObjectCutter::DXFObjectCutter(DXFObject* pdxf)
 	: pDxfObject(pdxf)
@@ -42,6 +53,11 @@ std::string DXFObjectCutter::getDescriptiveText() const
 	return std::string("DXF Object");
 }
 
+std::string DXFObjectCutter::getType() const
+{
+	return TYPE;
+}
+
 CStructure * DXFObjectCutter::getStructure()
 {
 	return pDxfObject;
@@ -50,4 +66,21 @@ CStructure * DXFObjectCutter::getStructure()
 const CStructure * DXFObjectCutter::getStructure() const
 {
 	return pDxfObject;
+}
+
+void DXFObjectCutter::serializeTo(CObjectSerializer & os)
+{
+	os.startSection(TYPE.c_str(), this);
+	CutStructure::serializeTo(os);
+	os.writeReference("dxfObjectRef", pDxfObject);
+	os.endSection();
+}
+
+void DXFObjectCutter::serializeFrom(CObjectSerializer & os)
+{
+	os.startReadSection(TYPE.c_str(), this);
+	CutStructure::serializeFrom(os);
+	pDxfObject = static_cast<DXFObject*>(os.readReference("dxfObjectRef"));
+	os.endReadSection();
+
 }

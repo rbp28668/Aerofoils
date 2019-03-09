@@ -24,6 +24,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 class CutStructure;
 class COutputDevice;
+class CObjectSerializer;
 
 struct Coordinates {
 	double x;
@@ -42,7 +43,8 @@ public:
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone() = 0;
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev) = 0;
-
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
 
 // Abstract class to be implemented by anything that uses the parser to 

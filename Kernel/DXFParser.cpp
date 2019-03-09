@@ -32,14 +32,15 @@ DXF Reference: https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-refer
 #include "DXFParser.h" 
 #include "CutStructure.h"
 #include "OutputDevice.h"
+#include "ObjectSerializer.h"
 
 DXFParser::DXFParser() {
-	ofs = new std::ofstream("E:/TEMP/dump.tmp");
+	//ofs = new std::ofstream("E:/TEMP/dump.tmp");
 }
 
 DXFParser::~DXFParser() {
-	ofs->close();
-	delete ofs;
+	//ofs->close();
+	//delete ofs;
 }
 
 class Arc : public DXFItem {
@@ -51,6 +52,9 @@ class Arc : public DXFItem {
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
+
 };
 
 class Circle : public DXFItem {
@@ -60,6 +64,8 @@ class Circle : public DXFItem {
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
 
 class Ellipse : public DXFItem {
@@ -72,6 +78,8 @@ class Ellipse : public DXFItem {
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
 
 class Line : public DXFItem {
@@ -81,6 +89,8 @@ public:
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
 
 class LWPolyLine : public DXFItem {
@@ -95,6 +105,8 @@ public:
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
 
 class Point : public DXFItem {
@@ -103,13 +115,33 @@ public:
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
 	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 };
+
+
+static CObjectFactory<Arc> arcFactory("dxfArc");
+static CObjectFactory<Circle> circleFactory("dxfCircle");
+static CObjectFactory<Ellipse> ellipseFactory("dxfEllipse");
+static CObjectFactory<Line> lineFactory("dxfLine");
+static CObjectFactory<LWPolyLine> lWPolyLineFactory("dxfLWPolyLine");
+static CObjectFactory<Point> pointFactory("dxfPoint");
+
 
 void DXFItem::add(int code, const std::string& value) {
 	switch (code) {
-	case 8:layer = value; break;
+	case 8: layer = value; break;
 	}
 }
+
+void DXFItem::serializeTo(CObjectSerializer & os) {
+	os.write("layer", layer.c_str());
+}
+
+void DXFItem::serializeFrom(CObjectSerializer & os) {
+	os.read("layer", layer);
+}
+
 
 //  ARC
 void Arc::add(int code, const std::string& value) {
@@ -160,6 +192,29 @@ void Arc::cut(CutStructure * pCut, COutputDevice * pdev){
 }
 
 
+void Arc::serializeTo(CObjectSerializer & os) {
+	os.startSection("dxfArc", this);
+	DXFItem::serializeTo(os);
+	os.write("x", centre.x);
+	os.write("y", centre.y);
+	os.write("r", r);
+	os.write("startAngle", startAngle);
+	os.write("endAngle", endAngle);
+	os.endSection();
+}
+
+void Arc::serializeFrom(CObjectSerializer & os) {
+	os.startReadSection("dxfArc", this);
+	DXFItem::serializeFrom(os);
+	os.read("x", centre.x);
+	os.read("y", centre.y);
+	os.read("r", r);
+	os.read("startAngle", startAngle);
+	os.read("endAngle", endAngle);
+	os.endReadSection();
+}
+
+
 // CIRCLE
 
 void Circle::add(int code, const std::string& value) {
@@ -197,6 +252,26 @@ void Circle::cut(CutStructure * pCut, COutputDevice * pdev) {
 	pt.fy = centre.y;
 	pCut->line(pdev, pt, pt);
 }
+
+
+void Circle::serializeTo(CObjectSerializer & os) {
+	os.startSection("dxfCircle", this);
+	DXFItem::serializeTo(os);
+	os.write("x", centre.x);
+	os.write("y", centre.y);
+	os.write("r", r);
+	os.endSection();
+}
+
+void Circle::serializeFrom(CObjectSerializer & os) {
+	os.startReadSection("dxfCircle", this);
+	DXFItem::serializeFrom(os);
+	os.read("x", centre.x);
+	os.read("y", centre.y);
+	os.read("r", r);
+	os.endReadSection();
+}
+
 
 // ELLIPSE
 
@@ -271,6 +346,34 @@ void Ellipse::cut(CutStructure * pCut, COutputDevice * pdev) {
 	pCut->line(pdev, pt, pt);
 }
 
+
+void Ellipse::serializeTo(CObjectSerializer & os) {
+	os.startSection("dxfEllipse", this);
+	DXFItem::serializeTo(os);
+	os.write("x", centre.x);
+	os.write("y", centre.y);
+	os.write("mx", masterAxis.x);
+	os.write("my", masterAxis.y);
+	os.write("ratio", ratio);
+	os.write("start", start);
+	os.write("end", end);
+	os.endSection();
+}
+
+void Ellipse::serializeFrom(CObjectSerializer & os) {
+	os.startReadSection("dxfEllipse", this);
+	DXFItem::serializeFrom(os);
+	os.read("x", centre.x);
+	os.read("y", centre.y);
+	os.read("mx", masterAxis.x);
+	os.read("my", masterAxis.y);
+	os.read("ratio", ratio);
+	os.read("start", start);
+	os.read("end", end);
+	os.endReadSection();
+}
+
+
 // LINE
 
 void Line::add(int code, const std::string& value) {
@@ -291,6 +394,29 @@ void Line::cut(CutStructure * pCut, COutputDevice * pdev) {
 	pCut->move(pdev, startPoint, startPoint);
 	pCut->line(pdev, endPoint, endPoint);
 }
+
+
+void Line::serializeTo(CObjectSerializer & os) {
+	os.startSection("dxfLine", this);
+	DXFItem::serializeTo(os);
+	os.write("sx", start.x);
+	os.write("sy", start.y);
+	os.write("ex", end.x);
+	os.write("ey", end.y);
+	os.endSection();
+}
+
+void Line::serializeFrom(CObjectSerializer & os) {
+	os.startReadSection("dxfLine", this);
+	DXFItem::serializeFrom(os);
+	os.read("sx", start.x);
+	os.read("sy", start.y);
+	os.read("ex", end.x);
+	os.read("ey", end.y);
+	os.endReadSection();
+
+}
+
 
 // LWPOLYLINE
 
@@ -353,6 +479,37 @@ void LWPolyLine::cut(CutStructure * pCut, COutputDevice * pdev) {
 
 }
 
+
+void LWPolyLine::serializeTo(CObjectSerializer & os) {
+	os.startSection("dxfLWPolyLine", this);
+	DXFItem::serializeTo(os);
+	os.startCollection("vertices", (int)vertices.size());
+	for (std::vector<Coordinates>::iterator iter = vertices.begin();
+		iter != vertices.end();
+		++iter) {
+		os.write("x", iter->x);
+		os.write("y", iter->y);
+	}
+	os.endCollection();
+	os.endSection();
+}
+
+void LWPolyLine::serializeFrom(CObjectSerializer & os) {
+	os.startReadSection("dxfLWPolyLine", this);
+	DXFItem::serializeFrom(os);
+	int vertexCount = os.startReadCollection("vertices");
+	vertices.resize(vertexCount);
+	for(int i=0; i<vertexCount; ++i){
+		Coordinates c;
+		os.read("x", c.x);
+		os.read("y", c.y);
+		vertices[i] = c;
+	}
+	os.endReadCollection();
+	os.endReadSection();
+}
+
+
 // POINT
 
 void Point::add(int code, const std::string& value) {
@@ -377,6 +534,24 @@ public:
 	DXFItemFactory();
 	DXFItem* create(const std::string& type);
 };
+
+
+void Point::serializeTo(CObjectSerializer & os) {
+	os.startSection("dxfPoint", this);
+	DXFItem::serializeTo(os);
+	os.write("x", point.x);
+	os.write("y", point.y);
+	os.endSection();
+}
+
+void Point::serializeFrom(CObjectSerializer & os) {
+	os.startReadSection("dxfPoint", this);
+	DXFItem::serializeFrom(os);
+	os.read("x", point.x);
+	os.read("y", point.y);
+	os.endReadSection();
+}
+
 
 static Arc arcPrototype;
 static Circle circlePrototype;

@@ -75,6 +75,7 @@ public:
 	void endOptional();
 
 	void write(const char* name, int value);
+	void write(const char* name, unsigned int value);
 	void write(const char* name, float value);
 	void write(const char* name, double value);
 	void write(const char* name, const char* text);
@@ -93,6 +94,7 @@ public:
 	bool ifExists(const char* pszName);
 
 	void read(const char* name, int& value);
+	void read(const char* name, unsigned int& value);
 	void read(const char* name, float& value);
 	void read(const char* name, double& value);
 	void read(const char* name, std::string& text);

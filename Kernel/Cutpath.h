@@ -34,6 +34,8 @@ class CPathCutter  : public CutStructure, private CPlotCommonImpl
 
 public:
 
+	static const std::string TYPE;
+
 	CPathCutter(CWing* pWing);
 	explicit CPathCutter(); // for serialization
 
@@ -43,6 +45,7 @@ public:
 
 	virtual void cut(COutputDevice* pdev, double toolOffset);
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 

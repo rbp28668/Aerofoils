@@ -45,6 +45,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "Kernel/HomeCutter.h"
 
 
+
 // CutterTreeView
 
 IMPLEMENT_DYNCREATE(CutterTreeView, CTreeView)
@@ -52,7 +53,18 @@ IMPLEMENT_DYNCREATE(CutterTreeView, CTreeView)
 CutterTreeView::CutterTreeView()
 	: hSelected(0)
 {
+	menuLookup.insert(make_pair(CWing::TYPE, WING));
+	menuLookup.insert(make_pair(CEllipsePair::TYPE, ELLIPSE));
+	menuLookup.insert(make_pair(CPointStructure::TYPE, POINT));
+	menuLookup.insert(make_pair(GCodeSnippet::TYPE, GCODE));
+	menuLookup.insert(make_pair(DXFObject::TYPE, DXF));
 
+	menuLookup.insert(make_pair(CPathCutter::TYPE, WING_CUT));
+	menuLookup.insert(make_pair(EllipseCutter::TYPE, ELLIPSE_CUT));
+	menuLookup.insert(make_pair(PointCutter::TYPE, POINT_CUT));
+	menuLookup.insert(make_pair(DXFObjectCutter::TYPE, DXF_CUT));
+	menuLookup.insert(make_pair(GCodeSnippetCutter::TYPE, GCODE_CUT));
+	menuLookup.insert(make_pair(HomeCutter::TYPE, HOME_CUT));
 }
 
 CutterTreeView::~CutterTreeView()
@@ -94,6 +106,7 @@ void CutterTreeView::freeNode(HTREEITEM item) {
 	delete node;
 }
 
+// label cutter nodes with their index so that they can be sorted.
 void CutterTreeView::labelCutterNodes()
 {
 	// Iterate through the children of the cutting node, finding out where
@@ -148,6 +161,27 @@ void CutterTreeView::deleteOrphanCutterNodes()
 			hChild = hNext;
 		}
 	}
+}
+
+void CutterTreeView::createTreeFromDoc()
+{
+	CutterDoc* pDoc = GetDocument();
+	for (Cut::StructureIterator iter = pDoc->beginStructures();
+		iter != pDoc->endStructures();
+		++iter) {
+		std::string typeName = (*iter)->getType();
+		Menus menu = menuLookup[typeName];
+		addStructureNode(*iter, menu);
+	}
+
+	for (Cut::CutIterator iter = pDoc->beginCutStructures();
+		iter != pDoc->endCutStructures();
+		++iter) {
+		std::string typeName = (*iter)->getType();
+		Menus menu = menuLookup[typeName];
+		addCutNode(*iter, menu);
+	}
+
 }
 
 void CutterTreeView::processClick(UINT nFlags, CPoint point)
@@ -293,7 +327,6 @@ int CutterTreeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CTreeView::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// TODO:  Add your specialized creation code here
 	return 0;
 }
 
@@ -307,6 +340,8 @@ void CutterTreeView::OnInitialUpdate()
 
 	hCutting = GetTreeCtrl().InsertItem("Cutting");
 	newNode(hCutting,this, CUTTING);
+
+	createTreeFromDoc();
 }
 
 
@@ -370,7 +405,6 @@ void CutterTreeView::OnStructureNewgcode()
 	GCodeEditDialog dlg;
 	if (dlg.DoModal()) {
 		GCodeSnippet* pSnippet = GetDocument()->newGcodeSnippet(dlg.programText);
-		// TODO - add checking here.
 		addStructureNode(pSnippet, GCODE);
 	}
 }

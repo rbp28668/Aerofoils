@@ -39,7 +39,7 @@ public:
 	virtual void serializeFrom(CObjectSerializer& os);
 
 	virtual std::string getDescriptiveText() const = 0;
-
+	virtual std::string getType() const = 0;
 
 	float getSpan() const {return span;}
 	void setSpan(float s) {span = s;}

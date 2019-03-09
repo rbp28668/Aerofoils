@@ -26,7 +26,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-static CObjectFactory<CPointStructure> factory("pointStructure");
+const std::string CPointStructure::TYPE("pointStructure");
+static CObjectFactory<CPointStructure> factory(CPointStructure::TYPE.c_str());
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -55,10 +56,15 @@ string CPointStructure::getDescriptiveText() const
 	return os.str();
 }
 
+std::string CPointStructure::getType() const
+{
+	return TYPE;
+}
+
 void CPointStructure::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("pointStructure",this);
+	os.startSection(TYPE.c_str(),this);
 	CStructure::serializeTo(os);
 	os.write("rootX",root.fx);
 	os.write("rootY",root.fy);
@@ -70,7 +76,7 @@ void CPointStructure::serializeTo(CObjectSerializer& os)
 void CPointStructure::serializeFrom(CObjectSerializer& os)
 {
 	assert(this);
-	os.startReadSection("pointStructure",this);
+	os.startReadSection(TYPE.c_str(),this);
 	CStructure::serializeFrom(os);
 	os.read("rootX",root.fx);
 	os.read("rootY",root.fy);

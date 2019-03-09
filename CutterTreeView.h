@@ -50,6 +50,8 @@ class CutterTreeView : public CTreeView
 
 	};
 
+	// NodeT is used to store the relationship between items in the tree,
+	// the actual object and the popup menu used to edit that item.
 	typedef struct NodeT {
 		HTREEITEM itemHandle;
 		void* pItem;
@@ -63,6 +65,8 @@ class CutterTreeView : public CTreeView
 	HTREEITEM hStructure;
 	HTREEITEM hCutting;
 	std::map<HTREEITEM, Node*> treeNodes;
+
+	std::map<std::string, Menus> menuLookup;
 
 	DECLARE_DYNCREATE(CutterTreeView)
 
@@ -84,7 +88,7 @@ protected:
 	void labelCutterNodes();
 	void sortCutterNodes();
 	void deleteOrphanCutterNodes();
-
+	void createTreeFromDoc();
 
 public:
 #ifdef _DEBUG

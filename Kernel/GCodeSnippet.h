@@ -30,6 +30,9 @@ class GCodeSnippet :
 	GCodeProgram* pProgram;
 
 public:
+	static const std::string TYPE;
+
+	GCodeSnippet();
 	GCodeSnippet(const char* content);
 	~GCodeSnippet();
 
@@ -37,6 +40,7 @@ public:
 	virtual void serializeFrom(CObjectSerializer& os);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 
 	void programText(std::string& str) const;
 	void updateProgram(const char* content);

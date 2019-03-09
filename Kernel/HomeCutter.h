@@ -23,14 +23,19 @@ class HomeCutter :
 	public CutStructure
 {
 public:
+	static const std::string TYPE;
+
 	HomeCutter();
 	~HomeCutter();
 
 	virtual void cut(COutputDevice *pdev, double toolOffset);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
+	virtual void serializeTo(CObjectSerializer & os);
+	virtual void serializeFrom(CObjectSerializer & os);
 
 };
 

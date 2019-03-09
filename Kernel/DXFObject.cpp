@@ -20,7 +20,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "DXFObject.h"
 #include "DXFParser.h"
+#include "ObjectSerializer.h"
 
+const std::string DXFObject::TYPE("dxfObject");
+static CObjectFactory<DXFObject> factory(DXFObject::TYPE.c_str());
+
+
+DXFObject::DXFObject()
+{
+}
 
 DXFObject::DXFObject(const char * pszPath)
 {
@@ -44,15 +52,47 @@ DXFObject::~DXFObject()
 
 void DXFObject::serializeTo(CObjectSerializer & os)
 {
+	os.startSection(TYPE.c_str(), this);
+
+	os.startCollection("dxfItems", (int)items.size());
+
+	for (std::vector<DXFItem*>::iterator iter = items.begin();
+		iter != items.end();
+		++iter) {
+		(*iter)->serializeTo(os);
+	}
+
+	os.endCollection();
+
+	os.endSection();
+
 }
 
 void DXFObject::serializeFrom(CObjectSerializer & os)
 {
+	os.startReadSection(TYPE.c_str(), this);
+
+	int count = os.startReadCollection("dxfItems");
+	for (int i = 0; i<count; ++i)
+	{
+		DXFItem* item = static_cast<DXFItem*>(os.createSubtype());
+		item->serializeFrom(os);
+		add(item);
+	}
+	os.endReadCollection();
+
+	os.endReadSection();
+
 }
 
 std::string DXFObject::getDescriptiveText() const
 {
 	return std::string("DXF Object");
+}
+
+std::string DXFObject::getType() const
+{
+	return TYPE;
 }
 
 void DXFObject::add(DXFItem * item)

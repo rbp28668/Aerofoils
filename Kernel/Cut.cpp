@@ -32,7 +32,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 Cut::Cut()
-	: toolOffset(0)
+	: toolOffset(0.5)
 {
 }
 
@@ -238,7 +238,7 @@ void Cut::deleteStructure(CStructure * toDelete)
 void Cut::serializeTo(CObjectSerializer & os)
 {
 	os.startSection("cut", this);
-
+	os.write("toolOffset", toolOffset);
 	os.startCollection("structures", (int)structures.size());
 	for (StructureIterator si = structures.begin();
 		si != structures.end();
@@ -266,7 +266,7 @@ void Cut::serializeFrom(CObjectSerializer & os)
 	assert(this);
 
 	os.startReadSection("cut", this);
-
+	os.read("toolOffset", toolOffset);
 	int count = os.startReadCollection("structures");
 	for (int i = 0; i<count; ++i)
 	{

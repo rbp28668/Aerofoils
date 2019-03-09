@@ -26,7 +26,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-static CObjectFactory<CEllipsePair> factory("ellipsePair");
+const std::string CEllipsePair::TYPE("ellipsePair");
+static CObjectFactory<CEllipsePair> factory(CEllipsePair::TYPE.c_str());
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -63,11 +64,16 @@ string CEllipsePair::getDescriptiveText() const
 	return os.str();
 }
 
+std::string CEllipsePair::getType() const
+{
+	return TYPE;
+}
+
 
 void CEllipsePair::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("ellipsePair",this);
+	os.startSection(TYPE.c_str(),this);
 	CStructure::serializeTo(os);
 	first.serializeTo(os);
 	second.serializeTo(os);
@@ -77,7 +83,7 @@ void CEllipsePair::serializeTo(CObjectSerializer& os)
 void CEllipsePair::serializeFrom(CObjectSerializer& os)
 {
 	assert(this);
-	os.startReadSection("ellipsePair",this);
+	os.startReadSection(TYPE.c_str(),this);
 	CStructure::serializeFrom(os);
 	first.serializeFrom(os);
 	second.serializeFrom(os);

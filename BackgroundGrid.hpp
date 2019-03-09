@@ -26,8 +26,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #endif // _MSC_VER > 1000
 
-// Class to describe a background grid for printing.  Note that this (currently) is not saved
-// as part of the plot - if it is it will need to be moved to kernel.
+class CObjectSerializer;
+
+// Class to describe a background grid for printing or display.
 
 class CBackgroundGrid  
 {
@@ -45,6 +46,8 @@ public:
 	inline void enableHorizontal(bool on) { m_plotHorizontal = on;}
 	inline void enableVertical(bool on) { m_plotVertical = on;}
 
+	void serializeTo(CObjectSerializer & os);
+	void serializeFrom(CObjectSerializer & os);
 
 private:
 	bool m_plotHorizontal;

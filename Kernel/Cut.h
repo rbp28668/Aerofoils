@@ -42,18 +42,18 @@ class Cut
 	typedef std::list<CStructure*> StructureList;
 	typedef std::list<CutStructure*> CutList;
 
-	typedef StructureList::iterator StructureIterator;
-	typedef CutList::iterator CutIterator;
-
 	StructureList structures;
 	CutList cut_structures;
 
 	double toolOffset;
 
 public:
+
+	typedef StructureList::iterator StructureIterator;
+	typedef CutList::iterator CutIterator;
+
 	Cut();
 	~Cut();
-
 
 	void cut(COutputDevice& pdev);
 
@@ -81,5 +81,8 @@ public:
 
 	int getStructureCount() const { return (int)structures.size(); }
 
-
+	StructureIterator beginStructures() { return structures.begin(); }
+	StructureIterator endStructures() { return structures.end(); }
+	CutIterator beginCutStructures() { return cut_structures.begin(); }
+	CutIterator endCutStructures() { return cut_structures.end(); }
 };

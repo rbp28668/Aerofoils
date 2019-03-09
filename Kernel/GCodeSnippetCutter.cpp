@@ -21,7 +21,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "GCodeSnippet.h"
 #include "OutputDevice.h"
 #include "PlottingCutter.h"
+#include "ObjectSerializer.h"
 
+const std::string GCodeSnippetCutter::TYPE("gcodeSnippetCutter");
+static CObjectFactory<GCodeSnippetCutter> factory(GCodeSnippetCutter::TYPE.c_str());
+
+
+GCodeSnippetCutter::GCodeSnippetCutter()
+	: pSnippet(0)
+{
+}
 
 GCodeSnippetCutter::GCodeSnippetCutter(GCodeSnippet* pgcode)
 	: pSnippet(pgcode)
@@ -59,6 +68,11 @@ std::string GCodeSnippetCutter::getDescriptiveText() const
 	return std::string("G-Code snippet");
 }
 
+std::string GCodeSnippetCutter::getType() const
+{
+	return TYPE;
+}
+
 CStructure * GCodeSnippetCutter::getStructure()
 {
 	assert(this);
@@ -69,4 +83,20 @@ const CStructure * GCodeSnippetCutter::getStructure() const
 {
 	assert(this);
 	return pSnippet;
+}
+
+void GCodeSnippetCutter::serializeTo(CObjectSerializer & os)
+{
+	os.startSection(TYPE.c_str(), this);
+	CutStructure::serializeTo(os);
+	os.writeReference("snippetRef", pSnippet);
+	os.endSection();
+}
+
+void GCodeSnippetCutter::serializeFrom(CObjectSerializer & os)
+{
+	os.startReadSection(TYPE.c_str(), this);
+	CutStructure::serializeFrom(os);
+	pSnippet = static_cast<GCodeSnippet*>(os.readReference("snippetRef"));
+	os.endReadSection();
 }

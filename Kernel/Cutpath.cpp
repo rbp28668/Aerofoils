@@ -57,7 +57,9 @@ Revsision History:
 
 using namespace std;
 
-static CObjectFactory<CPathCutter> factory("pathCutter");
+const std::string CPathCutter::TYPE("pathCutter");
+static CObjectFactory<CPathCutter> factory(CPathCutter::TYPE.c_str());
+
 
 /************************************************************/
 /** CPathCutter::CPathCutter                               **/
@@ -907,6 +909,11 @@ string CPathCutter::getDescriptiveText() const
 	return ss.str();
 }
 
+std::string CPathCutter::getType() const
+{
+	return TYPE;
+}
+
 CStructure * CPathCutter::getStructure()
 {
 	assert(this);
@@ -924,7 +931,8 @@ const CStructure * CPathCutter::getStructure() const
 void CPathCutter::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("pathCutter",this);
+	os.startSection(TYPE.c_str(),this);
+	CutStructure::serializeTo(os);
 	os.writeReference("wing", pWing);
 	os.write("toolOffset",tool_offset);
 	os.endSection();
@@ -932,7 +940,8 @@ void CPathCutter::serializeTo(CObjectSerializer& os)
 
 void CPathCutter::serializeFrom(CObjectSerializer& os)
 {
-	os.startReadSection("pathCutter",this);
+	os.startReadSection(TYPE.c_str(),this);
+	CutStructure::serializeFrom(os);
 	pWing = static_cast<CWing*>(os.readReference("wing"));
 	os.read("toolOffset",tool_offset);
 	os.endReadSection();

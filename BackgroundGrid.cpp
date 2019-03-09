@@ -22,6 +22,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "aerofoil.h"
 #include "BackgroundGrid.hpp"
+#include "Kernel/ObjectSerializer.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -46,4 +47,24 @@ CBackgroundGrid::CBackgroundGrid()
 CBackgroundGrid::~CBackgroundGrid()
 {
 
+}
+
+void CBackgroundGrid::serializeTo(CObjectSerializer & os)
+{
+	os.startSection("grid", this);
+	os.write("plotHorizontal",m_plotHorizontal);
+	os.write("plotVertical", m_plotVertical);
+	os.write("horizontalSpacing",m_horizontalSpacing);
+	os.write("verticalSpacing", m_verticalSpacing);
+	os.endSection();
+}
+
+void CBackgroundGrid::serializeFrom(CObjectSerializer & os)
+{
+	os.startReadSection("grid", this);
+	os.read("plotHorizontal", m_plotHorizontal);
+	os.read("plotVertical", m_plotVertical);
+	os.read("horizontalSpacing", m_horizontalSpacing);
+	os.read("verticalSpacing", m_verticalSpacing);
+	os.endReadSection();
 }

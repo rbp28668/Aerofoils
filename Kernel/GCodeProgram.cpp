@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include<assert.h>
 #include "GCodeInterpreter.h"
 #include "GCodeProgram.h"
+#include "ObjectSerializer.h"
 
 
 GCodeProgram::GCodeProgram(GCodeInterpreter* pi) :
@@ -191,6 +192,35 @@ std::string GCodeProgram::popError()
 		errors.pop_front();
 	}
 	return err;
+}
+
+void GCodeProgram::serializeTo(CObjectSerializer & os)
+{
+	assert(this);
+	os.startSection("gcodeProgram", this);
+	os.startCollection("lines", (int)lines.size());
+	for (std::vector<std::string>::iterator iter = lines.begin();
+		iter != lines.end();
+		++iter) {
+		os.write("line", iter->c_str());
+	}
+	os.endCollection();
+	os.endSection();
+}
+
+void GCodeProgram::serializeFrom(CObjectSerializer & os)
+{
+	assert(this);
+	os.startReadSection("gcodeProgram", this);
+	int nLines = os.startReadCollection("lines");
+	for(int i=0; i<nLines; ++i){
+		std::string line;
+		os.read("line", line);
+		lines.push_back(line);
+	}
+	os.endReadCollection();
+	os.endReadSection();
+
 }
 
 void GCodeProgram::load(std::istream & is)

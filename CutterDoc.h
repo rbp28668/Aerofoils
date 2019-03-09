@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 #include "BackgroundGrid.hpp"
+#include "Kernel\CutterGeometry.h"
 #include "kernel\cut.h"
 
 // CutterDoc document
@@ -27,12 +28,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 class CutterDoc : public CDocument
 {
 	DECLARE_DYNCREATE(CutterDoc)
+	
 	Cut cut;
-
-	float size_x;	// document size in mm
-	float size_y;
-
 	CBackgroundGrid grid;
+	CutterGeometry geometry;
 
 	std::string cncHost;
 	unsigned int cncPort;
@@ -55,10 +54,11 @@ public:
 
 	void UpdateNow();
 	void RedrawNow();
-	void setDocSize(float width, float height);
+	void geometryUpdated();
 
-	float sizeX() const { return size_x; }
-	float sizeY() const { return size_y; }
+	double sizeX() const { return geometry.getXTravel(); }
+	double sizeY() const { return geometry.getYTravel(); }
+
 	CBackgroundGrid& getGrid() { return grid; }
 
 
@@ -67,7 +67,8 @@ public:
 	CPointStructure* newPoint(CPointStructure& example);
 	GCodeSnippet* newGcodeSnippet(const char* text);
 	DXFObject* newDxfObject(const char* pszPath);
-
+	Cut::StructureIterator beginStructures() { return cut.beginStructures(); }
+	Cut::StructureIterator endStructures() { return cut.endStructures(); }
 	void deleteStructure(CStructure* pStructure);
 
 	CPathCutter* newPathCutter(CWing* pStructure);
@@ -79,8 +80,10 @@ public:
 	inline void moveUp(CutStructure* cs) { cut.moveUp(cs); }
 	inline void moveDown(CutStructure* cs) { cut.moveDown(cs); }
 	inline int indexOf(CutStructure* cs) { return cut.indexOf(cs); }
-
+	Cut::CutIterator beginCutStructures() { return cut.beginCutStructures(); }
+	Cut::CutIterator endCutStructures() { return cut.endCutStructures(); }
 	void deleteCut(CutStructure* pCut);
+
 
 	void runCut(COutputDevice& pdev);
 

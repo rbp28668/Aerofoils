@@ -57,7 +57,9 @@ public:
 
 	virtual void cut(COutputDevice *pdev, double toolOffset) = 0;
 
-	virtual std::string getDescriptiveText() const = 0;
+	virtual std::string getDescriptiveText() const = 0; // For UI
+	virtual std::string getType() const = 0; // for serialization, basic type identification etc.
+
 	virtual CStructure* getStructure() = 0;
 	virtual const CStructure* getStructure() const = 0;
 
