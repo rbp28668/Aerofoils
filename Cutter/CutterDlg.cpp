@@ -24,6 +24,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutterDlg.h"
 #include "ComPortEnumerator.h"
 #include "CutterConfig.h"
+#include "MainTabCtrl.h"
+#include "GCodeDialog.h"
 #include "afxwin.h"
 #include "../Kernel/Cutter.h"
 
@@ -134,8 +136,9 @@ CCutterDlg::CCutterDlg(CWnd* pParent /*=NULL*/)
 	, pCNCCutter(0)
 	, pGCodeInterpreter(0)
 	, pProgram(0)
-	, listener(this)
-	, link(this)
+	, pListener(0)
+	, pLink(0)
+	
 {
 	//{{AFX_DATA_INIT(CCutterDlg)
 	m_port = 8193;
@@ -187,14 +190,9 @@ void CCutterDlg::configLoaded(CutterConfig * pConfig)
 	}
 
 	if (pConfig->listenAutomatically) {
-		listener.Create(pConfig->defaultListenPort);
-		listener.setLink(&link);
-		listener.Listen();
-
 		m_port = pConfig->defaultListenPort;
+		listen();
 	}
-
-
 }
 
 void CCutterDlg::DoDataExchange(CDataExchange* pDX)
@@ -205,6 +203,9 @@ void CCutterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_CONNECT, btnConnect);
 	DDX_Control(pDX, IDC_COMBO_SERIAL, cmbSerialPort);
 	DDX_Control(pDX, IDC_TAB_MAIN, mainTabs);
+	DDX_Control(pDX, IDC_TXT_STATUS, lblStatus);
+	DDX_Control(pDX, IDC_CMD_LISTEN, btnListen);
+	DDX_Control(pDX, IDC_EDT_PORT, edtPort);
 }
 
 BEGIN_MESSAGE_MAP(CCutterDlg, CDialog)
@@ -222,7 +223,10 @@ END_MESSAGE_MAP()
 void CCutterDlg::connected()
 {
 	assert(this);
-	//m_lblStatus.SetWindowText("Connected");
+	lblStatus.SetWindowText("Connected");
+	progress = 0;
+	lineBuffer.erase();
+	pProgram->clear();
 }
 
 void CCutterDlg::error(int nErrorCode)
@@ -230,33 +234,69 @@ void CCutterDlg::error(int nErrorCode)
 	assert(this);
 	ostringstream os;
 	os << "Error code " << nErrorCode << ends;
-	//m_lblStatus.SetWindowText(os.str().c_str());
+	lblStatus.SetWindowText(os.str().c_str());
 }
 
 void CCutterDlg::received(const char* bytes, int nBytes)
 {
 	assert(this);
 
-	string msg(bytes,nBytes);
-	m_lstMessages.AddString(msg.c_str());
-	if(m_lstMessages.GetCount() > 64)
-		m_lstMessages.DeleteString(0);
+	lineBuffer.append(bytes, nBytes);
+	size_t index = lineBuffer.find("\n");
+	while (index != string::npos) {
+		string part = lineBuffer.substr(0, index);
+		lineBuffer.erase(0, index + 1); // message + trailing newline
+		pProgram->add(part);
+		index = lineBuffer.find("\n");
+	}
 
-	data.append(msg);
+	char* spinner = "|/-\\";
+	char str[2];
+	progress = (progress + 1) & 0x03;
+	str[0] = spinner[progress];
+	str[1] = 0;
+	lblStatus.SetWindowText(str);
 }
 
 void CCutterDlg::closed()
 {
 	assert(this);
-	//m_lblStatus.SetWindowText("Closed");
-	listener.setLink(&link);
+	lblStatus.SetWindowText("Closed");
 
-	ofstream ofs("c:/temp/dump.tmp");
-	ofs << data;
-	ofs << endl;
+	// Set up new link socket for any subsequent connection
+	assert(pLink);
+	delete pLink;
+	if(pListener){
+		pLink = new CLinkSocket(this);
+		pListener->setLink(pLink);
+	}
 
-	//int pos = 0;
-	//data.find_first_of("</l>",pos);
+	mainTabs.getGCodeDialog()->programUpdated();
+
+}
+
+void CCutterDlg::listen()
+{
+	pListener = new CListenerSocket(this);
+	pListener->Create(m_port);
+	pLink = new CLinkSocket(this);
+	pListener->setLink(pLink);
+	pListener->Listen();
+
+	btnListen.SetWindowTextA("Stop Listening");
+	edtPort.EnableWindow(FALSE);
+}
+
+void CCutterDlg::stopListening()
+{
+	pListener->Close();
+	delete pLink;
+	delete pListener;
+	pListener = 0;
+	pLink = 0;
+
+	btnListen.SetWindowTextA("Listen");
+	edtPort.EnableWindow(TRUE);
 }
 
 
@@ -367,15 +407,11 @@ HCURSOR CCutterDlg::OnQueryDragIcon()
 
 void CCutterDlg::OnCmdListen() 
 {
-	listener.Create(m_port);
-	listener.setLink(&link);
-	listener.Listen();
-	
-}
-
-void CCutterDlg::OnCmdAccept() 
-{
-	listener.Accept(link);	
+	if (pListener) {
+		stopListening();
+	} else {
+		listen();
+	}
 }
 
 

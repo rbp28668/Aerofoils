@@ -324,15 +324,18 @@ void CGCodeDialog::OnBnClickedBtnLoad()
 		pProgram->load(ifs);
 		ifs.close();
 
-		std::string text;
-		pProgram->asString(text);
-		programEditor.SetWindowTextA(text.c_str());
+		programUpdated();
 	}
 
 
 }
 
+void CGCodeDialog::programUpdated() {
+	std::string text;
+	pProgram->asString(text);
+	programEditor.SetWindowTextA(text.c_str());
 
+}
 void CGCodeDialog::OnBnClickedBtnSave()
 {
 	CFileDialog dlg(false

@@ -44,7 +44,6 @@ CListenerSocket::~CListenerSocket()
 void CListenerSocket::setLink(CAsyncSocket* pl) 
 {
 	link = pl;
-	AsyncSelect(FD_ACCEPT);
 }
 
 
@@ -62,22 +61,28 @@ END_MESSAGE_MAP()
 void CListenerSocket::OnAccept(int nErrorCode) 
 {
 	assert(this);
-	assert(link);
 
-	if(nErrorCode == 0)
-	{
-		if(link)
-		{
+	if(nErrorCode == 0) {
+		if(link) {
 			Accept(*link);
 			link->	AsyncSelect(FD_READ|FD_CONNECT|FD_CLOSE);
-			handler->connected();
+			//handler->connected(); // moved to LinkSocket();
 			link = 0;
 		}
 	}
-	else
-	{
+	else {
 		handler->error(nErrorCode);
 	}
 
 	CAsyncSocket::OnAccept(nErrorCode);
+}
+
+BOOL CListenerSocket::Listen(int nConnectionBacklog)
+{
+	BOOL ok = CAsyncSocket::Listen(nConnectionBacklog	);
+
+	// Wait for connections immediately but note that if link is not set
+	// they will be rejected
+	AsyncSelect(FD_ACCEPT);
+	return ok;
 }

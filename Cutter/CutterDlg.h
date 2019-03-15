@@ -50,9 +50,10 @@ class CCutterDlg : public CDialog, CSocketEventHandler
 	GCodeInterpreter* pGCodeInterpreter;
 	GCodeProgram* pProgram;
 
-	CListenerSocket listener;
-	CLinkSocket link;
-	std::string data;
+	CListenerSocket* pListener;
+	CLinkSocket* pLink;
+	std::string lineBuffer;
+	int progress;
 
 	void connectHardware(const char* port);
 	void disconnectHardware();
@@ -92,7 +93,6 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnCmdListen();
-	afx_msg void OnCmdAccept();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -102,15 +102,20 @@ protected:
 	virtual void received(const char* data, int nBytes);
 	virtual void closed();
 
+	void listen();
+	void stopListening();
+
 	afx_msg void OnEnChangeEdtPort();
+	afx_msg void OnBnClickedBtnConnect();
 
 private:
 
-
 	CButton btnConnect;
 	CComboBox cmbSerialPort;
-	afx_msg void OnBnClickedBtnConnect();
 	CMainTabCtrl mainTabs;
+	CStatic lblStatus;
+	CButton btnListen;
+	CEdit edtPort;
 };
 
 //{{AFX_INSERT_LOCATION}}

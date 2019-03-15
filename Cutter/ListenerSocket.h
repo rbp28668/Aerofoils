@@ -39,6 +39,8 @@ public:
 	//{{AFX_VIRTUAL(CListenerSocket)
 	public:
 	virtual void OnAccept(int nErrorCode);
+	BOOL Listen(int nConnectionBacklog = 5);
+
 	//}}AFX_VIRTUAL
 
 	// Generated message map functions

@@ -31,5 +31,5 @@ GCodeOutputFile::~GCodeOutputFile()
 
 void GCodeOutputFile::send(const std::string & str)
 {
-	os << str << std::endl;
+	os << str;
 }

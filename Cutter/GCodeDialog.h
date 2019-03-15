@@ -86,8 +86,10 @@ public:
 	afx_msg void OnBnClickedBtnRestart();
 	afx_msg void OnBnClickedBtnClear();
 	afx_msg void OnBnClickedBtnLoad();
-	afx_msg void OnBnClickedBtnSave();
+	afx_msg	void OnBnClickedBtnSave();
 	
+	void programUpdated();
+
 	CButton runButton;
 	CButton startButton;
 	CButton stepButton;

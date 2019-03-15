@@ -13,6 +13,7 @@ Debug/*
 Release/*
 
 *.tlog
+*.cache
 
 #Intellisense database and lock file, inc old versions
 *.VC.db

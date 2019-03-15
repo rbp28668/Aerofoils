@@ -115,6 +115,11 @@ void SerialLink::disconnect()
 	if (hComm != INVALID_HANDLE_VALUE) {
 		::CloseHandle(hComm);
 	}
+
+	hComm = INVALID_HANDLE_VALUE;
+	hEventRead = INVALID_HANDLE_VALUE;
+	hEventWrite = INVALID_HANDLE_VALUE;
+
 	connected = false;
 }
 

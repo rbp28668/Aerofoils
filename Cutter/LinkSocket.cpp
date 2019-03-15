@@ -55,8 +55,11 @@ END_MESSAGE_MAP()
 
 void CLinkSocket::OnConnect(int nErrorCode) 
 {
-	// TODO: Add your specialized code here and/or call the base class
-	
+	if (nErrorCode != 0) {
+		handler->error(nErrorCode);
+	} else {
+		handler->connected();
+	}
 	CAsyncSocket::OnConnect(nErrorCode);
 }
 
@@ -72,7 +75,7 @@ void CLinkSocket::OnReceive(int nErrorCode)
 		int bytesRead = Receive(bytes + totalBytes, bytesFree);
 		switch(bytesRead)
 		{
-		case 0:
+		case 0: // remote side has shut down gracefully.
 			Close();
 			closed = true;
 			break;
@@ -94,7 +97,11 @@ void CLinkSocket::OnReceive(int nErrorCode)
 	{
 		handler->error(nErrorCode);
 	}
-	
+
+	if (closed) {
+		handler->closed();
+	}
+
 	CAsyncSocket::OnReceive(nErrorCode);
 }
 

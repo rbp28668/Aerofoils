@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "GCodeInterpreter.h"
 #include "GCodeProgram.h"
 #include "ObjectSerializer.h"
+#include "trim.h"
 
 
 GCodeProgram::GCodeProgram(GCodeInterpreter* pi) :
@@ -229,6 +230,7 @@ void GCodeProgram::load(std::istream & is)
 	assert(is.good());
 	std::string line;
 	while (std::getline(is, line)) {
+		trim(line);
 		lines.push_back(line);
 	}
 	bRunning = false;
@@ -248,7 +250,7 @@ void GCodeProgram::save(std::ostream & os)
 void GCodeProgram::asString(std::string & str)
 {
 	assert(this);
-	str = "";
+	str.erase();
 	for (auto const&l : lines) {
 		str.append(l);
 		str.append("\r\n");

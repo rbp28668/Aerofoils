@@ -1,6 +1,9 @@
 
+Aerofoil
 
 As a user I want to be able to open/save cutter files so that I can save a cut and reload it.
+As a user I want to see what the components are when I load a file.
+As a user I want to see what the plot looks like when I load a file.
 
 As a user I want to be able to delete a structure and have all dependent cuts removed.
 As a user I want to have labels on items in the cut tree updated so that the labels reflect the state of the objects.
@@ -17,6 +20,23 @@ As a user I want to see scroll bars in the cut display so that I can see the com
 As a user I want to see move-to commands displayed in a different colour (e.g. grey) so that I can distinguish between cuts proper and moving between cuts.
 As a user I want to have the zoom dialog work so that I can zoom in and look at detail or get the big picture view.
 As a user I want to be able to turn a background grid on or off on the cut display so that I can easily see positions of items.
+
+As a user I want to be able to send a gcode program to the cutter over the network
+
+Cutter
+As a user I want to be able to set the cutter to listen for gcode files sent from the aerofoil program
+As a user I want to be able to stop listening for files
+
+As a user I want to be able to edit gcode files
+As a user I want to be able to save a gcode file to disk
+As a user I want to be able to load a gcode file from disk
+
+As a user I want to be able to run gcode files
+As a user I want to be able to single step gcode files
+As a user I want to be able to restart a gcode file once it has finished.
+As a user I want to be able to see what statements the gcode program is running
+
+
 
 Bug - if there is a port preselected in the cutter and the hardware isn't connected the program aborts (exit 3)
 Bug - First U,V coordinate has invalid values.

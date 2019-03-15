@@ -43,6 +43,10 @@ public:
 	void init(CCutterDlg* pApp);
 	void sizeChildren();
 
+	inline CGCodeDialog* getGCodeDialog() {	return pGCodeDialog; }
+	inline CHardwareDialog* getHardwareDialog() { return pHardwareDialog; }
+	inline CConfigDialog* getConfigDialog() {return pConfigDialog; }
+
 protected:
 	DECLARE_MESSAGE_MAP()
 public:

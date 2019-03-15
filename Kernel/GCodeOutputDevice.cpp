@@ -1,3 +1,4 @@
+
 /* Aerofoil
 Aerofoil plotting and CNC cutter driver
 Copyright(C) 1995-2019 R Bruce Porteous
@@ -88,7 +89,7 @@ void GCodeOutputDevice::sendMove(const char* pszCommand) {
 		<< "Y" << y << " "
 		<< "U" << u << " "
 		<< "V" << v << " "
-		<< ends;
+		<< endl;
 	send(oss.str());
 	hasLeft = hasRight = false; // as now sent
 }
@@ -101,14 +102,16 @@ void GCodeOutputDevice::Label(int iStream, const char* psz)
 	assert(psz);
 
 	ostringstream oss;
-	oss << "(" << psz << ")" << ends; //  treat as comment
+	oss << "(" << psz << ")" << endl; //  treat as comment
 	send(oss.str());
 }
 
 void GCodeOutputDevice::Home()
 {
 	assert(this);
-	send("G28"); // home command
+	ostringstream oss;
+	oss << "G28" << endl; // home command
+	send(oss.str());
 	hasLeft = hasRight = false;
 	x = y = u = v = 0;
 }
@@ -135,7 +138,7 @@ void GCodeOutputDevice::startObject(const char* description)
 	assert(this);
 	assert(description);
 	ostringstream oss;
-	oss << "( START" << description << ")" << ends; //  treat as comment
+	oss << "( START" << description << ")" << endl; //  treat as comment
 	send(oss.str());
 }
 
@@ -144,14 +147,17 @@ void GCodeOutputDevice::endObject(const char* description)
 	assert(this);
 	assert(description);
 	ostringstream oss;
-	oss << "( END" << description << ")" << ends; //  treat as comment
+	oss << "( END" << description << ")" << endl; //  treat as comment
 	send(oss.str());
 }
 
 void GCodeOutputDevice::startPlot()
 {
 	assert(this);
-	send("G21 G39 G53 G90"); // mm, mirror off, cancel workshift, absolute
+	ostringstream oss;
+	oss << "G21 G39 G53 G90" << endl; // mm, mirror off, cancel workshift, absolute
+	send(oss.str());
+
 	hasLeft = hasRight = false;
 	x = y = u = v = 0;
 }
@@ -159,14 +165,18 @@ void GCodeOutputDevice::startPlot()
 void GCodeOutputDevice::endPlot()
 {
 	assert(this);
-	send("M05 M02"); // wire off, end of program
+	ostringstream oss;
+	oss << "M05 M02" << endl; //  treat as comment
+	send(oss.str()); // wire off, end of program
 }
 
 void GCodeOutputDevice::passthrough(const char * data)
 {
 	assert(this);
 	assert(data);
-	send(data);
+	ostringstream oss;
+	oss << data << endl; //  treat as comment
+	send(oss.str());
 }
 
 
