@@ -149,10 +149,13 @@ int CutterHardware::line(AxisT steps, AxisT lx, AxisT ly, AxisT rx, AxisT ry)
 	assert(abs(ry) <= steps);
 
 	std::stringstream out;
-	out << "L" 
-		<<std::hex << std::setfill('0') << std::right << std::setw(8)
-		<< steps
-		<< lx << ly << rx << ry;
+	out << "L";
+	out <<std::hex << std::setfill('0') << std::right 
+		<< std::setw(8) << steps 
+		<< std::setw(8) << lx 
+		<< std::setw(8) << ly 
+		<< std::setw(8) << rx 
+		<< std::setw(8) << ry;
 	return send(out.str());
 }
 

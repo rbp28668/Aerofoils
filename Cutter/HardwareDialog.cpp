@@ -143,9 +143,10 @@ void CHardwareDialog::OnBnClickedBtnStatus()
 void CHardwareDialog::OnBnClickedBtnLine()
 {
 	if (pCutter != 0) {
-
-		int stat = pCutter->line(lxSteps, lySteps, rxSteps, rySteps, totalSteps);
-		showStatus(stat);
+		if (UpdateData() == TRUE) {
+			int stat = pCutter->line(totalSteps, lxSteps, lySteps, rxSteps, rySteps);
+			showStatus(stat);
+		}
 	}
 }
 
