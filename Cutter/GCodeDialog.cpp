@@ -146,6 +146,13 @@ void CGCodeDialog::setModelObjects(GCodeInterpreter* pInterpreter, GCodeProgram*
 	pProgram->setUpstreamContext(this); 
 }
 
+void CGCodeDialog::setMainDialog(CCutterDlg * pDlg)
+{
+	assert(this);
+	assert(pDlg);
+	pMainDialog = pDlg;
+}
+
 void CGCodeDialog::showError(const std::string & line, size_t where, const std::string & msg)
 {
 	std::string error(msg);

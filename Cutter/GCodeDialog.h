@@ -23,6 +23,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 class GCodeInterpreter;
 class GCodeProgram;
 class Cutter;
+class CCutterDlg;
 
 class CGCodeDialog : public CDialogEx, ParserContext
 {
@@ -30,6 +31,8 @@ class CGCodeDialog : public CDialogEx, ParserContext
 	GCodeInterpreter* pInterpreter;
 	GCodeProgram* pProgram;
 	Cutter* pCutter;
+	CCutterDlg* pMainDialog;
+
 	bool isStepping;
 
 	void getProgramFromEdit();
@@ -41,6 +44,7 @@ public:
 	virtual ~CGCodeDialog();
 
 	void setModelObjects(GCodeInterpreter* pInterpreter, GCodeProgram* pProgram,  Cutter* pCutter);
+	void setMainDialog(CCutterDlg* pDlg);
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME

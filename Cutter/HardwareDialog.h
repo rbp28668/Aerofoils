@@ -17,6 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 class CutterHardware;
+class CCutterDlg;
 
 // CHardwareDialog dialog
 
@@ -25,6 +26,7 @@ class CHardwareDialog : public CDialogEx
 	DECLARE_DYNAMIC(CHardwareDialog)
 
 	CutterHardware* pCutter;
+	CCutterDlg* pMainDialog;
 
 	long lxSteps;
 	long lySteps;
@@ -40,8 +42,8 @@ class CHardwareDialog : public CDialogEx
 	CButton lyStepPulse;
 	CButton rxStepPulse;
 	CButton ryStepPulse;
-	CStatic	statusText;
-
+	CStatic statusText;
+	
 	void showStatus(int stat);
 
 public:
@@ -49,6 +51,7 @@ public:
 	virtual ~CHardwareDialog();
 
 	void setHardware(CutterHardware* pHardware);
+	void setMainDialog(CCutterDlg* pDlg);
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME

@@ -68,6 +68,7 @@ public:
 	inline GCodeInterpreter* getInterpreter() { return pGCodeInterpreter; }
 	inline GCodeProgram* getProgram() { return pProgram; }
 	void configLoaded(CutterConfig* pConfig);
+	void showLimitSwitches(int status);
 
 // Dialog Data
 	//{{AFX_DATA(CCutterDlg)
@@ -116,6 +117,11 @@ private:
 	CStatic lblStatus;
 	CButton btnListen;
 	CEdit edtPort;
+public:
+	CButton chkLXLimit;
+	CButton chkLYLimit;
+	CButton chkRXLimit;
+	CButton chkRYLimit;
 };
 
 //{{AFX_INSERT_LOCATION}}

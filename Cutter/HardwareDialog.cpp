@@ -20,6 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include <assert.h>
 #include "HardwareDialog.h"
+#include "CutterDlg.h"
 #include "afxdialogex.h"
 #include "resource.h"
 #include "CutterHardware.h"
@@ -51,7 +52,9 @@ void CHardwareDialog::showStatus(int status)
 
 	statusText.SetWindowTextA(msg.c_str());
 
-
+	if (pMainDialog) {
+		pMainDialog->showLimitSwitches(status);
+	}
 }
 
 CHardwareDialog::CHardwareDialog(CWnd* pParent /*=NULL*/)
@@ -74,6 +77,13 @@ void CHardwareDialog::setHardware(CutterHardware * pHardware)
 	assert(this);
 	assert(pHardware);
 	pCutter = pHardware;
+}
+
+void CHardwareDialog::setMainDialog(CCutterDlg * pDlg)
+{
+	assert(this);
+	assert(pDlg);
+	pMainDialog = pDlg;
 }
 
 void CHardwareDialog::DoDataExchange(CDataExchange* pDX)

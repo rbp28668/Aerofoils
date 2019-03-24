@@ -68,6 +68,9 @@ void CMainTabCtrl::init(CCutterDlg* pApp)
 	pHardwareDialog->setHardware(pApp->getHardware());
 	pConfigDialog->initialize(pApp);
 
+	pGCodeDialog->setMainDialog(pApp);
+	pHardwareDialog->setMainDialog(pApp);
+
 	tabs[0]->ShowWindow(SW_SHOW);
 	tabs[1]->ShowWindow(SW_HIDE);
 	tabs[2]->ShowWindow(SW_HIDE);

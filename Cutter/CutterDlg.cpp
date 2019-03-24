@@ -195,6 +195,13 @@ void CCutterDlg::configLoaded(CutterConfig * pConfig)
 	}
 }
 
+void CCutterDlg::showLimitSwitches(int status) {
+	chkLXLimit.SetCheck((status & 0x01) != 0 ? BST_CHECKED : BST_UNCHECKED);
+	chkLYLimit.SetCheck((status & 0x02) != 0 ? BST_CHECKED : BST_UNCHECKED);
+	chkRXLimit.SetCheck((status & 0x04) != 0 ? BST_CHECKED : BST_UNCHECKED);
+	chkRYLimit.SetCheck((status & 0x08) != 0 ? BST_CHECKED : BST_UNCHECKED);
+}
+
 void CCutterDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -206,6 +213,10 @@ void CCutterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TXT_STATUS, lblStatus);
 	DDX_Control(pDX, IDC_CMD_LISTEN, btnListen);
 	DDX_Control(pDX, IDC_EDT_PORT, edtPort);
+	DDX_Control(pDX, IDC_CHK_LX_LIMIT, chkLXLimit);
+	DDX_Control(pDX, IDC_CHK_LY_LIMIT, chkLYLimit);
+	DDX_Control(pDX, IDC_CHK_RX_LIMIT, chkRXLimit);
+	DDX_Control(pDX, IDC_CHK_RY_LIMIT, chkRYLimit);
 }
 
 BEGIN_MESSAGE_MAP(CCutterDlg, CDialog)
