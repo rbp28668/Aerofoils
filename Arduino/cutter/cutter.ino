@@ -17,6 +17,7 @@
 #include "wireoff_handler.h"
 #include "abort_handler.h"
 
+char hexDigits[] = "0123456789ABCDEF";
 
 // Comms
 char inputBuffer[80];
@@ -79,7 +80,8 @@ void loop() {
     outputBuffer[0] = ok ? 'Y' : 'N';
     outputBuffer[1] = commandQueue.isFull() ? 'F' : '-';
     outputBuffer[2] = commandQueue.isEmpty() ? 'E' : '-';
-    outputBuffer[3] = 0;
+    outputBuffer[3] = hexDigits[hardware.getLimits() & 0x0F];
+    outputBuffer[4] = 0;
     Serial.println(outputBuffer);
   }
   
