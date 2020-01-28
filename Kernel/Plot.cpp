@@ -1,4 +1,21 @@
-// Plot.cpp: implementation of the CPlot class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// Plot.cpp: implementation of the CPlot class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -50,19 +67,7 @@ CPlot::CPlot()
 
 CPlot::~CPlot()
 {
-//	for(WINGS::iterator wi = wings.begin();
-//	wi != wings.end();
-//	++wi)
-//	{
-//		delete (*wi);
-//	}
-//
-//	for(ELLIPSES::iterator ei = ellipses.begin();
-//	ei != ellipses.end();
-//	++ei)
-//	{
-//		delete (*ei);
-//	}
+
 
 	for(STRUCTURES::iterator si = structures.begin();
 	si != structures.end();
@@ -88,9 +93,9 @@ void CPlot::plot(COutputDevice& pdev)
 	++iter)
 	{
 		CPlotStructure* pps = *iter;
-		pdev.startObject(pps);
+		pdev.startObject(pps->getDescriptiveText().c_str());
 		pps->plot(&pdev);
-		pdev.endObject(pps);
+		pdev.endObject(pps->getDescriptiveText().c_str());
 	}
 	pdev.Flush();
 	pdev.endPlot();
@@ -136,13 +141,6 @@ CPathPlotter* CPlot::addPathPlotter(CWing* pWing)
 	return pp;
 }
 
-CPathCutter* CPlot::addPathCutter(CWing* pWing)
-{
-	assert(this);
-	CPathCutter* ppc = new CPathCutter(pWing);
-	plot_structures.push_back(ppc);
-	return ppc;
-}
 
 CEllipsePlotter* CPlot::addEllipsePlotter(CEllipsePair* pep)
 {
@@ -229,25 +227,7 @@ void CPlot::serializeTo(CObjectSerializer& os)
 {
 	os.startSection("plot",this);
 
-//	os.startCollection("wings",wings.size());
-//	for(WINGS::iterator wi = wings.begin();
-//	wi != wings.end();
-//	++wi)
-//	{
-//		(*wi)->serializeTo(os);
-//	}
-//	os.endCollection();
-//
-//	os.startCollection("ellipses",ellipses.size());
-//	for(ELLIPSES::iterator ei = ellipses.begin();
-//	ei != ellipses.end();
-//	++ei)
-//	{
-//		(*ei)->serializeTo(os);
-//	}
-//	os.endCollection();
-
-	os.startCollection("structures",structures.size());
+	os.startCollection("structures", (int)structures.size());
 	for(STRUCTURES::iterator si = structures.begin();
 	si != structures.end();
 	++si)
@@ -256,7 +236,7 @@ void CPlot::serializeTo(CObjectSerializer& os)
 	}
 	os.endCollection();
 
-	os.startCollection("plotStructures",plot_structures.size());
+	os.startCollection("plotStructures", (int) plot_structures.size());
 	for(PLOT_STRUCTURES::iterator psi = plot_structures.begin();
 	psi != plot_structures.end();
 	++psi)
@@ -264,20 +244,6 @@ void CPlot::serializeTo(CObjectSerializer& os)
 		(*psi)->serializeTo(os);
 	}
 	os.endCollection();
-
-	// Need to write these out after the plot structures as
-	// plot-points don't have any underlying structure per se.
-	// Hence when we read them back, we've got to have already
-	// read the plot structures (which include the plot points)
-	// so we can reference them and set up the list.
-//	os.startCollection("points",points.size());
-//	for(PLOT_POINTS::iterator ppi = points.begin();
-//	ppi != points.end();
-//	++ppi)
-//	{
-//		os.writeReference("point",(*ppi));
-//	}
-//	os.endCollection();
 
 	os.endSection();
 }
@@ -288,23 +254,6 @@ void CPlot::serializeFrom(CObjectSerializer& os)
 
 	os.startReadSection("plot",this);
 
-//	int count = os.startReadCollection("wings");
-//	for(int i=0; i<count; ++i)
-//	{
-//		CWing* pWing = new CWing();
-//		pWing->serializeFrom(os);
-//		wings.push_back(pWing);
-//	}
-//	os.endReadCollection();
-//
-//	count = os.startReadCollection("ellipses");
-//	for(i=0; i<count; ++i)
-//	{
-//		CEllipsePair* pep = new CEllipsePair();
-//		pep->serializeFrom(os);
-//		ellipses.push_back(pep);
-//	}
-//	os.endReadCollection();
 
 	int count = os.startReadCollection("structures");
 	for(int i=0; i<count; ++i)
@@ -316,7 +265,7 @@ void CPlot::serializeFrom(CObjectSerializer& os)
 	os.endReadCollection();
 
 	count = os.startReadCollection("plotStructures");
-	for(i=0; i<count; ++i)
+	for(int i=0; i<count; ++i)
 	{
 		CPlotStructure* pps = static_cast<CPlotStructure*>(os.createSubtype());
 		pps->serializeFrom(os);
@@ -324,19 +273,6 @@ void CPlot::serializeFrom(CObjectSerializer& os)
 	}
 	os.endReadCollection();
 
-	// set up the plot points list now that the plot structures
-	// have been read in.
-//	if(os.ifExists("points"))
-//	{
-//		count = os.startReadCollection("points");
-//		for(i=0; i<count; ++i)
-//		{
-//			CPlotPoint* ppp = static_cast<CPlotPoint*>(os.readReference("point"));
-//			points.push_back(ppp);
-//
-//		}
-//		os.endReadCollection();
-//	}
 
 	os.endReadSection();
 

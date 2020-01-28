@@ -1,4 +1,21 @@
-/*
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*//*
 File:             CUTPATH.CPP
 
 Program/rev.:     Aerofoil 0.0
@@ -40,27 +57,28 @@ Revsision History:
 
 using namespace std;
 
-static CObjectFactory<CPathCutter> factory("pathCutter");
+const std::string CPathCutter::TYPE("pathCutter");
+static CObjectFactory<CPathCutter> factory(CPathCutter::TYPE.c_str());
+
 
 /************************************************************/
 /** CPathCutter::CPathCutter                               **/
 /************************************************************/
-CPathCutter::CPathCutter(CWing* pWing)
-: CPlotCommonImpl(pWing)
+CPathCutter::CPathCutter(CWing* pw)
+	: pWing(pw)
+	, tool_offset(0.0f)
+	, blToolOffsetSet(false)
+	, icount(0)
 {
 	assert(pWing);
-	
-	tool_offset = 0.0f;
-	blToolOffsetSet = false;
-	icount = 0;
 }
 
 CPathCutter::CPathCutter()
-: CPlotCommonImpl()
+	: pWing(0)
+	, tool_offset(0.0f)
+	, blToolOffsetSet(false)
+	, icount(0)
 {
-	tool_offset = 0.0f;
-	blToolOffsetSet = false;
-	icount = 0;
 }
 
 /************************************************************/
@@ -119,7 +137,7 @@ void CPathCutter::find_forward_PointT(const CAerofoil& foil,float *u)
 /************************************************************/
 /** PLOT_SEGMENT                                           **/
 /************************************************************/
-void CPathCutter::plot_segment(const CWing& wing, INTERCEPT* start, INTERCEPT* finish, float delta)
+void CPathCutter::plot_segment(COutputDevice* pdev, const CWing& wing, INTERCEPT* start, INTERCEPT* finish, float delta)
 {
 	PointT tangent;
 	float r_skin,t_skin;
@@ -157,7 +175,7 @@ void CPathCutter::plot_segment(const CWing& wing, INTERCEPT* start, INTERCEPT* f
 	r_here = wing.getRootTransform()->transform(r_here);
 	t_here = wing.getTipTransform()->transform(t_here);
 	
-	interp_move_to(r_here,t_here);
+	line(pdev, r_here,t_here);
 	
 	for(ru=ru0+delta;ru<=ru1;ru+=delta)
     {
@@ -176,7 +194,7 @@ void CPathCutter::plot_segment(const CWing& wing, INTERCEPT* start, INTERCEPT* f
 		r_here = wing.getRootTransform()->transform(r_here);
 		t_here = wing.getTipTransform()->transform(t_here);
 		
-		interp_line_to(r_here,t_here);
+		line(pdev, r_here,t_here);
     }
 	
 	r_here = root->Point(ru1,tangent);
@@ -190,7 +208,7 @@ void CPathCutter::plot_segment(const CWing& wing, INTERCEPT* start, INTERCEPT* f
 	r_here = wing.getRootTransform()->transform(r_here);
 	t_here = wing.getTipTransform()->transform(t_here);
 	
-	interp_line_to(r_here,t_here);
+	line(pdev, r_here,t_here);
 	
 	return;
 }
@@ -238,7 +256,7 @@ void CPathCutter::sort_intercepts(void)
 /** CUT_LE cuts the leading edge at the LE intercept       **/
 /************************************************************/
 
-void CPathCutter::cut_le(INTERCEPT* /*icept*/,FRAME* frame)
+void CPathCutter::cut_le(COutputDevice* pdev, INTERCEPT* /*icept*/,FRAME* frame)
 {
 	const CWing* wing = frame->wing;
 	
@@ -333,9 +351,9 @@ void CPathCutter::cut_le(INTERCEPT* /*icept*/,FRAME* frame)
 	// bottom to top. forward to the intersection and back to
 	// the bottom. Cutter should already be at the bottom.
 	*/
-	interp_line_to(rt,tt);
-	interp_line_to(ri,ti);
-	interp_line_to(rb,tb);
+	line(pdev,rt,tt);
+	line(pdev,ri,ti);
+	line(pdev,rb,tb);
 	
 	return;
 }
@@ -344,7 +362,7 @@ void CPathCutter::cut_le(INTERCEPT* /*icept*/,FRAME* frame)
 /************************************************************/
 /** CUT_TE cuts trailing edges at the TE intercepts        **/
 /************************************************************/
-void CPathCutter::cut_te(INTERCEPT* icept,FRAME* frame)
+void CPathCutter::cut_te(COutputDevice* pdev, INTERCEPT* icept,FRAME* frame)
 {
 	const CWing* wing = frame->wing;
 	const CAerofoil* root = wing->getRoot();
@@ -420,12 +438,12 @@ void CPathCutter::cut_te(INTERCEPT* icept,FRAME* frame)
 	tm = tipTransform->transform(tm);
 	
 	/* Now cut... */
-	interp_line_to(rm,tm);    /* cut to midPointT */
+	line(pdev,rm,tm);    /* cut to midPointT */
 	
 	if(icept->idx == 0)         /* then top surface */
-		interp_line_to(rt,tt);    /* so move back up */  
+		line(pdev,rt,tt);    /* so move back up */  
 	else                        /* bottom surface */
-		interp_line_to(rb,tb);    /* so move back down */
+		line(pdev,rb,tb);    /* so move back down */
 	return;
 }
 
@@ -433,7 +451,7 @@ void CPathCutter::cut_te(INTERCEPT* icept,FRAME* frame)
 /** CUT_SPAR cuts a spar (or half a spar for full-depth)   **/
 /** The intercept index has the index of the spar.         **/
 /************************************************************/
-void CPathCutter::cut_spar(INTERCEPT* icept,FRAME* frame)
+void CPathCutter::cut_spar(COutputDevice* pdev, INTERCEPT* icept,FRAME* frame)
 {
 	const CWing* wing = frame->wing;
 	const CAerofoil* root = wing->getRoot();
@@ -578,7 +596,7 @@ void CPathCutter::cut_spar(INTERCEPT* icept,FRAME* frame)
 		tpos[i] = tipTransform->transform(tpos[i]);
 		
 		/* Now cut... */
-		interp_line_to(rpos[i],tpos[i]);    /* cut to midPointT */
+		line(pdev,rpos[i],tpos[i]);    /* cut to midPointT */
     }
 	
 	return;
@@ -611,7 +629,7 @@ void CPathCutter::set_le_intercept(FRAME* frame)
 		ilist[icount].idx = 0;
 		ilist[icount].ru = ru1;
 		ilist[icount].tu = tu1;
-		ilist[icount].fn = cut_le;
+		ilist[icount].fn = &CPathCutter::cut_le;
 		ilist[icount].data = frame;
 		++icount;
     }
@@ -655,7 +673,7 @@ void CPathCutter::set_te_intercept(FRAME* frame)
 		ilist[icount].idx = 0;  /* mark as top surface*/
 		ilist[icount].ru = ru0;
 		ilist[icount].tu = tu0;
-		ilist[icount].fn = cut_te;
+		ilist[icount].fn = &CPathCutter::cut_te;
 		ilist[icount].data = frame;
 		++icount;
 		
@@ -663,7 +681,7 @@ void CPathCutter::set_te_intercept(FRAME* frame)
 		ilist[icount].idx = 1;  /* and bottom surface */
 		ilist[icount].ru = ru1;
 		ilist[icount].tu = tu1;
-		ilist[icount].fn = cut_te;
+		ilist[icount].fn = &CPathCutter::cut_te;
 		ilist[icount].data = frame;
 		++icount;
 		
@@ -706,7 +724,7 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru0;
 			ilist[icount].tu = tu0;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			break;
@@ -718,7 +736,7 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru1;
 			ilist[icount].tu = tu1;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			break;
@@ -733,14 +751,14 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru0;
 			ilist[icount].tu = tu0;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			
 			ilist[icount].idx = i;
 			ilist[icount].ru = ru1;
 			ilist[icount].tu = tu1;
-			ilist[icount].fn = cut_spar;
+			ilist[icount].fn = &CPathCutter::cut_spar;
 			ilist[icount].data = frame;
 			++icount;
 			break;
@@ -750,23 +768,24 @@ void CPathCutter::set_spars_intercept(FRAME* frame)
 	return;
 }
 
+
 /************************************************************/
 /** CUT_CORE  cuts the core in a single pass of the cutter.**/
 /** it sets up the start, finish and le intercept PointTs,  **/
 /** any intercepts for spars, LE and TE and then cuts      **/
 /** segments between the intercepts.                       **/
 /************************************************************/
-void CPathCutter::plot(COutputDevice* pdev)
+void CPathCutter::cut(COutputDevice* pdev, double toolOffset)
 {
 	assert(this);
 	assert(pdev);
 	
-	plot_flags = *(wing->getPlotFlags());
-	setDevice(pdev);
-	setInterpolate(plot_flags.plot_section);
+	set_tool_offset((float)toolOffset);
 
-	const CAerofoil *root = wing->getRoot();
-	const CAerofoil *tip = wing->getTip();
+	plot_flags = *(pWing->getPlotFlags());
+
+	const CAerofoil *root = pWing->getRoot();
+	const CAerofoil *tip = pWing->getTip();
 	
 	float ru0,ru1;
 	float tu0,tu1;
@@ -776,8 +795,8 @@ void CPathCutter::plot(COutputDevice* pdev)
 	FRAME frame;
 	int i;
 	
-	float root_chord = wing->getRootTransform()->getChord();
-	float tip_chord = wing->getTipTransform()->getChord();
+	float root_chord = pWing->getRootTransform()->getChord();
+	float tip_chord = pWing->getTipTransform()->getChord();
 	
 	/* Work out delta (in U) to give a line segment length of about 0.2 mm */
 	delta = max(root_chord, tip_chord);
@@ -785,10 +804,11 @@ void CPathCutter::plot(COutputDevice* pdev)
 	
 	
 	/* Get, & Scale the skin thickness to aerofoil space */
-	r_skin=wing->getSkinThickness() - tool_offset;
+	r_skin = pWing->getSkinThickness() - tool_offset;
 	r_skin /= root_chord;
-	t_skin=wing->getSkinThickness() - tool_offset;
+	t_skin = pWing->getSkinThickness() - tool_offset;
 	t_skin /= tip_chord;
+
 	
 	icount = 0;
 	
@@ -801,12 +821,12 @@ void CPathCutter::plot(COutputDevice* pdev)
 	PointT rte = root->Point(ru0,tangent);
 	rte.fx -= r_skin*tangent.fy;
 	rte.fy += r_skin*tangent.fx;
-	rte = wing->getRootTransform()->transform(rte);
+	rte = pWing->getRootTransform()->transform(rte);
 
 	PointT tte = tip->Point(tu0,tangent);
 	tte.fx -= t_skin*tangent.fy;
 	tte.fy += t_skin*tangent.fx;
-	tte = wing->getTipTransform()->transform(tte);
+	tte = pWing->getTipTransform()->transform(tte);
 	
 	/* store these values in INTERCEPT list */
 	ilist[icount].idx = 0;
@@ -843,7 +863,7 @@ void CPathCutter::plot(COutputDevice* pdev)
 	frame.tuf = tuf;
 	frame.ru1 = ru1;
 	frame.tu1 = tu1;
-	frame.wing = wing;
+	frame.wing = pWing;
 	
 	if(plot_flags.plot_le)
     {
@@ -863,20 +883,20 @@ void CPathCutter::plot(COutputDevice* pdev)
 	sort_intercepts();
 	
 	// Run the plot....
-	interp_move_to(rte,tte);
+	line(pdev, rte,tte);
 
 	for(i=0; i<icount-1; ++i)
     {
 		if(ilist[i].fn != NULL)
-			(this->*(ilist[i].fn))(ilist+i,&frame);
+			(this->*(ilist[i].fn))(pdev, ilist+i,&frame);
 		
-		plot_segment(*wing,ilist+i,ilist+i+1,delta);
+		plot_segment(pdev, *pWing,ilist+i,ilist+i+1,delta);
     }
 	
 	if(ilist[i].fn != NULL)
-		(this->*(ilist[i].fn))(ilist+i,&frame);
+		(this->*(ilist[i].fn))(pdev, ilist+i,&frame);
 
-	interp_move_to(rte,tte);
+	line(pdev, rte,tte);
 	
 	return;
 }
@@ -885,25 +905,44 @@ string CPathCutter::getDescriptiveText() const
 {
 	stringstream ss;
 
-	ss << "Wing Core at " << getSectionPos() << ends;
+	ss << "Wing Core for " << pWing->getDescriptiveText() << ends;
 	return ss.str();
+}
+
+std::string CPathCutter::getType() const
+{
+	return TYPE;
+}
+
+CStructure * CPathCutter::getStructure()
+{
+	assert(this);
+	assert(pWing);
+	return pWing;
+}
+
+const CStructure * CPathCutter::getStructure() const
+{
+	assert(this);
+	assert(pWing);
+	return pWing;
 }
 
 void CPathCutter::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("pathCutter",this);
-	CPlotStructure::serializeTo(os);
-	os.writeReference("wing",wing);
+	os.startSection(TYPE.c_str(),this);
+	CutStructure::serializeTo(os);
+	os.writeReference("wing", pWing);
 	os.write("toolOffset",tool_offset);
 	os.endSection();
 }
 
 void CPathCutter::serializeFrom(CObjectSerializer& os)
 {
-	os.startReadSection("pathCutter",this);
-	CPlotStructure::serializeFrom(os);
-	wing = static_cast<CWing*>(os.readReference("wing"));
+	os.startReadSection(TYPE.c_str(),this);
+	CutStructure::serializeFrom(os);
+	pWing = static_cast<CWing*>(os.readReference("wing"));
 	os.read("toolOffset",tool_offset);
 	os.endReadSection();
 }

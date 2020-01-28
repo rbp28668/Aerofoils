@@ -1,4 +1,21 @@
-// ObjectSerializer.cpp: implementation of the CObjectSerializer class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// ObjectSerializer.cpp: implementation of the CObjectSerializer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -8,6 +25,7 @@
 
 #include <assert.h>
 #include "ObjectSerializer.h"
+
 
 using namespace std;
 
@@ -85,7 +103,7 @@ void CObjectSerializer::startSection(const char* pszName, const void* pObject)
 {
 	assert(this);
 	*ps << "<" << pszName << ">" << endl;
-	*ps << "<id>" << (unsigned long)pObject << "</id>" << endl;
+	*ps << "<id>" << (unsigned long long)pObject << "</id>" << endl;
 	sectionNames.push(pszName);
 }
 
@@ -138,10 +156,21 @@ void CObjectSerializer::write(const char* name, int value)
 	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
 }
 
+void CObjectSerializer::write(const char * name, unsigned int value)
+{
+	assert(this);
+	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
+}
+
 // write a float
 void CObjectSerializer::write(const char* name, float value)
 {
 	assert(this);
+	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
+}
+
+void CObjectSerializer::write(const char * name, double value)
+{
 	*ps << "<" << name << ">" << value << "</" << name << ">" << endl;
 }
 
@@ -163,7 +192,7 @@ void CObjectSerializer::write(const char* name, bool value)
 void CObjectSerializer::writeReference(const char* name, const void* pObject)
 {
 	assert(this);
-	*ps << "<" << name << ">" << (unsigned long)pObject << "</" << name << ">" << endl;
+	*ps << "<" << name << ">" << (uintptr_t)pObject << "</" << name << ">" << endl;
 }
 
 // read an integer
@@ -179,6 +208,18 @@ void CObjectSerializer::read(const char* name, int& value)
 	endTag();
 }
 
+void CObjectSerializer::read(const char * name, unsigned int & value)
+{
+	assert(this);
+	string element = startTag();
+	if (element.compare(name) != 0)
+	{
+		throw CSerializeException("Serialization - name mismatch reading unsigned integer");
+	}
+	*ps >> value;
+	endTag();
+}
+
 // read a float
 void CObjectSerializer::read(const char* name, float& value)
 {
@@ -188,6 +229,19 @@ void CObjectSerializer::read(const char* name, float& value)
 	{
 		assert(false);
 		throw CSerializeException("Serialization - name mismatch reading float");
+	}
+	*ps >> value;
+	endTag();
+}
+
+void CObjectSerializer::read(const char * name, double & value)
+{
+	assert(this);
+	string element = startTag();
+	if (element.compare(name) != 0)
+	{
+		assert(false);
+		throw CSerializeException("Serialization - name mismatch reading double");
 	}
 	*ps >> value;
 	endTag();
@@ -246,7 +300,7 @@ void* CObjectSerializer::readReference(const char* name)
 		throw CSerializeException("Serialization - name mismatch reading reference");
 	}
 
-	unsigned long id;
+	uintptr_t id;
 	*ps >> id;
 
 	void* pObject = 0;

@@ -1,4 +1,21 @@
-/*
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*//*
 File:               Postscript.h
 
 Program/rev.:       Aerofoil 0.0
@@ -110,6 +127,13 @@ void CPostscriptOutputDevice::Flush()
 	assert(this);
 }
 
+PointT CPostscriptOutputDevice::position(int iStream)
+{
+	assert(this);
+	assert(iStream == 0 || iStream == 1);
+	return last[iStream];
+}
+
 
 /************************************************************
 * CPostscriptOutputDevice::StartDocument
@@ -119,7 +143,7 @@ void CPostscriptOutputDevice::StartDocument()
 {
   
     os << "%%!PS-Adobe-2.0\n";
-    os << "%%%%Creator: LaserPlot 0.0\n";
+    os << "%%%%Creator: Aerofoil 6.0\n";
     os << "%%%%EndComments\n";
   
     os << "/Times-Roman findfont 10 scalefont setfont\n";

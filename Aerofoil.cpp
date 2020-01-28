@@ -1,3 +1,20 @@
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/
 // Aerofoil.cpp : Defines the class behaviors for the application.
 //
 
@@ -8,6 +25,9 @@
 #include "ChildFrm.h"
 #include "AerofoilDoc.h"
 #include "AerofoilView.h"
+#include "CutterFrame.h"
+#include "CutterDoc.h"
+#include "CutterView.h"
 #include "VersionInfo.hpp"
 #include "kernel\ObjectSerializer.h"
 #include <dos.h>
@@ -70,21 +90,10 @@ BOOL CAerofoilApp::InitInstance()
 	}
 	AfxEnableControlContainer();
 
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	//  of your final executable, you should remove from the following
-	//  the specific initialization routines you do not need.
-
-#ifdef _AFXDLL
-	Enable3dControls();			// Call this when using MFC in a shared DLL
-#else
-	Enable3dControlsStatic();	// Call this when linking to MFC statically
-#endif
 
 	// Change the registry key under which our settings are stored.
-	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization.
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T("Airofoil Cutter and Plotter"));
 
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 
@@ -99,6 +108,13 @@ BOOL CAerofoilApp::InitInstance()
 		RUNTIME_CLASS(CAerofoilView));
 	AddDocTemplate(pDocTemplate);
 
+	pDocTemplate = new CMultiDocTemplate(
+		IDR_CUTTERTYPE,
+		RUNTIME_CLASS(CutterDoc),
+		RUNTIME_CLASS(CutterFrame), // custom MDI child frame
+		RUNTIME_CLASS(CutterView));
+	AddDocTemplate(pDocTemplate);
+
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
 	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
@@ -107,6 +123,7 @@ BOOL CAerofoilApp::InitInstance()
 
 	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;
+	cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing; // stop "new" on startup
 	ParseCommandLine(cmdInfo);
 
 	// Dispatch commands specified on the command line
@@ -148,6 +165,8 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+public:
 };
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
@@ -166,8 +185,6 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 // App command to run the dialog
@@ -241,3 +258,8 @@ BOOL CAerofoilApp::PreTranslateMessage(MSG* pMsg)
 
 	return CWinApp::PreTranslateMessage(pMsg);
 }
+
+
+
+
+

@@ -1,4 +1,21 @@
-// EllipsePair.cpp: implementation of the CEllipsePair class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// EllipsePair.cpp: implementation of the CEllipsePair class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,7 +26,8 @@
 
 using namespace std;
 
-static CObjectFactory<CEllipsePair> factory("ellipsePair");
+const std::string CEllipsePair::TYPE("ellipsePair");
+static CObjectFactory<CEllipsePair> factory(CEllipsePair::TYPE.c_str());
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -46,11 +64,16 @@ string CEllipsePair::getDescriptiveText() const
 	return os.str();
 }
 
+std::string CEllipsePair::getType() const
+{
+	return TYPE;
+}
+
 
 void CEllipsePair::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("ellipsePair",this);
+	os.startSection(TYPE.c_str(),this);
 	CStructure::serializeTo(os);
 	first.serializeTo(os);
 	second.serializeTo(os);
@@ -60,7 +83,7 @@ void CEllipsePair::serializeTo(CObjectSerializer& os)
 void CEllipsePair::serializeFrom(CObjectSerializer& os)
 {
 	assert(this);
-	os.startReadSection("ellipsePair",this);
+	os.startReadSection(TYPE.c_str(),this);
 	CStructure::serializeFrom(os);
 	first.serializeFrom(os);
 	second.serializeFrom(os);

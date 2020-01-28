@@ -1,4 +1,21 @@
-// PointPlotter.cpp: implementation of the CPointPlotter class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// PointPlotter.cpp: implementation of the CPointPlotter class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -37,43 +54,37 @@ void CPointPlotter::plot(COutputDevice *pdev)
 {
 	assert(this);
 	assert(pdev);
+	assert(!pdev->isCNC()); // use PointCutter for CNC, not this.
 	
-	setDevice(pdev);
+	const float size = 1.0f;
 
-	if(pdev->isCNC())
-		interp_move_to(structure->getRoot(), structure->getTip());
-	else
-	{
-		const float size = 1.0f;
+	PointT r = structure->getRoot();
+	PointT t = structure->getTip();
 
-		PointT r = structure->getRoot();
-		PointT t = structure->getTip();
+	r.fx -= size;
+	t.fx -= size;
+	interp_move_to(pdev, r,t); // left
 
-		r.fx -= size;
-		t.fx -= size;
-		interp_move_to(r,t); // left
+	r.fx += size;
+	r.fy -= size;
+	t.fx += size;
+	t.fy -= size;
+	interp_line_to(pdev, r,t); // bottom
 
-		r.fx += size;
-		r.fy -= size;
-		t.fx += size;
-		t.fy -= size;
-		interp_line_to(r,t); // bottom
+	r.fy += 2*size;
+	t.fy += 2*size;
+	interp_line_to(pdev, r,t); // top
 
-		r.fy += 2*size;
-		t.fy += 2*size;
-		interp_line_to(r,t); // top
+	r.fx += size;
+	r.fy -= size;
+	t.fx += size;
+	t.fy -= size;
+	interp_line_to(pdev, r,t); // right
 
-		r.fx += size;
-		r.fy -= size;
-		t.fx += size;
-		t.fy -= size;
-		interp_line_to(r,t); // right
+	r.fx -= 2*size;
+	t.fx -= 2*size;
+	interp_line_to(pdev, r,t); // left
 
-		r.fx -= 2*size;
-		t.fx -= 2*size;
-		interp_line_to(r,t); // left
-
-	}
 
 }
 

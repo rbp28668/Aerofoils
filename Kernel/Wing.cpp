@@ -1,4 +1,21 @@
-// Wing.cpp: implementation of the CWing class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// Wing.cpp: implementation of the CWing class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,7 +26,8 @@
 
 using namespace std;
 
-static CObjectFactory<CWing> factory("wing");
+const std::string CWing::TYPE("wing");
+static CObjectFactory<CWing> factory(CWing::TYPE.c_str());
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -83,6 +101,11 @@ string CWing::getDescriptiveText() const
 	return ost.str();
 }
 
+std::string CWing::getType() const
+{
+	return TYPE;
+}
+
 const CSpar* CWing::getSpar(int idx) const
 {
 	assert(this);
@@ -127,7 +150,7 @@ void CWing::deleteSpar(const CSpar* spar)
 void CWing::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
-	os.startSection("wing",this);
+	os.startSection(TYPE.c_str(),this);
 	os.write("le",le);
 	os.write("te",te);
 	os.write("span",span);
@@ -141,7 +164,7 @@ void CWing::serializeTo(CObjectSerializer& os)
 	
 	flags.serializeTo(os);
 
-	os.startCollection("spars",spars.size());
+	os.startCollection("spars",(int)spars.size());
 	for(SPARS::iterator iter = spars.begin();
 	iter != spars.end();
 	++iter)
@@ -156,7 +179,7 @@ void CWing::serializeTo(CObjectSerializer& os)
 void CWing::serializeFrom(CObjectSerializer& os)
 {
 	assert(this);
-	os.startReadSection("wing",this);
+	os.startReadSection(TYPE.c_str(),this);
 	os.read("le",le);
 	os.read("te",te);
 	os.read("span",span);

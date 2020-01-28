@@ -1,4 +1,21 @@
-// PlotCommonImpl.cpp: implementation of the CPlotCommonImpl class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// PlotCommonImpl.cpp: implementation of the CPlotCommonImpl class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -6,7 +23,6 @@
 #include <assert.h>
 #include "PlotCommonImpl.h"
 #include "Aerofoil.h"
-#include "Wing.h"
 
 const float CPlotCommonImpl::CLOSE = 1.0e-3f;     /* limit of resolution in mm per step */
 const int CPlotCommonImpl::MAX_ITER = 10;			/* max number of runs thro' the iteration */
@@ -17,39 +33,16 @@ const float CPlotCommonImpl::WEENY = 1.0e-6f;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPlotCommonImpl::CPlotCommonImpl(CWing* pw)
-: wing(pw)
+CPlotCommonImpl::CPlotCommonImpl()
 {
-	assert(pw);
 }
 
-CPlotCommonImpl::CPlotCommonImpl() 
-:wing(0)
-{}
 
 CPlotCommonImpl::~CPlotCommonImpl()
 {
 
 }
 
-float CPlotCommonImpl::getSpan() const
-{
-	assert(this);
-	assert(wing);
-	return wing->getSpan();
-}
-
-CStructure* CPlotCommonImpl::getStructure()
-{
-	assert(this);
-	return wing;
-}
-
-const CStructure* CPlotCommonImpl::getStructure() const
-{
-	assert(this);
-	return wing;
-}
 
 /***********************************************************/
 /** FIND_CORE_TE  searches along the spline curve from    **/

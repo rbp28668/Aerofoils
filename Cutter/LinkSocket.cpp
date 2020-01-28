@@ -1,11 +1,26 @@
-// LinkSocket.cpp : implementation file
-//
+/* Cutter
+Copyright(C) 2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 #include "stdafx.h"
 #include <assert.h>
-#include "Cutter.h"
 #include "LinkSocket.h"
 #include "SocketEventHandler.h"
+#include "../Kernel/Cutter.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,8 +55,11 @@ END_MESSAGE_MAP()
 
 void CLinkSocket::OnConnect(int nErrorCode) 
 {
-	// TODO: Add your specialized code here and/or call the base class
-	
+	if (nErrorCode != 0) {
+		handler->error(nErrorCode);
+	} else {
+		handler->connected();
+	}
 	CAsyncSocket::OnConnect(nErrorCode);
 }
 
@@ -57,7 +75,7 @@ void CLinkSocket::OnReceive(int nErrorCode)
 		int bytesRead = Receive(bytes + totalBytes, bytesFree);
 		switch(bytesRead)
 		{
-		case 0:
+		case 0: // remote side has shut down gracefully.
 			Close();
 			closed = true;
 			break;
@@ -79,7 +97,11 @@ void CLinkSocket::OnReceive(int nErrorCode)
 	{
 		handler->error(nErrorCode);
 	}
-	
+
+	if (closed) {
+		handler->closed();
+	}
+
 	CAsyncSocket::OnReceive(nErrorCode);
 }
 

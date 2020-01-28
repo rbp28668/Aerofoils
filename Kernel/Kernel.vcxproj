@@ -5,13 +5,25 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Template|Win32">
       <Configuration>Template</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|x64">
+      <Configuration>Template</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -24,7 +36,17 @@
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
@@ -36,17 +58,34 @@
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
   </ImportGroup>
@@ -56,12 +95,46 @@
     <IntDir>.\Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\Debug\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\Kernel.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0809</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\Kernel.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\Kernel.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
@@ -119,16 +192,64 @@
       <OutputFile>.\Debug\Kernel.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\Kernel.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0809</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\Kernel.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(OutDir)\Kernel.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aerofoil.cpp" />
+    <ClCompile Include="Bounds.cpp" />
+    <ClCompile Include="CNCConnectionOutputDevice.cpp" />
+    <ClCompile Include="CNCSocket.cpp" />
+    <ClCompile Include="Cut.cpp" />
     <ClCompile Include="Cutpath.cpp" />
+    <ClCompile Include="CutStructure.cpp" />
+    <ClCompile Include="CutterGeometry.cpp" />
     <ClCompile Include="Drivers\DXFOutputDevice.cpp" />
     <ClCompile Include="Drivers\LASERJET.CPP" />
     <ClCompile Include="Drivers\Postscript.cpp" />
+    <ClCompile Include="DummyCutter.cpp" />
+    <ClCompile Include="DXFObject.cpp" />
+    <ClCompile Include="DXFObjectCutter.cpp" />
+    <ClCompile Include="DXFParser.cpp" />
     <ClCompile Include="Ellipse.cpp" />
+    <ClCompile Include="EllipseCutter.cpp" />
     <ClCompile Include="EllipseFlags.cpp" />
     <ClCompile Include="EllipsePair.cpp" />
     <ClCompile Include="EllipsePlotter.cpp" />
+    <ClCompile Include="GCodeInterpreter.cpp" />
+    <ClCompile Include="GCodeOutputDevice.cpp" />
+    <ClCompile Include="GCodeOutputFile.cpp" />
+    <ClCompile Include="GCodeProgram.cpp" />
+    <ClCompile Include="GCodeSnippet.cpp" />
+    <ClCompile Include="GCodeSnippetCutter.cpp" />
+    <ClCompile Include="HomeCutter.cpp" />
     <ClCompile Include="KernelError.cpp" />
     <ClCompile Include="ObjectSerializer.cpp" />
     <ClCompile Include="OutputDevice.cpp" />
@@ -137,6 +258,8 @@
     <ClCompile Include="PlotFlags.cpp" />
     <ClCompile Include="Plotfoil.cpp" />
     <ClCompile Include="PlotStructure.cpp" />
+    <ClCompile Include="PlottingCutter.cpp" />
+    <ClCompile Include="PointCutter.cpp" />
     <ClCompile Include="PointPlotter.cpp" />
     <ClCompile Include="PointStructure.cpp" />
     <ClCompile Include="PointT.cpp" />
@@ -150,31 +273,55 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aerofoil.h" />
+    <ClInclude Include="Bounds.h" />
+    <ClInclude Include="CNCConnectionOutputDevice.h" />
+    <ClInclude Include="CNCSocket.h" />
+    <ClInclude Include="Cut.h" />
     <ClInclude Include="Cutpath.h" />
+    <ClInclude Include="CutStructure.h" />
+    <ClInclude Include="Cutter.h" />
+    <ClInclude Include="CutterGeometry.h" />
     <ClInclude Include="Drivers\DXFOutputDevice.h" />
     <ClInclude Include="Drivers\LASERJET.H" />
     <ClInclude Include="Drivers\Postscript.h" />
+    <ClInclude Include="DummyCutter.h" />
+    <ClInclude Include="DXFObject.h" />
+    <ClInclude Include="DXFObjectCutter.h" />
+    <ClInclude Include="DXFParser.h" />
     <ClInclude Include="Ellipse.h" />
+    <ClInclude Include="EllipseCutter.h" />
     <ClInclude Include="EllipseFlags.h" />
     <ClInclude Include="EllipsePair.h" />
     <ClInclude Include="EllipsePlotter.h" />
+    <ClInclude Include="GCodeInterpreter.h" />
+    <ClInclude Include="GCodeOutputDevice.h" />
+    <ClInclude Include="GCodeOutputFile.h" />
+    <ClInclude Include="GCodeProgram.h" />
+    <ClInclude Include="GCodeSnippet.h" />
+    <ClInclude Include="GCodeSnippetCutter.h" />
+    <ClInclude Include="HomeCutter.h" />
     <ClInclude Include="KernelError.h" />
     <ClInclude Include="ObjectSerializer.h" />
     <ClInclude Include="OutputDevice.h" />
     <ClInclude Include="ParametricCurve2D.h" />
+    <ClInclude Include="ParserContext.h" />
     <ClInclude Include="Plot.h" />
     <ClInclude Include="PlotCommonImpl.h" />
     <ClInclude Include="PlotFlags.h" />
     <ClInclude Include="Plotfoil.h" />
     <ClInclude Include="PlotStructure.h" />
+    <ClInclude Include="PlottingCutter.h" />
+    <ClInclude Include="PointCutter.h" />
     <ClInclude Include="PointPlotter.h" />
     <ClInclude Include="PointStructure.h" />
     <ClInclude Include="PointT.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="RectT.h" />
     <ClInclude Include="Spar.h" />
     <ClInclude Include="Spline.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="trim.h" />
     <ClInclude Include="UIProxy.h" />
     <ClInclude Include="Wing.h" />
   </ItemGroup>

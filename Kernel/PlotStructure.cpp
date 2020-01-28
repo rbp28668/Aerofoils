@@ -1,44 +1,29 @@
-// PlotStructure.cpp: implementation of the CPlotStructure class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// PlotStructure.cpp: implementation of the CPlotStructure class.
 //
 //////////////////////////////////////////////////////////////////////
 
 #include <assert.h>
-#include <limits>
 #include "PlotStructure.h"
 #include "ObjectSerializer.h"
 #include "UIProxy.h"
-
-CPlotStructure::CBounds::CBounds()
-: lastOpIsMove(false)
-{
-	minx = miny = std::numeric_limits<float>::max();
-	maxx = maxy = -std::numeric_limits<float>::max();
-}
-
-void CPlotStructure::CBounds::MoveTo(int iStream, const PointT& pt)
-{
-	lastMove = pt;
-	lastOpIsMove = true;
-}
-void CPlotStructure::CBounds::LineTo(int iStream, const PointT& pt)
-{
-	if(lastOpIsMove)
-	{
-		lastOpIsMove = false;
-		LineTo(iStream,lastMove);
-	}
-
-	if(pt.fx < minx) minx = pt.fx;
-	if(pt.fx > maxx) maxx = pt.fx;
-	if(pt.fy < miny) miny = pt.fy;
-	if(pt.fy > maxy) maxy = pt.fy;
-}
-
-RectT CPlotStructure::CBounds::getBounds() const
-{
-	RectT bounds(minx,maxy,maxx,miny);
-	return bounds;
-}
+#include "Bounds.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -47,8 +32,7 @@ RectT CPlotStructure::CBounds::getBounds() const
 /************************************************************/
 /************************************************************/
 CPlotStructure::CPlotStructure()
-: plotDevice(0)
-, xpos(0), ypos(0)
+: xpos(0), ypos(0)
 , section_pos(0)
 , shouldInterpolate(true)
 , root_stream(0)
@@ -67,16 +51,11 @@ CPlotStructure::~CPlotStructure()
 	delete proxy;
 }
 
-/************************************************************/
-/************************************************************/
-COutputDevice* CPlotStructure::setDevice(COutputDevice *pdev)
+
+void CPlotStructure::setInterpolate(bool inter)
 {
 	assert(this);
-	assert(pdev);
-
-	COutputDevice* old = plotDevice;
-	plotDevice = pdev;
-	return old;
+	shouldInterpolate = inter;
 }
 
 /************************************************************/
@@ -105,11 +84,18 @@ CUIProxy* CPlotStructure::getUIProxy()
 	return proxy;
 }
 
+void CPlotStructure::setPosition(float x, float y)
+{
+	assert(this);
+	xpos = x;
+	ypos = y;
+}
+
 /************************************************************/
 /************************************************************/
 RectT CPlotStructure::getBounds()
 {
-	CBounds bounds;
+	Bounds bounds;
 	plot(&bounds);
 	return bounds.getBounds();
 }
@@ -149,19 +135,19 @@ PointT CPlotStructure::interpolate(const PointT& root, const PointT& tip) const
 /** interpolated end point. Which is done depends on the  **/
 /** status of plot_flags.plot_section.            **/
 /************************************************************/
-void CPlotStructure::interp_move_to(const PointT& root, const PointT& tip) const
+void CPlotStructure::interp_move_to(COutputDevice* pdev, const PointT& root, const PointT& tip) const
 {
 	assert(this);
 	
 	if(shouldInterpolate)
 	{
 		PointT here = interpolate(root,tip);
-		plotDevice->MoveTo(root_stream,offset(here));
+		pdev->MoveTo(root_stream,offset(here));
 	}
 	else
 	{
-		plotDevice->MoveTo(root_stream,offset(root));
-		plotDevice->MoveTo(tip_stream,offset(tip));
+		pdev->MoveTo(root_stream,offset(root));
+		pdev->MoveTo(tip_stream,offset(tip));
 	}
 	return;
 }
@@ -171,28 +157,28 @@ void CPlotStructure::interp_move_to(const PointT& root, const PointT& tip) const
 /** interpolated end point. Which is done depends on the  **/
 /** status of plot_flags.plot_section.            **/
 /************************************************************/
-void CPlotStructure::interp_line_to(const PointT& root,const PointT& tip) const
+void CPlotStructure::interp_line_to(COutputDevice* pdev, const PointT& root,const PointT& tip) const
 {
 	assert(this);
 	
 	if(shouldInterpolate)
 	{
 		PointT here = interpolate(root,tip);
-		plotDevice->LineTo(root_stream,offset(here));
+		pdev->LineTo(root_stream,offset(here));
 	}
 	else
 	{
-		plotDevice->LineTo(root_stream,offset(root));
-		plotDevice->LineTo(tip_stream,offset(tip));
+		pdev->LineTo(root_stream,offset(root));
+		pdev->LineTo(tip_stream,offset(tip));
 	}
 	return;
 }
 
-void CPlotStructure::LabelAt(const PointT& where, const std::string& text, bool atRoot) const
+void CPlotStructure::LabelAt(COutputDevice* pdev, const PointT& where, const std::string& text, bool atRoot) const
 {
 	int stream = (atRoot) ? root_stream : tip_stream;
-	plotDevice->MoveTo( stream, offset(where));
-	plotDevice->Label( stream, text.c_str());
+	pdev->MoveTo( stream, offset(where));
+	pdev->Label( stream, text.c_str());
 }
 
 PointT CPlotStructure::offset(PointT pos) const 

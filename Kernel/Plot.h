@@ -1,4 +1,22 @@
-// Plot.h: interface for the CPlot class.
+
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// Plot.h: interface for the CPlot class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -11,6 +29,7 @@
 
 #include <list>
 #include "OutputDevice.h"
+#include "PointT.h"
 
 class CStructure;
 class CWing;
@@ -19,7 +38,6 @@ class CPointStructure;
 
 class CPlotStructure;
 class CPathPlotter;
-class CPathCutter;
 class CEllipsePlotter;
 class CPointPlotter;
 
@@ -43,7 +61,6 @@ public:
 
 	// Add plotters
 	CPathPlotter* addPathPlotter(CWing* pWing);
-	CPathCutter* addPathCutter(CWing* pWing);
 	CEllipsePlotter* addEllipsePlotter(CEllipsePair* pep);
 	CPointPlotter* addPointPlotter(CPointStructure* pps);
 
@@ -65,7 +82,7 @@ public:
 	StructureIterator endStructures() {return structures.end();}
 	PlotStructureIterator endPlotStructures() {return plot_structures.end();}
 	
-	int getStructureCount() const {return structures.size();}
+	int getStructureCount() const {return (int)structures.size();}
 
 	void moveToEnd(CPlotStructure* ps);
 
@@ -81,6 +98,7 @@ private:
 		virtual void Label(int iStream, const char* psz) {};
 		virtual void Home() {};
 		virtual void Flush() {};
+		virtual PointT position(int iStream) { return PointT(); }
 
 		float getMinDist() const {return d2min;}
 	private:

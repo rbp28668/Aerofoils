@@ -1,4 +1,21 @@
-// Wing.h: interface for the CWing class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// Wing.h: interface for the CWing class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -20,6 +37,9 @@
 class CWing : public CStructure
 {
 public:
+
+	static const std::string TYPE;
+
 	CWing(const char* rootSection, float rootThickness, const char* tipSection, float tipThickness);
 	explicit CWing(const CWing& rhs);
 	explicit CWing();
@@ -29,6 +49,7 @@ public:
 	CWing& operator = (const CWing& rhs);
 
 	virtual std::string getDescriptiveText() const;
+	virtual std::string getType() const;
 
 	const CAerofoil* getRoot() const {return &root;}
 	CAerofoil* getRoot() {return &root;}
@@ -50,7 +71,7 @@ public:
 
 	const CSpar* getSpar(int idx) const;
 	CSpar* getSpar(int idx);
-	int getSparCount() const {return spars.size();}
+	int getSparCount() const {return (int)spars.size();}
 
 	CSpar* addSpar(const CSpar& spar);
 	void deleteSpar(const CSpar* spar);

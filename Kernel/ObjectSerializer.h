@@ -1,4 +1,21 @@
-// ObjectSerializer.h: interface for the CObjectSerializer class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// ObjectSerializer.h: interface for the CObjectSerializer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -17,10 +34,11 @@
 #include <stack>
 #include <map>
 #include <iostream>
+#include <exception>
 
 ///////////////////////////////////////////////////////////////////////
 // Class for serialization exceptions
-class CSerializeException : public exception
+class CSerializeException : public std::exception
 {
 public:
 	CSerializeException(const char* msg) : errMsg(msg) {}
@@ -57,7 +75,9 @@ public:
 	void endOptional();
 
 	void write(const char* name, int value);
+	void write(const char* name, unsigned int value);
 	void write(const char* name, float value);
+	void write(const char* name, double value);
 	void write(const char* name, const char* text);
 	void write(const char* name, bool value);
 	void writeReference(const char* name, const void* pObject);
@@ -74,7 +94,9 @@ public:
 	bool ifExists(const char* pszName);
 
 	void read(const char* name, int& value);
+	void read(const char* name, unsigned int& value);
 	void read(const char* name, float& value);
+	void read(const char* name, double& value);
 	void read(const char* name, std::string& text);
 	void read(const char* name, bool& value);
 	void* readReference(const char* name);
@@ -106,14 +128,14 @@ public:
 	std::stack<std::string> sectionNames;	// to match start and end tags	
 
 	// map objects by their IDs for resolving references
-	typedef	std::map<unsigned long, void*> OBJECT_MAP; 
+	typedef	std::map<uintptr_t, void*> OBJECT_MAP; 
 	OBJECT_MAP objectMap;
 
 	std::string savedTag;	// allow 1 tag lookahead
 
 	std::iostream* ps;	
 	
-	unsigned long currentID;  // holds ID of current object when reading.
+	uintptr_t currentID;  // holds ID of current object when reading.
 };
 
 ///////////////////////////////////////////////////////////////////////

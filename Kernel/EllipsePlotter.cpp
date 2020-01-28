@@ -1,4 +1,21 @@
-// EllipsePlotter.cpp: implementation of the CEllipsePlotter class.
+/* Aerofoil
+Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
+Copyright(C) 1995-2019 R Bruce Porteous
+
+This program is free software : you can redistribute it and / or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.If not, see <http://www.gnu.org/licenses/>.
+*/// EllipsePlotter.cpp: implementation of the CEllipsePlotter class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -63,8 +80,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 	PointT h0,h1;
 	double rads;
 	
-	setDevice(pdev);
-	
+
 	const CEllipse *first = ellipses->getFirst();
 	const CEllipse *second = ellipses->getSecond();
 	
@@ -83,7 +99,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
 		
-		interp_move_to(h0,h1);
+		interp_move_to(pdev, h0,h1);
 
 		for(theta = DELTA;theta <= 180.0f; theta+=DELTA)
 		{
@@ -96,7 +112,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 			h0.fy = y0+first->getY();
 			h1.fx = x1+second->getX();
 			h1.fy = y1+second->getY();
-			interp_line_to(h0,h1);
+			interp_line_to(pdev,h0,h1);
 		}
 	}
 	
@@ -113,7 +129,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
 		
-		interp_move_to(h0,h1);
+		interp_move_to(pdev,h0,h1);
 
 		for(theta = 180.0f + DELTA;theta <= 360.0f; theta+=DELTA)
 		{
@@ -126,7 +142,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 			h0.fy = y0+first->getY();
 			h1.fx = x1+second->getX();
 			h1.fy = y1+second->getY();
-			interp_line_to(h0,h1);
+			interp_line_to(pdev,h0,h1);
 		}
 	}
 	
@@ -140,7 +156,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_move_to(h0,h1);
+		interp_move_to(pdev,h0,h1);
 		
 		x0 = -first->getB()/2.0f;
 		x1 = -second->getB()/2.0f;
@@ -149,7 +165,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_line_to(h0,h1);
+		interp_line_to(pdev,h0,h1);
 		
 		x0 = x1 = 0.0f;
 		if(ellipses->getPlotFlags()->plot_upper)
@@ -165,7 +181,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_move_to(h0,h1);
+		interp_move_to(pdev,h0,h1);
 		
 		x0 = x1 = 0.0f;
 		if(ellipses->getPlotFlags()->plot_lower)
@@ -181,7 +197,7 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 		h0.fy = y0+first->getY();
 		h1.fx = x1+second->getX();
 		h1.fy = y1+second->getY();
-		interp_line_to(h0,h1);
+		interp_line_to(pdev,h0,h1);
     }
 	
 	return;
