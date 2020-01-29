@@ -13,10 +13,10 @@ void Steppers::start(long steps, long distances[]){
 
   for(int i=0; i<STEPPER_COUNT; ++i) {
    long dist = distances[i];
-   byte dirBit = 0;
+   byte dirBit = 1; // move away from home for +ve
    if(dist < 0){
      dist = -dist;
-     dirBit = 1;
+     dirBit = 0;    // move towards home for -ve
    }
     _steppers[i].start(dist, steps);
     _dirMask <<= 1;
