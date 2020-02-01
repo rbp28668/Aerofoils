@@ -60,18 +60,23 @@ Cut::~Cut()
 
 void Cut::cut(COutputDevice & pdev)
 {
-	pdev.startPlot();
-	for (CutIterator iter = cut_structures.begin();
-		iter != cut_structures.end();
-		++iter)
-	{
-		CutStructure* pcs = *iter;
-		pdev.startObject(pcs->getDescriptiveText().c_str());
-		pcs->cut(&pdev, toolOffset);
-		pdev.endObject(pcs->getDescriptiveText().c_str());
+	try {
+		pdev.startPlot();
+		for (CutIterator iter = cut_structures.begin();
+			iter != cut_structures.end();
+			++iter)
+		{
+			CutStructure* pcs = *iter;
+			pdev.startObject(pcs->getDescriptiveText().c_str());
+			pcs->cut(&pdev, toolOffset);
+			pdev.endObject(pcs->getDescriptiveText().c_str());
+		}
+		pdev.Flush();
+		pdev.endPlot();
 	}
-	pdev.Flush();
-	pdev.endPlot();
+	catch (COutputDevice::OutputException& ex) {
+		// NOP for the time being.
+	}
 
 }
 

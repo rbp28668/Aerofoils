@@ -56,6 +56,7 @@ BEGIN_MESSAGE_MAP(CutterFrame, CMDIChildWnd)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_DRAWMOVES, &CutterFrame::OnUpdateViewDrawmoves)
 	ON_COMMAND(ID_VIEW_ZOOM, &CutterFrame::OnViewZoom)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM, &CutterFrame::OnUpdateViewZoom)
+	ON_COMMAND(ID_VIEW_PREVIEW_CUT_PATH, &CutterFrame::OnViewPreviewCutPath)
 END_MESSAGE_MAP()
 
 
@@ -83,4 +84,9 @@ void CutterFrame::OnViewZoom()
 void CutterFrame::OnUpdateViewZoom(CCmdUI *pCmdUI)
 {
 	static_cast<CutterView*>(m_wndSplitter.GetPane(0, 1))->OnUpdateViewZoom(pCmdUI);
+}
+
+void CutterFrame::OnViewPreviewCutPath()
+{
+	static_cast<CutterView*>(m_wndSplitter.GetPane(0, 1))->OnViewPreviewCutPath();
 }

@@ -60,6 +60,9 @@ public:
 	// Z - Abort
 	int abort();
 
+	// A - Abort NOW
+	int abortNow();
+
 	// H - Home
 	int home();
 

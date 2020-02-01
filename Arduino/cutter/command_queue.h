@@ -24,10 +24,10 @@ public:
   byte* addCommand(int nBytes);
   bool isEmpty();
   bool isFull();
+  void clear();
   Operation* processNextCommand();
 
 };
 
 
 #endif
-

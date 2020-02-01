@@ -17,6 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
+#include <string>
 #include "BackgroundGrid.hpp"
 #include "Kernel\CutterGeometry.h"
 #include "kernel\cut.h"
@@ -58,6 +59,7 @@ public:
 
 	double sizeX() const { return geometry.getXTravel(); }
 	double sizeY() const { return geometry.getYTravel(); }
+	const CutterGeometry& getGeometry() { return geometry; }
 
 	CBackgroundGrid& getGrid() { return grid; }
 
@@ -98,4 +100,5 @@ public:
 	afx_msg void OnFileCncoutput();
 	afx_msg void OnFileCncsetup();
 	afx_msg void OnFileGcode();
+
 };

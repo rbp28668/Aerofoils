@@ -103,8 +103,6 @@ void CHardwareDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK_LYPULSE, lyStepPulse);
 	DDX_Control(pDX, IDC_CHECK_RXPULSE, rxStepPulse);
 	DDX_Control(pDX, IDC_CHECK_RYPULSE, ryStepPulse);
-
-
 }
 
 
@@ -118,7 +116,7 @@ BEGIN_MESSAGE_MAP(CHardwareDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_WIREOFF, &CHardwareDialog::OnBnClickedBtnWireoff)
 	ON_BN_CLICKED(IDC_BTN_ENABLE, &CHardwareDialog::OnBnClickedBtnEnable)
 	ON_BN_CLICKED(IDC_BTN_DISABLE, &CHardwareDialog::OnBnClickedBtnDisable)
-
+	ON_BN_CLICKED(IDC_BTN_ABORT_NOW, &CHardwareDialog::OnBnClickedBtnAbortNow)
 END_MESSAGE_MAP()
 
 
@@ -222,6 +220,14 @@ void CHardwareDialog::OnBnClickedBtnDisable()
 {
 	if (pCutter != 0) {
 		int stat = pCutter->disable();
+		showStatus(stat);
+	}
+}
+
+void CHardwareDialog::OnBnClickedBtnAbortNow()
+{
+	if (pCutter != 0) {
+		int stat = pCutter->abortNow();
 		showStatus(stat);
 	}
 }

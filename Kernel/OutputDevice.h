@@ -24,13 +24,30 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-
+#include <exception>
 class PointT;
 class CPlotStructure;
 
 class COutputDevice  
 {
 public:
+
+	// Some generic exceptions for an output device.  Subclasses should throw
+	// some variant of OutputException in the event of the operation failing.
+	struct OutputException : public std::exception {};
+
+	struct LimitsException : public OutputException {
+		const char * what() const throw () {
+			return "Reached limits of device";
+		}
+	};
+
+	struct StoppedException : public OutputException {
+		const char * what() const throw () {
+			return "Device has been stopped";
+		}
+	};
+
 	COutputDevice();
 	virtual ~COutputDevice();
 

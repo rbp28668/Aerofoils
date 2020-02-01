@@ -1,9 +1,13 @@
 #include "command_processor.h"
 #include "command_handler.h"
 #include "command_queue.h"
+#include "operation.h"
+#include "fifo.h"
 
-CommandProcessor::CommandProcessor(CommandQueue* queue) {
+CommandProcessor::CommandProcessor(CommandQueue* queue, Fifo* fifo, Operation** currentOperation) {
   _commandQueue = queue;
+  _fifo = fifo;
+  _currentOperation = currentOperation;
 }
 
 bool CommandProcessor::process(char* message, int nBytes){
@@ -25,6 +29,14 @@ bool CommandProcessor::process(char* message, int nBytes){
       ok = true;
       break;
 
+    case 'A':   // stop everything!
+      _commandQueue->clear();
+      (*_currentOperation)->stop();
+      _fifo->clear();
+      ok = true;
+      break;
+
+
     default: 
       CommandHandler* handler = CommandHandler::find(*message);
       if(handler == 0) {
@@ -41,6 +53,7 @@ bool CommandProcessor::process(char* message, int nBytes){
 void CommandProcessor::showCommands(){
   Serial.println("? - show this message");
   Serial.println("P - ping, show queue state");
+  Serial.println("A - abort now and clear queues");
   for(int i=0; i<CommandHandler::getCount(); ++i){
     CommandHandler* handler = CommandHandler::lookup(i);
     Serial.print(handler->getCommandChar());
@@ -48,5 +61,3 @@ void CommandProcessor::showCommands(){
     Serial.println(handler->getDescription());
   }
 }
-
-

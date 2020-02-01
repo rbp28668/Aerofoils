@@ -30,37 +30,38 @@
     <SccProjectName>"$/Aerofoil/Windows", XABAAAAA</SccProjectName>
     <SccLocalPath>..</SccLocalPath>
     <ProjectGuid>{058DEE9A-621B-4A0F-A6A2-969266910689}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -231,6 +232,8 @@
     <ClCompile Include="Cutpath.cpp" />
     <ClCompile Include="CutStructure.cpp" />
     <ClCompile Include="CutterGeometry.cpp" />
+    <ClCompile Include="CutterSimulation.cpp" />
+    <ClCompile Include="CutterSimulationOutputDevice.cpp" />
     <ClCompile Include="Drivers\DXFOutputDevice.cpp" />
     <ClCompile Include="Drivers\LASERJET.CPP" />
     <ClCompile Include="Drivers\Postscript.cpp" />
@@ -266,6 +269,7 @@
     <ClCompile Include="RectT.cpp" />
     <ClCompile Include="Spar.cpp" />
     <ClCompile Include="Spline.cpp" />
+    <ClCompile Include="Steps.cpp" />
     <ClCompile Include="Structure.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIProxy.cpp" />
@@ -281,6 +285,8 @@
     <ClInclude Include="CutStructure.h" />
     <ClInclude Include="Cutter.h" />
     <ClInclude Include="CutterGeometry.h" />
+    <ClInclude Include="CutterSimulation.h" />
+    <ClInclude Include="CutterSimulationOutputDevice.h" />
     <ClInclude Include="Drivers\DXFOutputDevice.h" />
     <ClInclude Include="Drivers\LASERJET.H" />
     <ClInclude Include="Drivers\Postscript.h" />
@@ -319,6 +325,7 @@
     <ClInclude Include="RectT.h" />
     <ClInclude Include="Spar.h" />
     <ClInclude Include="Spline.h" />
+    <ClInclude Include="Steps.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="trim.h" />

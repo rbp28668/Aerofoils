@@ -26,8 +26,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CoordMap.h"
 #include "ZoomDlg.h"
 #include "WindowsOutputDevice.h"
+#include "CutterPreviewWindow.h"
 #include "Kernel/PointT.h"
 #include "Kernel/RectT.h"
+#include "Kernel/CutterSimulation.h"
+#include "Kernel/CutterSimulationOutputDevice.h"
 
 
 // CutterView
@@ -51,6 +54,7 @@ BEGIN_MESSAGE_MAP(CutterView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_DRAWMOVES, &CutterView::OnUpdateViewDrawmoves)
 	ON_COMMAND(ID_VIEW_ZOOM, &CutterView::OnViewZoom)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM, &CutterView::OnUpdateViewZoom)
+	ON_COMMAND(ID_VIEW_PREVIEW_CUT_PATH, &CutterView::OnViewPreviewCutPath)
 END_MESSAGE_MAP()
 
 
@@ -217,3 +221,20 @@ void CutterView::OnUpdateViewZoom(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable(1);
 }
+
+void CutterView::OnViewPreviewCutPath()
+{
+	CutterPreviewWindow* preview = new CutterPreviewWindow(this);
+	CutterSimulation* simulation = new CutterSimulation(preview);
+	simulation->setGeometry(GetDocument()->getGeometry());
+	CutterSimulationOutputDevice* device = new CutterSimulationOutputDevice(simulation);
+
+	preview->ShowWindow(TRUE);
+	GetDocument()->runCut(*device);
+
+	delete device;
+	delete simulation;
+	delete preview;
+
+}
+

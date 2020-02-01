@@ -44,6 +44,7 @@ public:
 	afx_msg void OnUpdateViewDrawmoves(CCmdUI *pCmdUI);
 	afx_msg void OnViewZoom();
 	afx_msg void OnUpdateViewZoom(CCmdUI *pCmdUI);
+	afx_msg void OnViewPreviewCutPath();
 };
 
 

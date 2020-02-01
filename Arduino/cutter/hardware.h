@@ -1,7 +1,7 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 class Hardware {
 
@@ -19,5 +19,3 @@ public:
   void enableLimits(bool enabled);
 };
 #endif
-
-

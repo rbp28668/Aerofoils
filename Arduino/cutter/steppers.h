@@ -1,6 +1,6 @@
 #ifndef STEPPERS_H
 #define STEPPERS_H
-#include "WProgram.h"
+#include "Arduino.h"
 #include "operation.h"
 #include "fifo.h"
 #include "stepper.h"

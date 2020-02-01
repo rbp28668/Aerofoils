@@ -2,7 +2,7 @@
 #define FIFO_H
 
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 #define FIFO_SIZE 2048
 

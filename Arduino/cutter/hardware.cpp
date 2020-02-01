@@ -73,7 +73,7 @@ void Hardware::step(byte value){
   digitalWrite(DIRN_XL, ((value & 0x80) != 0) ? HIGH : LOW);  
   digitalWrite(DIRN_YL, ((value & 0x40) != 0) ? HIGH : LOW);  
   digitalWrite(DIRN_XR, ((value & 0x20) != 0) ? HIGH : LOW);  
-  digitalWrite(DIRN_YR, ((value & 0x10) != 0) ? HIGH : LOW);
+  digitalWrite(DIRN_YR, ((value & 0x10) != 0) ? LOW : HIGH); // swapped pending a bit of rewiring.
 
   // Set appropriate pulse bits
   digitalWrite(PULSE_XL, ((value & 0x08) != 0) ? HIGH : LOW);  
@@ -128,6 +128,3 @@ void Hardware::enableStatusLed(bool enabled){
 void Hardware::enableLimits(bool enabled){
   _limitsEnabled = enabled;
 }
-
-
-

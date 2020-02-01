@@ -67,9 +67,12 @@ public:
 	afx_msg void OnBnClickedBtnWireoff();
 	afx_msg void OnBnClickedBtnEnable();
 	afx_msg void OnBnClickedBtnDisable();
+	afx_msg void OnBnClickedBtnAbortNow();
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
+public:
+	
 };

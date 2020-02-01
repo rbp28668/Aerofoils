@@ -129,6 +129,15 @@ int CutterHardware::abort()
 	return send(msg);
 }
 
+int CutterHardware::abortNow()
+{
+	assert(this);
+	assert(serialLink.isConnected());
+
+	std::string msg("A");
+	return send(msg);
+}
+
 int CutterHardware::home()
 {
 	assert(this);

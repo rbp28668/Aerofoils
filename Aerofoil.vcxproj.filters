@@ -129,6 +129,9 @@
     <ClCompile Include="WingCoreFlagsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CutterPreviewWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Aerofoil.rc">
@@ -254,6 +257,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WingCoreFlagsDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CutterPreviewWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

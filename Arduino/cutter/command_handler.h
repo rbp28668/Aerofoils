@@ -1,7 +1,7 @@
 #ifndef COMMAND_HANDLER_H
 #define COMMAND_HANDLER_H
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 class Operation;
 
@@ -52,5 +52,3 @@ public:
 };
 
 #endif
-
-

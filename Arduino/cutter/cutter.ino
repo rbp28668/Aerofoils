@@ -26,7 +26,6 @@ char outputBuffer[80];
 IntervalTimer tickTimer;
 Hardware hardware;
 CommandQueue commandQueue;
-CommandProcessor commandProcessor(&commandQueue);
 Fifo fifo;
 
 // Main operations
@@ -34,6 +33,8 @@ Steppers steppers(&fifo);
 Home home(&fifo, &hardware);
 Idle idle;
 Operation* currentOperation = &idle; 
+
+CommandProcessor commandProcessor(&commandQueue, &fifo, &currentOperation);
 
 // Commands
 StepHandler stepHandler(&hardware);

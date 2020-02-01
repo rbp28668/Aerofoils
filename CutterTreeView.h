@@ -20,6 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 // to be cut and the cut instances for those structures.
 #pragma once
 #include <map>
+#include <string>
 
 class CutterDoc;
 class CStructure;

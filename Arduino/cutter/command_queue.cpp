@@ -4,7 +4,11 @@
 
 #define HIGH_WATER (BUFFER_SIZE-64)  // ensure that last command doesn't overflow buffer 
 
-CommandQueue::CommandQueue(){
+CommandQueue::CommandQueue()
+ : _inPtr(0)
+ , _outPtr(0)
+ , _count(0)
+{
 }
 
 // provides a pointer to write nBytes of command data to.
@@ -27,6 +31,10 @@ bool CommandQueue::isFull() {
   return _count > HIGH_WATER;
 }
 
+void CommandQueue::clear() {
+  _inPtr = _outPtr = _count = 0;
+}
+
 Operation* CommandQueue::processNextCommand() {
   Operation* newOp = 0;
   if( !isEmpty()) {
@@ -41,4 +49,3 @@ Operation* CommandQueue::processNextCommand() {
   }
   return newOp;
 }
-
