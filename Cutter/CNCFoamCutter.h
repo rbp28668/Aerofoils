@@ -53,6 +53,7 @@ class CNCFoamCutter : public Cutter {
 	void blockToAxes(Position<double>& pos);
 	void updateBlockInfo(); // call when blockLeft, blockRight or width are changed;
 
+	void validate(int status);
 public:
 	CNCFoamCutter(CutterHardware* pHardware);
 	virtual ~CNCFoamCutter();

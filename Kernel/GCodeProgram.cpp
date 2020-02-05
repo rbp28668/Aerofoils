@@ -1,3 +1,4 @@
+
 /* Cutter
 Copyright(C) 2019 R Bruce Porteous
 
@@ -155,9 +156,21 @@ bool GCodeProgram::step()
 	assert(this);
 	assert(pInterpreter);
 	if (currentLine != lines.end()) {
-		pInterpreter->process(*currentLine);
-		++currentLine;
-		if (currentLine == lines.end()) {
+		try {
+			pInterpreter->process(*currentLine);
+			++currentLine;
+			if (currentLine == lines.end()) {
+				bComplete = true;
+				bPaused = false;
+				bRunning = false;
+			}
+		}
+		catch (std::exception & e) {
+			errors.push_back(e.what());
+			if (upstreamContext) {
+				upstreamContext->showError(*currentLine,0, e.what());
+			}
+
 			bComplete = true;
 			bPaused = false;
 			bRunning = false;

@@ -16,7 +16,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
+#include <exception>
 #include "Position.h"
+
+class CutterException : public std::exception {
+	const char* message;
+public:
+	CutterException(const char* msg) : message(msg) {}
+	virtual const char* what() const throw() { return message; }
+};
 
 class Cutter
 {

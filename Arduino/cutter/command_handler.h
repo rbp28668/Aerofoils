@@ -9,7 +9,7 @@ class Operation;
 
 // This is the base class for binary representations of a command
 struct commandT{
-  char _tag;
+  char _tag; // index into the _handlers array for this command.
 };
 
 /*

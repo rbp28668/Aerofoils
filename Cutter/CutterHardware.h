@@ -18,22 +18,39 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include "SerialLink.h"
 #include <string>
+#include <fstream>
 
+// #define OUTPUT_TO_FILE 1
 class CutterHardware {
 
 private:
-
+#ifdef OUTPUT_TO_FILE
+	std::ofstream ofs;
+#endif
 	SerialLink serialLink;
+	bool queueFull;
+	bool queueEmpty;
 
 	int processResponse();
-	int send(std::string& msg);
+	int send(const std::string& msg);
+	int queueCommand(const std::string& msg);
 public:
-	// Bitmask for return values.
-	enum {
+	// Bitmask for return values.  Note LS 4 bits has the 
+	// status of the limit switches for the 4 axes.
+	enum class StatusT {
 		VALID = 0x10,
 	    FULL = 0x20,
-		EMPTY = 0x40
+		EMPTY = 0x40,
+		COMMS = 0x80
 	};
+
+	// Inline convenience functions for pulling apart the return codes.
+	static inline bool isValid(int status) { return (status & (int)StatusT::VALID) != 0; }
+	static inline bool isQueueFull(int status) { return (status & (int)StatusT::FULL) != 0; }
+	static inline bool isQueueEmpty(int status) { return (status & (int)StatusT::EMPTY) != 0; }
+	static inline bool isCommsError(int status) { return (status & (int)StatusT::COMMS) != 0; }
+	static inline int limitSwitches(int status) { return (status & 0x0F); }
+
 
 	typedef __int32 AxisT;
 

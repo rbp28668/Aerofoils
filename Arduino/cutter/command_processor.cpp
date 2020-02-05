@@ -4,6 +4,8 @@
 #include "operation.h"
 #include "fifo.h"
 
+#include "line_handler.h"
+
 CommandProcessor::CommandProcessor(CommandQueue* queue, Fifo* fifo, Operation** currentOperation) {
   _commandQueue = queue;
   _fifo = fifo;
@@ -38,11 +40,15 @@ bool CommandProcessor::process(char* message, int nBytes){
 
 
     default: 
-      CommandHandler* handler = CommandHandler::find(*message);
-      if(handler == 0) {
-        return false;  // no valid handler
+      if(_commandQueue->isFull()){
+        return false; // error to send a command that needs to be queued when queue full.
+      } else {
+        CommandHandler* handler = CommandHandler::find(*message);
+        if(handler == 0) {
+          return false;  // no valid handler
+        }
+        ok = handler->parseInto(message, _commandQueue->addCommand(handler));
       }
-      ok = handler->parseInto(message, _commandQueue->addCommand(handler->getMessageSize()));
       break;
     }
   }
@@ -60,4 +66,6 @@ void CommandProcessor::showCommands(){
     Serial.print(" - ");
     Serial.println(handler->getDescription());
   }
+  Serial.println("--------------");
+  Serial.println(sizeof(lineT));
 }

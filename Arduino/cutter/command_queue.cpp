@@ -12,7 +12,8 @@ CommandQueue::CommandQueue()
 }
 
 // provides a pointer to write nBytes of command data to.
-byte* CommandQueue::addCommand(int nBytes){
+byte* CommandQueue::addCommand(CommandHandler* cmd){
+  int nBytes = cmd->getMessageSize();
   byte* head = _buffer + _inPtr;
   _count += nBytes;
   _inPtr += nBytes;
@@ -28,7 +29,7 @@ bool CommandQueue::isEmpty() {
 }
 
 bool CommandQueue::isFull() {
-  return _count > HIGH_WATER;
+  return _count >= HIGH_WATER;
 }
 
 void CommandQueue::clear() {
@@ -40,12 +41,14 @@ Operation* CommandQueue::processNextCommand() {
   if( !isEmpty()) {
     byte* head = _buffer + _outPtr;
     CommandHandler* cmd = CommandHandler::lookup(*head);
-    newOp = cmd->process(head);
-    _count -= cmd->getMessageSize();
-    _outPtr += cmd->getMessageSize();
+    int nBytes = cmd->getMessageSize();
+    
+    _count -= nBytes;
+    _outPtr += nBytes;
     if(_outPtr > HIGH_WATER){
       _outPtr = 0;
     }
+     newOp = cmd->process(head);
   }
   return newOp;
 }

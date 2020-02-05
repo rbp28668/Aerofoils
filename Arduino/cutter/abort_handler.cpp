@@ -2,11 +2,13 @@
 #include "hardware.h"
 #include "fifo.h"
 #include "operation.h"
+#include "command_queue.h"
 
 static char description[] = "Abort current operation and clear queues";
 
-AbortHandler::AbortHandler(Fifo* fifo, Hardware* hardware, Operation** currentOperation)
+AbortHandler::AbortHandler(CommandQueue* commands, Fifo* fifo, Hardware* hardware, Operation** currentOperation)
 : CommandHandler('Z') {
+  _commands = commands;
   _fifo = fifo;
   _hardware = hardware;
   _currentOperation = currentOperation;
@@ -25,10 +27,10 @@ Operation* AbortHandler::process(byte* msg){
   _hardware->setEnabled(false);
   _fifo->clear();
   (*_currentOperation)->stop();
+  _commands->clear();
   return 0;
 }
 
 char* AbortHandler::getDescription(){
   return description;
 }
-

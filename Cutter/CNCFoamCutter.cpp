@@ -44,6 +44,18 @@ void CNCFoamCutter::updateBlockInfo()
 	wd = wr - wl;
 }
 
+void CNCFoamCutter::validate(int status)
+{
+	if (!CutterHardware::isValid(status)) {
+		if (CutterHardware::isCommsError(status)) {
+			throw CutterException("Communications failure to hardware");
+		}
+		else {
+			throw CutterException("Invalid response from hardware");
+		}
+	}
+}
+
 CNCFoamCutter::CNCFoamCutter(CutterHardware* ph)
 	: pHardware(ph),
 	width(1000.0),
@@ -55,8 +67,8 @@ CNCFoamCutter::CNCFoamCutter(CutterHardware* ph)
 	yMicroStep(4),
 	blockLeft(0),
 	blockRight(1000.0),
-	stepFrequency(2000),
-	feedRate(10.0), // arbitrary 10mm per sec
+	stepFrequency(2500),
+	feedRate(2.0), // arbitrary 2mm per sec
 	feedRateError(false)
 {
 	assert(this);
@@ -196,11 +208,12 @@ void CNCFoamCutter::fastMove(const Position<double> & deltas)
 		max(abs(stepDeltas.x), abs(stepDeltas.y)), 
 		max(abs(stepDeltas.u), abs(stepDeltas.v))
 	);
-	pHardware->line((CutterHardware::AxisT)longest, 
+	int status = pHardware->line((CutterHardware::AxisT)longest, 
 		(CutterHardware::AxisT)stepDeltas.x, (CutterHardware::AxisT)stepDeltas.y, 
 		(CutterHardware::AxisT)stepDeltas.u, (CutterHardware::AxisT)stepDeltas.v );
-
+	validate(status);
 	axesPosition.set(target); // update current axes position to reflect this move.
+	
 }
 
 void CNCFoamCutter::cutMove(const Position<double> & deltas)
@@ -254,9 +267,10 @@ void CNCFoamCutter::cutMove(const Position<double> & deltas)
 		feedRateError = true;
 	}
 
-	pHardware->line((CutterHardware::AxisT)steps, 
+	int status = pHardware->line((CutterHardware::AxisT)steps, 
 		(CutterHardware::AxisT)stepDeltas.x, (CutterHardware::AxisT)stepDeltas.y, 
 		(CutterHardware::AxisT)stepDeltas.u, (CutterHardware::AxisT)stepDeltas.v);
+	validate(status);
 
 	axesPosition.set(target); // update current axes position to reflect this move.
 
@@ -267,33 +281,40 @@ void CNCFoamCutter::dwell(int mS)
 	// use line with 0 x,y,u,v and pick steps to give delay
 	double t = (double)mS / 1000.0; // in seconds.
 	double pulses = stepFrequency * t;
-	pHardware->line(lround(pulses),0,0,0,0);
+	int status = pHardware->line(lround(pulses),0,0,0,0);
+	validate(status);
 }
 
 void CNCFoamCutter::home()
 {
 	currentPosition.zero();
-	pHardware->home();
+	axesPosition.zero();
+	int status = pHardware->home();
+	validate(status);
 }
 
 void CNCFoamCutter::wireOn()
 {
-	pHardware->wireOn();
+	int status = pHardware->wireOn();
+	validate(status);
 }
 
 void CNCFoamCutter::wireOff()
 {
-	pHardware->wireOff();
+	int status = pHardware->wireOff();
+	validate(status);
 }
 
 void CNCFoamCutter::enableMotors()
 {
-	pHardware->enable();
+	int status = pHardware->enable();
+	validate(status);
 }
 
 void CNCFoamCutter::disableMotors()
 {
-	pHardware->disable();
+	int status = pHardware->disable();
+	validate(status);
 }
 
 double CNCFoamCutter::getFeedRate()

@@ -60,7 +60,7 @@ SerialLink::ErrorT SerialLink::connect(const char * pszPort)
 		FILE_FLAG_OVERLAPPED,
 		0);
 	if (hComm == INVALID_HANDLE_VALUE) {
-		return CANNOT_CONNECT;
+		return ErrorT::CANNOT_CONNECT;
 	}
 
 
@@ -69,7 +69,7 @@ SerialLink::ErrorT SerialLink::connect(const char * pszPort)
 
 	dcb.DCBlength = sizeof(dcb);
 	if (!BuildCommDCBA("4800,n,8,1", &dcb)) {
-		return BUILD_DCB;
+		return ErrorT::BUILD_DCB;
 	}
 	dcb.fOutxCtsFlow = 0;
 	dcb.fOutxDsrFlow = 0;
@@ -82,7 +82,7 @@ SerialLink::ErrorT SerialLink::connect(const char * pszPort)
 
 
 	if (!SetCommState(hComm, &dcb)) {
-		return COMMS_SET_STATE;
+		return ErrorT::COMMS_SET_STATE;
 	}
 
 	// Set timeouts - see https://docs.microsoft.com/en-gb/windows/desktop/api/winbase/nf-winbase-getcommtimeouts
@@ -94,14 +94,14 @@ SerialLink::ErrorT SerialLink::connect(const char * pszPort)
 	timeouts.WriteTotalTimeoutConstant = 100;   // + 100mS per message
 
 	if (!::SetCommTimeouts(hComm, &timeouts)) {
-		return COMMS_SET_TIMEOUTS;
+		return ErrorT::COMMS_SET_TIMEOUTS;
 	}
 	// Create event for use by overlapped IO
 	hEventRead = ::CreateEvent(NULL, TRUE, TRUE, NULL); // Manual reset, initially signalled.
 	hEventWrite = ::CreateEvent(NULL, TRUE, TRUE, NULL); // Manual reset, initially signalled.
 
 	connected = true;
-	return SUCCESS;
+	return ErrorT::SUCCESS;
 }
 
 void SerialLink::disconnect()
@@ -166,7 +166,7 @@ bool SerialLink::canSend() {
 }
 
 
-void SerialLink::send(std::string& str) {
+void SerialLink::send(const std::string& str) {
 	assert(this);
 	assert(connected);
    
