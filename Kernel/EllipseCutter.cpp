@@ -160,4 +160,5 @@ void EllipseCutter::serializeFrom(CObjectSerializer & os)
 	CutStructure::serializeFrom(os);
 	pEllipses = static_cast<CEllipsePair*>(os.readReference("ellipseRef"));
 	os.endReadSection();
+	updateBounds();
 }

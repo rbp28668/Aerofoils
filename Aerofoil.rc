@@ -181,16 +181,18 @@ BEGIN
     LTEXT           "Tool offset should be set to half the width of the kerf produced by the hot wire",IDC_STATIC,19,24,263,15
 END
 
-IDD_FEED_RATE DIALOGEX 0, 0, 197, 78
+IDD_FEED_RATE DIALOGEX 0, 0, 237, 92
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Set Feed Rate"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,83,57,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,140,57,50,14
+    DEFPUSHBUTTON   "OK",IDOK,125,71,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,71,50,14
     LTEXT           "Feed rate",IDC_STATIC,23,26,32,8
     LTEXT           "mm per second",IDC_STATIC,111,26,49,8
     EDITTEXT        IDC_EDIT_FEED_RATE,63,23,40,14,ES_AUTOHSCROLL
+    CONTROL         "Include Feed Rate in Output",IDC_CHK_INCLUDE_FEED,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,65,45,107,10
 END
 
 
@@ -213,9 +215,9 @@ BEGIN
     IDD_FEED_RATE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 190
+        RIGHTMARGIN, 230
         TOPMARGIN, 7
-        BOTTOMMARGIN, 71
+        BOTTOMMARGIN, 85
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -282,6 +284,7 @@ BEGIN
     POPUP "Point"
     BEGIN
         MENUITEM "Edit",                        ID_POINT_EDIT
+        MENUITEM "New Move",                    ID_POINT_NEWMOVE
         MENUITEM "New Cut ",                    ID_POINT_NEWCUT
         MENUITEM "Delete",                      ID_POINT_DELETE
     END
@@ -313,6 +316,8 @@ BEGIN
     POPUP "Point Cut"
     BEGIN
         MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        MENUITEM "Make Cut",                    ID_POINTCUT_MAKECUT
+        MENUITEM "Make Move",                   ID_POINTCUT_MAKEMOVE
         MENUITEM "Move Up",                     ID_CUT_MOVEUP
         MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
         MENUITEM "Delete",                      ID_POINTCUT_DELETE
@@ -386,151 +391,6 @@ BEGIN
         MENUITEM "&About Aerofoil...",          ID_APP_ABOUT
     END
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\Aerofoil.ico"
-
-IDR_AEROFOTYPE          ICON                    "res\\AerofoilDoc.ico"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-
-IDB_SPLASH              BITMAP                  "Splsh16.bmp"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Toolbar
-//
-
-IDR_MAINFRAME TOOLBAR 16, 15
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    SEPARATOR
-    BUTTON      ID_APP_ABOUT
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
-
-IDR_MAINFRAME ACCELERATORS
-BEGIN
-    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
-    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
-    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
-    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
-    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
-    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
-    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
-    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
-    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
-    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
-    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
-    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
-    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Version
-//
-
-VS_VERSION_INFO VERSIONINFO
- FILEVERSION 6,0,0,0
- PRODUCTVERSION 6,0,0,0
- FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x1L
-#else
- FILEFLAGS 0x0L
-#endif
- FILEOS 0x4L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
-BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "080904b0"
-        BEGIN
-            VALUE "Comments", "Aerofoil Plotting Program"
-            VALUE "FileDescription", "Aerofoil MFC Application"
-            VALUE "FileVersion", "6.0.0.0"
-            VALUE "InternalName", "Aerofoil"
-            VALUE "LegalCopyright", "Copyright (C) Bruce Porteous 2002-2020"
-            VALUE "OriginalFilename", "Aerofoil.EXE"
-            VALUE "ProductName", "Aerofoil Application"
-            VALUE "ProductVersion", "6.0.0.0"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x809, 1200
-    END
-END
-
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#include ""afxres.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE 
-BEGIN
-    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
-    "#define _AFX_NO_OLE_RESOURCES\r\n"
-    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
-    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
-    "\r\n"
-    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
-    "#ifdef _WIN32\r\n"
-    "LANGUAGE 9, 1\r\n"
-    "#pragma code_page(1252)\r\n"
-    "#endif //_WIN32\r\n"
-    "#include ""res\\Aerofoil.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
-    "#include ""afxres.rc""         // Standard components\r\n"
-    "#include ""afxprint.rc""       // printing/print preview resources\r\n"
-    "#endif\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1067,6 +927,151 @@ IDD_WING_CUT_FLAGS AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Aerofoil.ico"
+
+IDR_AEROFOTYPE          ICON                    "res\\AerofoilDoc.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+IDB_SPLASH              BITMAP                  "Splsh16.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 6,0,0,0
+ PRODUCTVERSION 6,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080904b0"
+        BEGIN
+            VALUE "Comments", "Aerofoil Plotting Program"
+            VALUE "FileDescription", "Aerofoil MFC Application"
+            VALUE "FileVersion", "6.0.0.0"
+            VALUE "InternalName", "Aerofoil"
+            VALUE "LegalCopyright", "Copyright (C) Bruce Porteous 2002-2020"
+            VALUE "OriginalFilename", "Aerofoil.EXE"
+            VALUE "ProductName", "Aerofoil Application"
+            VALUE "ProductVersion", "6.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x809, 1200
+    END
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\Aerofoil.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#include ""afxprint.rc""       // printing/print preview resources\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////

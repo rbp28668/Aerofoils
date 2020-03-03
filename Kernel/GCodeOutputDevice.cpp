@@ -138,7 +138,7 @@ void GCodeOutputDevice::startObject(const char* description)
 	assert(this);
 	assert(description);
 	ostringstream oss;
-	oss << "( START" << description << ")" << endl; //  treat as comment
+	oss << "( START " << description << ")" << endl; //  treat as comment
 	send(oss.str());
 }
 
@@ -147,7 +147,7 @@ void GCodeOutputDevice::endObject(const char* description)
 	assert(this);
 	assert(description);
 	ostringstream oss;
-	oss << "( END" << description << ")" << endl; //  treat as comment
+	oss << "( END " << description << ")" << endl; //  treat as comment
 	send(oss.str());
 }
 
@@ -182,6 +182,14 @@ void GCodeOutputDevice::passthrough(const char * data)
 	ostringstream oss;
 	oss << data << endl; //  treat as comment
 	send(oss.str());
+}
+
+void GCodeOutputDevice::feedRate(float mmPerSec)
+{
+	std::ostringstream os;
+	os << "G01 F" << mmPerSec << std::endl;
+	send(os.str());
+
 }
 
 

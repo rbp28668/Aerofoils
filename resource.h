@@ -141,6 +141,8 @@
 #define IDC_EDIT_TOOL_OFFSET            1092
 #define IDC_EDIT1                       1093
 #define IDC_EDIT_FEED_RATE              1093
+#define IDC_CHECK1                      1094
+#define IDC_CHK_INCLUDE_FEED            1094
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -244,8 +246,11 @@
 #define ID_POINTCUT_TRANSFORM           32873
 #define ID_VIEW_DRAWMOVES               32874
 #define ID_WING_PLOTFLAGS               32875
-#define ID_CUTTER_TOOLOFFSET            32876
-#define ID_CUTTER_FEEDRATE              32877
+#define ID_POINT_NEWMOVE                32876
+#define ID_POINTCUT_MAKECUT             32877
+#define ID_POINTCUT_MAKEMOVE            32878
+#define ID_CUTTER_TOOLOFFSET            32879
+#define ID_CUTTER_FEEDRATE              32880
 
 // Next default values for new objects
 // 
@@ -253,8 +258,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        162
-#define _APS_NEXT_COMMAND_VALUE         32878
-#define _APS_NEXT_CONTROL_VALUE         1094
+#define _APS_NEXT_COMMAND_VALUE         32881
+#define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

@@ -63,6 +63,7 @@ public:
 	virtual void startPlot() {}
 	virtual void endPlot() {}
 	virtual void passthrough(const char* data) {}
+	virtual void feedRate(float mmPerSec) {}
 
 	// Information about the device;
 	bool isCNC() const {return _isCNC;}

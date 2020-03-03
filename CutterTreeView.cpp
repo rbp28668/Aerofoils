@@ -52,6 +52,8 @@ IMPLEMENT_DYNCREATE(CutterTreeView, CTreeView)
 
 CutterTreeView::CutterTreeView()
 	: hSelected(0)
+	, hCutting(0)
+	, hStructure(0)
 {
 	menuLookup.insert(make_pair(CWing::TYPE, WING));
 	menuLookup.insert(make_pair(CEllipsePair::TYPE, ELLIPSE));
@@ -188,7 +190,7 @@ void CutterTreeView::processClick(UINT nFlags, CPoint point)
 {
 	assert(this);
 
-	UINT uFlags;
+	UINT uFlags = 0;
 	HTREEITEM hItem = GetTreeCtrl().HitTest(point, &uFlags);
 
 	if ((hItem != NULL) && (TVHT_ONITEM & uFlags))
@@ -299,6 +301,9 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_CUT_MOVEDOWN, &CutterTreeView::OnCutMovedown)
 	ON_COMMAND(ID_CUT_TRANSFORM, &CutterTreeView::OnCutTransform)
 	ON_COMMAND(ID_WING_PLOTFLAGS, &CutterTreeView::OnWingPlotflags)
+	ON_COMMAND(ID_POINT_NEWMOVE, &CutterTreeView::OnPointNewmove)
+	ON_COMMAND(ID_POINTCUT_MAKECUT, &CutterTreeView::OnPointcutMakecut)
+	ON_COMMAND(ID_POINTCUT_MAKEMOVE, &CutterTreeView::OnPointcutMakemove)
 END_MESSAGE_MAP()
 
 
@@ -549,6 +554,19 @@ void CutterTreeView::OnPointNewcut()
 	}
 }
 
+void CutterTreeView::OnPointNewmove()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		CPointStructure* pPoints = static_cast<CPointStructure*>(node->pItem);
+
+		PointCutter* cut = GetDocument()->newPointCutter(pPoints);
+		cut->setFast(true);
+		addCutNode(cut, POINT_CUT);
+	}
+}
 
 void CutterTreeView::OnPointDelete()
 {
@@ -644,6 +662,7 @@ void CutterTreeView::OnCutTransform()
 			pcut->setInvert(dialog.invert == TRUE );
 			pcut->setReflect(dialog.reflect == TRUE);
 			pcut->setRootSide(dialog.rootSide == 0);
+			GetTreeCtrl().SetItemText(item, pcut->getDescriptiveText().c_str());
 			GetDocument()->RedrawNow();
 		}
 	}
@@ -659,6 +678,33 @@ void CutterTreeView::OnWingcutDelete()
 void CutterTreeView::OnEllipsecutDelete()
 {
 	deleteCutNode();
+}
+
+void CutterTreeView::OnPointcutMakecut()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		PointCutter* pcut = static_cast<PointCutter*>(node->pItem);
+		pcut->setFast(false);
+		GetTreeCtrl().SetItemText(item, pcut->getDescriptiveText().c_str());
+		GetDocument()->RedrawNow();
+	}
+}
+
+
+void CutterTreeView::OnPointcutMakemove()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		PointCutter* pcut = static_cast<PointCutter*>(node->pItem);
+		pcut->setFast(true);
+		GetTreeCtrl().SetItemText(item, pcut->getDescriptiveText().c_str());
+		GetDocument()->RedrawNow();
+	}
 }
 
 
@@ -708,6 +754,10 @@ void CutterTreeView::OnCutMovedown()
 		GetDocument()->RedrawNow();
 	}
 }
+
+
+
+
 
 
 

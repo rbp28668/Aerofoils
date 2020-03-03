@@ -14,6 +14,7 @@ IMPLEMENT_DYNAMIC(FeedRateDialog, CDialogEx)
 FeedRateDialog::FeedRateDialog(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_FEED_RATE, pParent)
 	, feedRate(0)
+	, useFeedRate(FALSE)
 {
 
 }
@@ -27,6 +28,7 @@ void FeedRateDialog::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_FEED_RATE, feedRate);
 	DDV_MinMaxDouble(pDX, feedRate, 0.1, 10);
+	DDX_Check(pDX, IDC_CHK_INCLUDE_FEED, useFeedRate);
 }
 
 

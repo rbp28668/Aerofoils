@@ -23,4 +23,5 @@ protected:
 public:
 	// feed rate in mm per second
 	double feedRate;
+	BOOL useFeedRate;
 };
