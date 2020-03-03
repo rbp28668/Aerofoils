@@ -240,6 +240,9 @@
 #define ID_POINTCUT_TRANSFORM           32873
 #define ID_VIEW_DRAWMOVES               32874
 #define ID_WING_PLOTFLAGS               32875
+#define ID_POINT_NEWMOVE                32876
+#define ID_POINTCUT_MAKECUT             32877
+#define ID_POINTCUT_MAKEMOVE            32878
 
 // Next default values for new objects
 // 
@@ -247,7 +250,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        158
-#define _APS_NEXT_COMMAND_VALUE         32876
+#define _APS_NEXT_COMMAND_VALUE         32879
 #define _APS_NEXT_CONTROL_VALUE         1092
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

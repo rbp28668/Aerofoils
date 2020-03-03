@@ -386,6 +386,7 @@ BEGIN
     POPUP "Point"
     BEGIN
         MENUITEM "Edit",                        ID_POINT_EDIT
+        MENUITEM "New Move",                    ID_POINT_NEWMOVE
         MENUITEM "New Cut ",                    ID_POINT_NEWCUT
         MENUITEM "Delete",                      ID_POINT_DELETE
     END
@@ -417,6 +418,8 @@ BEGIN
     POPUP "Point Cut"
     BEGIN
         MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        MENUITEM "Make Cut",                    ID_POINTCUT_MAKECUT
+        MENUITEM "Make Move",                   ID_POINTCUT_MAKEMOVE
         MENUITEM "Move Up",                     ID_CUT_MOVEUP
         MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
         MENUITEM "Delete",                      ID_POINTCUT_DELETE
