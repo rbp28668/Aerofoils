@@ -6,6 +6,9 @@
 *.res
 *.idb
 
+# Plots (as distinct from Test)
+Plots/*
+
 # Output folders
 ipch/*
 x64/*

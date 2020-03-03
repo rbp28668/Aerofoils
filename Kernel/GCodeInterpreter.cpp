@@ -505,6 +505,7 @@ int GCodeInterpreter::home()
 	assert(this);
 	assert(pCutter);
 	pCutter->home();
+	x = y = u = v = 0; // home equivalent to move to 0,0,0,0
 	return 0;
 }
 
