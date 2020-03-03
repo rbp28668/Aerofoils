@@ -155,7 +155,12 @@ void GCodeOutputDevice::startPlot()
 {
 	assert(this);
 	ostringstream oss;
-	oss << "G21 G39 G53 G90" << endl; // mm, mirror off, cancel workshift, absolute
+	oss << "G21" << endl; // mm
+	oss << "G39" << endl; // mirror off
+	oss << "G53" << endl; // cancel local workshift
+	oss << "G90" << endl; // absolute
+	oss << "M17" << endl; // enable steppers
+	oss << "M03" << endl; // wire on
 	send(oss.str());
 
 	hasLeft = hasRight = false;
@@ -166,7 +171,7 @@ void GCodeOutputDevice::endPlot()
 {
 	assert(this);
 	ostringstream oss;
-	oss << "M05 M02" << endl; //  treat as comment
+	oss << "M05 M02" << endl; 
 	send(oss.str()); // wire off, end of program
 }
 

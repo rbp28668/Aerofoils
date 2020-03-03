@@ -25,11 +25,17 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 int CutterHardware::processResponse()
 {
 	assert(this);
+
+#ifdef OUTPUT_TO_FILE
+	return (int)StatusT::VALID;
+#endif
+
+
 	serialLink.read(6);   // 4 status characters + CRLF
 	while (!serialLink.readComplete());
 	std::string response;
 	serialLink.getReadData(response);
-	std::cout << response << std::endl;
+	
 
 	// This is the code on the device that sends the response
 	//outputBuffer[0] = ok ? 'Y' : 'N';
@@ -37,54 +43,112 @@ int CutterHardware::processResponse()
 	//outputBuffer[2] = commandQueue.isEmpty() ? 'E' : '-';
 	//outputBuffer[3] = hexDigits[hardware.limitSwitches() & 0x0F];
 	int combinedResults = 0;
-	if (response[0] == 'Y') {
-		combinedResults |= VALID;
+	if (response.size() >= 4) {
+		std::ostringstream os;
+		os << "Response: " << response[0] << response[1] << response[2] << response[3] << std::endl;
+		::OutputDebugString(os.str().c_str());
+	
+		if (response[0] == 'Y') {
+			combinedResults |= (int) StatusT::VALID;
+		}
+		if (response[1] == 'F') {
+			combinedResults |= (int) StatusT::FULL;
+			queueFull = true;
+			std::cout << "Queue full" << std::endl;
+		}
+		else {
+			queueFull = false;
+		}
+		if (response[2] == 'E') {
+			combinedResults |= (int) StatusT::EMPTY;
+			queueEmpty = true;
+		}
+		else {
+			queueEmpty = false;
+		}
+		int switches = 0;
+		char ch = response[3];
+		if (ch >= '0' && ch <= '9') {
+			switches = (ch - '0');
+		}
+		else if (ch >= 'A' && ch <= 'F') {
+			switches = 10 + (ch - 'A');
+		}
+		combinedResults |= switches;
 	}
-	if (response[1] == 'F') {
-		combinedResults |= FULL;
+	else {
+		combinedResults |= (int)StatusT::COMMS;
 	}
-	if (response[2] == 'E') {
-		combinedResults |= EMPTY;
-	}
-	int switches = 0;
-	char ch = response[3];
-	if (ch >= '0' && ch <= '9') {
-		switches = (ch - '0');
-	}
-	else if (ch >= 'A' && ch <= 'F') {
-		switches = 10 + (ch - 'A');
-	}
-	combinedResults |= switches;
 	return combinedResults;
 }
 
 
-int CutterHardware::send(std::string& msg)
+int CutterHardware::send(const std::string& msg)
 {
 	assert(this);
+#ifdef OUTPUT_TO_FILE
+	ofs << msg << std::endl;
+#else
 	serialLink.send(msg);
+	::Sleep(10); // not needed;
+#endif
+
+
+	std::ostringstream os;
+	os << "Command: " << msg << std::endl;
+	::OutputDebugString(os.str().c_str());
+
 	return processResponse();
 }
 
+int CutterHardware::queueCommand(const std::string& msg)
+{
+#ifndef OUTPUT_TO_FILE
+	while(queueFull) {
+	  ::Sleep(10); // just back off a bit
+	  ping(); // will reset queueEmpty/queueFull if no longer full
+	}
+#endif
+	return send(msg);
+}
+
 CutterHardware::CutterHardware()
+	: queueFull(false)
+	, queueEmpty(true)
 {
 }
 
-CutterHardware::CutterHardware(const char * pszPort) :
-	serialLink(pszPort)
+CutterHardware::CutterHardware(const char * pszPort) 
+	: serialLink(pszPort)
+	, queueFull(false)
+	, queueEmpty(true)
+
 {
 }
 
 int CutterHardware::connect(const char * pszPort)
 {
 	assert(this);
-	return serialLink.connect(pszPort);
+	assert(pszPort);
+
+#ifdef OUTPUT_TO_FILE
+	ofs.open("cutter.out");
+#endif
+
+	return (int)serialLink.connect(pszPort);
 }
 
 void CutterHardware::disconnect()
 {
 	assert(this);
-	serialLink.disconnect();
+
+#ifdef OUTPUT_TO_FILE
+	ofs.close();
+#endif
+
+	if (serialLink.isConnected()) {
+		serialLink.disconnect();
+	}
 }
 
 boolean CutterHardware::isConnected()
@@ -99,7 +163,7 @@ int CutterHardware::ping()
 	assert(serialLink.isConnected());
 
 	std::string msg("P");
-	return send(msg);
+	return send(msg); // valid at any time
 }
 
 int CutterHardware::disable()
@@ -108,7 +172,7 @@ int CutterHardware::disable()
 	assert(serialLink.isConnected());
 
 	std::string msg("D");
-	return send(msg);
+	return queueCommand(msg);
 }
 
 int CutterHardware::enable()
@@ -117,7 +181,7 @@ int CutterHardware::enable()
 	assert(serialLink.isConnected());
 
 	std::string msg("E");
-	return send(msg);
+	return queueCommand(msg);
 }
 
 int CutterHardware::abort()
@@ -126,7 +190,7 @@ int CutterHardware::abort()
 	assert(serialLink.isConnected());
 
 	std::string msg("Z");
-	return send(msg);
+	return queueCommand(msg);
 }
 
 int CutterHardware::abortNow()
@@ -135,7 +199,7 @@ int CutterHardware::abortNow()
 	assert(serialLink.isConnected());
 
 	std::string msg("A");
-	return send(msg);
+	return send(msg); // valid at any time
 }
 
 int CutterHardware::home()
@@ -144,7 +208,7 @@ int CutterHardware::home()
 	assert(serialLink.isConnected());
 
 	std::string msg("H");
-	return send(msg);
+	return queueCommand(msg);
 }
 
 int CutterHardware::line(AxisT steps, AxisT lx, AxisT ly, AxisT rx, AxisT ry)
@@ -165,7 +229,7 @@ int CutterHardware::line(AxisT steps, AxisT lx, AxisT ly, AxisT rx, AxisT ry)
 		<< std::setw(8) << ly 
 		<< std::setw(8) << rx 
 		<< std::setw(8) << ry;
-	return send(out.str());
+	return queueCommand(out.str());
 }
 
 int CutterHardware::step(int direction, int pulse)
@@ -181,7 +245,7 @@ int CutterHardware::step(int direction, int pulse)
 	out << "S"
 		<< std::hex << std::setfill('0') << std::right << std::setw(2)
 		<< data;
-	return send(out.str());
+	return queueCommand(out.str());
 }
 
 int CutterHardware::wireOn()
@@ -190,7 +254,7 @@ int CutterHardware::wireOn()
 	assert(serialLink.isConnected());
 
 	std::string msg("W");
-	return send(msg);
+	return queueCommand(msg);
 }
 
 int CutterHardware::wireOff()
@@ -199,5 +263,5 @@ int CutterHardware::wireOff()
 	assert(serialLink.isConnected());
 
 	std::string msg("X");
-	return send(msg);
+	return queueCommand(msg);
 }

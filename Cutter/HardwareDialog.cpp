@@ -34,7 +34,7 @@ void CHardwareDialog::showStatus(int status)
 {
 	std::string msg;
 
-	if (status & CutterHardware::VALID) {
+	if (status & (int)CutterHardware::StatusT::VALID) {
 		msg = "OK";
 	}
 	else {
@@ -42,11 +42,11 @@ void CHardwareDialog::showStatus(int status)
 	}
 
 
-	if (status & CutterHardware::EMPTY) {
+	if (status & (int)CutterHardware::StatusT::EMPTY) {
 		msg += " Empty";
 	}
 
-	if (status & CutterHardware::FULL) {
+	if (status & (int)CutterHardware::StatusT::FULL) {
 		msg += " Full";
 	}
 
@@ -124,8 +124,10 @@ END_MESSAGE_MAP()
 void CHardwareDialog::OnBnClickedBtnHome()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->home();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->home();
+			showStatus(stat);
+		}
 	}
 }
 
@@ -133,8 +135,10 @@ void CHardwareDialog::OnBnClickedBtnHome()
 void CHardwareDialog::OnBnClickedBtnAbort()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->abort();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->abort();
+			showStatus(stat);
+		}
 	}
 }
 
@@ -142,8 +146,10 @@ void CHardwareDialog::OnBnClickedBtnAbort()
 void CHardwareDialog::OnBnClickedBtnStatus()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->ping();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->ping();
+			showStatus(stat);
+		}
 	}
 }
 
@@ -152,8 +158,10 @@ void CHardwareDialog::OnBnClickedBtnLine()
 {
 	if (pCutter != 0) {
 		if (UpdateData() == TRUE) {
-			int stat = pCutter->line(totalSteps, lxSteps, lySteps, rxSteps, rySteps);
-			showStatus(stat);
+			if (pCutter->isConnected()) {
+				int stat = pCutter->line(totalSteps, lxSteps, lySteps, rxSteps, rySteps);
+				showStatus(stat);
+			}
 		}
 	}
 }
@@ -162,7 +170,6 @@ void CHardwareDialog::OnBnClickedBtnLine()
 void CHardwareDialog::OnBnClickedBtnStep()
 {
 	if (pCutter != 0) {
-
 		int direction = 0;
 		if (lxStepDirection.GetCheck() == BST_CHECKED) direction |= 1;
 		direction <<= 1;
@@ -181,10 +188,10 @@ void CHardwareDialog::OnBnClickedBtnStep()
 		pulse <<= 1;
 		if (ryStepPulse.GetCheck() == BST_CHECKED) pulse |= 1;
 
-
-		int stat = pCutter->step(direction, pulse);
-		showStatus(stat);
-
+		if (pCutter->isConnected()) {
+			int stat = pCutter->step(direction, pulse);
+			showStatus(stat);
+		}
 	}
 }
 
@@ -192,8 +199,10 @@ void CHardwareDialog::OnBnClickedBtnStep()
 void CHardwareDialog::OnBnClickedBtnWireon()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->wireOn();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->wireOn();
+			showStatus(stat);
+		}
 	}
 }
 
@@ -201,8 +210,10 @@ void CHardwareDialog::OnBnClickedBtnWireon()
 void CHardwareDialog::OnBnClickedBtnWireoff()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->wireOff();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->wireOff();
+			showStatus(stat);
+		}
 	}
 }
 
@@ -210,8 +221,10 @@ void CHardwareDialog::OnBnClickedBtnWireoff()
 void CHardwareDialog::OnBnClickedBtnEnable()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->enable();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->enable();
+			showStatus(stat);
+		}
 	}
 }
 
@@ -219,16 +232,20 @@ void CHardwareDialog::OnBnClickedBtnEnable()
 void CHardwareDialog::OnBnClickedBtnDisable()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->disable();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->disable();
+			showStatus(stat);
+		}
 	}
 }
 
 void CHardwareDialog::OnBnClickedBtnAbortNow()
 {
 	if (pCutter != 0) {
-		int stat = pCutter->abortNow();
-		showStatus(stat);
+		if (pCutter->isConnected()) {
+			int stat = pCutter->abortNow();
+			showStatus(stat);
+		}
 	}
 }
 

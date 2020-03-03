@@ -21,11 +21,13 @@ void Fifo::add(byte val){
 // Call from ISR only
 byte Fifo::get(){
   byte val = 0;
+  noInterrupts();
   if(_count > 0) {
     --_count;
     val = _buffer[_outPtr];
     _outPtr = (_outPtr + 1) % FIFO_SIZE;
   }
+  interrupts();
   analogWrite(A14, _count);
   return val;
 }
@@ -54,5 +56,3 @@ void Fifo::clear() {
   _outPtr = 0;
   interrupts();
 }
-
-

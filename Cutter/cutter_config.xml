@@ -1,5 +1,5 @@
 <config>
-<id>2684967968304</id>
+<id>1713289077568</id>
 <cutterWidth>1000</cutterWidth>
 <blockLeft>100</blockLeft>
 <blockRight>900</blockRight>
@@ -10,7 +10,7 @@
 <yLead>2</yLead>
 <yStepsPerRev>200</yStepsPerRev>
 <yMicroStepping>4</yMicroStepping>
-<stepFrequency>2000</stepFrequency>
+<stepFrequency>2500</stepFrequency>
 <defaultComPort>COM3</defaultComPort>
 <connectAutomatically>1</connectAutomatically>
 <defaultListenPort>8193</defaultListenPort>

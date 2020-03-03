@@ -3,8 +3,10 @@
 
 #include "WProgram.h"
 
-#define BUFFER_SIZE 40000
+// 20k buffer. Note that 40k is too much and we run out of stack space.
+#define BUFFER_SIZE 20000
 
+class CommandHandler;
 class Operation;
 
 /*
@@ -21,7 +23,7 @@ private:
   
 public:
   CommandQueue();
-  byte* addCommand(int nBytes);
+  byte* addCommand(CommandHandler* cmd);
   bool isEmpty();
   bool isFull();
   void clear();

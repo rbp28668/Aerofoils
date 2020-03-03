@@ -19,7 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 struct CutterConfig;
 class CCutterDlg;
-class Cutter;
+class CNCFoamCutter;
 
 // CConfigDialog dialog
 
@@ -27,7 +27,7 @@ class CConfigDialog : public CDialogEx
 {
 	DECLARE_DYNAMIC(CConfigDialog)
 	CutterConfig* config;
-	Cutter* pCutter;
+	CNCFoamCutter* pCutter;
 
 public:
 	CConfigDialog(CWnd* pParent = NULL);   // standard constructor

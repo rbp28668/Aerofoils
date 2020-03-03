@@ -44,7 +44,7 @@ EnableHandler enableHandler(&hardware);
 DisableHandler disableHandler(&hardware);
 WireOnHandler wireOnHandler(&hardware);
 WireOffHandler wireOffHandler(&hardware);
-AbortHandler abortHandler(&fifo, &hardware, &currentOperation);
+AbortHandler abortHandler(&commandQueue, &fifo, &hardware, &currentOperation);
 
 // Interrupt timer
 void timerTick() {
@@ -70,7 +70,10 @@ void setup() {
 
   currentOperation = &idle;
 
-  tickTimer.begin(timerTick, 500); // 500uS main tick.
+  // Time between hardware pulses.  Not reliable at 5kHz (200uS) especially Nema23 motors
+  // Better at 250uS but still misses on reverses
+  // Reliable at 2khz (500uS).
+  tickTimer.begin(timerTick, 400); 
  }
 
 void loop() {
@@ -85,7 +88,9 @@ void loop() {
     outputBuffer[4] = 0;
     Serial.println(outputBuffer);
   }
-  
+
+    hardware.enableStatusLed( commandQueue.isFull());
+
 //  if(currentOperation != &idle){
 //    Serial.println(currentOperation->name());
 //  }
@@ -105,5 +110,5 @@ void loop() {
     }
   }
     
-  hardware.enableStatusLed( !(fifo.isEmpty() && commandQueue.isEmpty()));
+ //  hardware.enableStatusLed( !(fifo.isEmpty() && commandQueue.isEmpty()));
 }

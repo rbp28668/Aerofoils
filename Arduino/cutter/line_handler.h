@@ -7,10 +7,12 @@ class Steppers;
 
 
 // Exernalised state
+#pragma pack(1)
 struct lineT : public commandT{
   long _steps;
   long _axes[4];
 };
+#pragma pack()
 
 // Lssssaaaabbbbccccdddd Line, a,b,c,d over s steps in hex
 class LineHandler : public CommandHandler {
@@ -25,4 +27,3 @@ public:
 };
 
 #endif
-
