@@ -71,8 +71,17 @@ void PointCutter::cut(COutputDevice * pdev, double toolOffset)
 std::string PointCutter::getDescriptiveText() const
 {
 	std::stringstream ss;
+	ss.precision(1);
 
-	ss << ((fast) ? "Move to point" : "Cut to point") << std::ends;
+	PointT root = pStructure->getRoot();
+	PointT tip = pStructure->getTip();
+	transform(root, tip);
+
+	ss << ((fast) ? "Move to point" : "Cut to point") 
+		<<  std::fixed 
+		<< " [" <<  root.fx << "," << root.fy << "],["
+		<< tip.fx << "," << tip.fy << "]"
+		<< std::ends;
 	return ss.str();
 }
 
@@ -101,6 +110,7 @@ void PointCutter::serializeTo(CObjectSerializer& os)
 	assert(pStructure);
 	os.startSection(TYPE.c_str(), this);
 	CutStructure::serializeTo(os);
+	os.write("fast", fast);
 	os.writeReference("structure", pStructure);
 	os.endSection();
 }
@@ -110,6 +120,10 @@ void PointCutter::serializeFrom(CObjectSerializer& os)
 	assert(this);
 	os.startReadSection(TYPE.c_str(), this);
 	CutStructure::serializeFrom(os);
+	if (os.ifExists("fast")) {
+		os.read("fast", fast);
+	}
 	pStructure = static_cast<CPointStructure*>(os.readReference("structure"));
 	os.endReadSection();
+	updateBounds();
 }

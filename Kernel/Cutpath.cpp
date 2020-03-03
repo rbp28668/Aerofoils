@@ -945,4 +945,5 @@ void CPathCutter::serializeFrom(CObjectSerializer& os)
 	pWing = static_cast<CWing*>(os.readReference("wing"));
 	os.read("toolOffset",tool_offset);
 	os.endReadSection();
+	updateBounds();
 }

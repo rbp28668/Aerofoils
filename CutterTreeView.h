@@ -123,6 +123,7 @@ public:
 
 	afx_msg void OnPointEdit();
 	afx_msg void OnPointNewcut();
+	afx_msg void OnPointNewmove();
 	afx_msg void OnPointDelete();
 
 	afx_msg void OnGcodeEdit();
@@ -147,6 +148,8 @@ public:
 	afx_msg void OnCutMovedown();
 	afx_msg void OnCutTransform();
 	afx_msg void OnWingPlotflags();
+	afx_msg void OnPointcutMakecut();
+	afx_msg void OnPointcutMakemove();
 };
 
 

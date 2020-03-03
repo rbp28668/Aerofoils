@@ -43,6 +43,7 @@ public:
 	virtual void startPlot();
 	virtual void endPlot();
 	virtual void passthrough(const char* data);
+	virtual void feedRate(float mmPerSec);
 
 protected:
 	void sendMove(const char* pszCommand);

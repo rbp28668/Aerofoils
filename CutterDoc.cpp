@@ -374,7 +374,9 @@ void CutterDoc::OnCutterFeedrate()
 {
 	FeedRateDialog dlg;
 	dlg.feedRate = cut.getFeedRate();
+	dlg.useFeedRate = cut.isUseFeedRate() ? TRUE : FALSE;
 	if (dlg.DoModal() == IDOK) {
 		cut.setFeedRate(dlg.feedRate);
+		cut.setUseFeedRate(dlg.useFeedRate == TRUE);
 	}
 }

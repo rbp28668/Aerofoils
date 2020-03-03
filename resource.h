@@ -141,6 +141,8 @@
 #define IDC_EDIT_TOOL_OFFSET            1092
 #define IDC_EDIT1                       1093
 #define IDC_EDIT_FEED_RATE              1093
+#define IDC_CHECK1                      1094
+#define IDC_CHK_INCLUDE_FEED            1094
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -257,7 +259,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        162
 #define _APS_NEXT_COMMAND_VALUE         32881
-#define _APS_NEXT_CONTROL_VALUE         1094
+#define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

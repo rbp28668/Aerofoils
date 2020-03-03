@@ -41,7 +41,7 @@ void CutStructure::line(COutputDevice * pdev, const PointT & root, const PointT 
 	pdev->LineTo(tip_stream, t);
 }
 
-void CutStructure::transform(PointT& r, PointT& t)
+void CutStructure::transform(PointT& r, PointT& t) const
 {
 	if (invert && pBounds) {
 		r.fy = pBounds->height() - r.fy;

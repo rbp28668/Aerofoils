@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <assert.h>
+#include <sstream>
 #include "Cut.h"
 #include "Structure.h"
 #include "CutStructure.h"
@@ -34,6 +35,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 Cut::Cut()
 	: toolOffset(0.5)
 	, feedRate(1.0)
+	, useFeedRate(false)
 {
 }
 
@@ -63,6 +65,11 @@ void Cut::cut(COutputDevice & pdev)
 {
 	try {
 		pdev.startPlot();
+
+		if (useFeedRate) {
+			pdev.feedRate(feedRate);
+		}
+
 		for (CutIterator iter = cut_structures.begin();
 			iter != cut_structures.end();
 			++iter)
@@ -247,6 +254,7 @@ void Cut::serializeTo(CObjectSerializer & os)
 	os.startSection("cut", this);
 	os.write("toolOffset", toolOffset);
 	os.write("feedRate", feedRate);
+	os.write("useFeedRate", useFeedRate);
 	os.startCollection("structures", (int)structures.size());
 	for (StructureIterator si = structures.begin();
 		si != structures.end();
@@ -277,6 +285,9 @@ void Cut::serializeFrom(CObjectSerializer & os)
 	os.read("toolOffset", toolOffset);
 	if (os.ifExists("feedRate")) {
 		os.read("feedRate", feedRate);
+	}
+	if (os.ifExists("useFeedRate")) {
+		os.read("useFeedRate", useFeedRate);
 	}
 	int count = os.startReadCollection("structures");
 	for (int i = 0; i<count; ++i)

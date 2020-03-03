@@ -48,7 +48,7 @@ public:
 	void move(COutputDevice *pdev, const PointT& root, const PointT& tip);
 	void line(COutputDevice *pdev, const PointT& root, const PointT& tip);
 protected:
-	void transform(PointT& r, PointT& t);
+	void transform(PointT& r, PointT& t) const;
 	void updateBounds();
 
 public:
