@@ -132,6 +132,12 @@
     <ClCompile Include="CutterPreviewWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ToolOffsetDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FeedRateDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Aerofoil.rc">
@@ -260,6 +266,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutterPreviewWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolOffsetDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FeedRateDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -263,6 +263,7 @@
     <ClCompile Include="EllipseFlagsDlg.cpp" />
     <ClCompile Include="EllipsePairDlg.cpp" />
     <ClCompile Include="EllipseUIProxy.cpp" />
+    <ClCompile Include="FeedRateDialog.cpp" />
     <ClCompile Include="GCodeEditDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PaperSizeDlg.cpp" />
@@ -285,6 +286,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="ToolOffsetDialog.cpp" />
     <ClCompile Include="TransformDialog.cpp" />
     <ClCompile Include="VersionInfo.CPP" />
     <ClCompile Include="WindowsOutputDevice.cpp" />
@@ -316,6 +318,7 @@
     <ClInclude Include="EllipseFlagsDlg.h" />
     <ClInclude Include="EllipsePairDlg.h" />
     <ClInclude Include="EllipseUIProxy.h" />
+    <ClInclude Include="FeedRateDialog.h" />
     <ClInclude Include="GCodeEditDialog.h" />
     <ClInclude Include="Kernel\ParametricCurve2D.h" />
     <ClInclude Include="MainFrm.h" />
@@ -331,6 +334,7 @@
     <ClInclude Include="SparDlg.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="ToolOffsetDialog.h" />
     <ClInclude Include="TransformDialog.h" />
     <ClInclude Include="VersionInfo.HPP" />
     <ClInclude Include="WindowsOutputDevice.h" />

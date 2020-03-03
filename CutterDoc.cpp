@@ -27,6 +27,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutterView.h"
 #include "BackgroundGridDlg.hpp"
 #include "CNCConnectionDlg.h"
+#include "ToolOffsetDialog.h"
+#include "FeedRateDialog.h"
 #include "Kernel\Wing.h"
 #include "Kernel\EllipsePair.h"
 #include "Kernel\PointStructure.h"
@@ -147,6 +149,8 @@ BEGIN_MESSAGE_MAP(CutterDoc, CDocument)
 	ON_COMMAND(ID_FILE_CNCOUTPUT, &CutterDoc::OnFileCncoutput)
 	ON_COMMAND(ID_FILE_CNCSETUP, &CutterDoc::OnFileCncsetup)
 	ON_COMMAND(ID_FILE_GCODE, &CutterDoc::OnFileGcode)
+	ON_COMMAND(ID_CUTTER_TOOLOFFSET, &CutterDoc::OnCutterTooloffset)
+	ON_COMMAND(ID_CUTTER_FEEDRATE, &CutterDoc::OnCutterFeedrate)
 END_MESSAGE_MAP()
 
 BOOL CutterDoc::OnNewDocument()
@@ -355,5 +359,22 @@ void CutterDoc::OnFileGcode()
 }
 
 
+void CutterDoc::OnCutterTooloffset()
+{
+	ToolOffsetDialog dlg;
+	dlg.toolOffset = cut.getToolOffset();
+	if (dlg.DoModal() == IDOK) {
+		cut.setToolOffset(dlg.toolOffset);
+		RedrawNow();
+	}
+}
 
 
+void CutterDoc::OnCutterFeedrate()
+{
+	FeedRateDialog dlg;
+	dlg.feedRate = cut.getFeedRate();
+	if (dlg.DoModal() == IDOK) {
+		cut.setFeedRate(dlg.feedRate);
+	}
+}
