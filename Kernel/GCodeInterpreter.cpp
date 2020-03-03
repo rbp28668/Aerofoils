@@ -91,62 +91,75 @@ int GCodeInterpreter::process(const std::string & line)
 	int status = 0;
 	command = 0;
 
-	while (idx < length) {
-		char ch = line[idx++];
+	try {
+		while (idx < length) {
+			char ch = line[idx++];
 
-		if (isspace(ch)) {
-			idx = skipSpaces(line, idx, length);
-			continue;
-		}
-
-		switch (toupper(ch)) {
-		case '(':
-			idx = skipComment(line, idx, length);
-			break;
-		case 'G':
-			idx = processCommand(line, idx, length);
-			break;
-		case 'M':
-			idx = processMiscCommand(line, idx, length);
-			break;
-		case 'X':
-			idx = processXAxis(line, idx, length);
-			break;
-		case 'Y':
-			idx = processYAxis(line, idx, length);
-			break;
-		case 'U':
-			idx = processUAxis(line, idx, length);
-			break;
-		case 'V':
-			idx = processVAxis(line, idx, length);
-			break;
-		case 'F':
-			idx = processFeedRate(line, idx, length);
-			break;
-		case 'P':
-			idx = processDwellTimeMilliSeconds(line, idx, length);
-			break;
-		case 'S':
-			idx = processDwellTimeSeconds(line, idx, length);
-			break;
-
-		default:
-			if (pContext) {
-				std::string err = "Unknown command: <";
-				err.append(1, ch).append(">");
-				pContext->showError(line, idx, err);
-				idx = length; // abort processing.
+			if (isspace(ch)) {
+				idx = skipSpaces(line, idx, length);
+				continue;
 			}
-			status = 1;
+
+			switch (toupper(ch)) {
+			case '(':
+				idx = skipComment(line, idx, length);
+				break;
+			case 'G':
+				idx = processCommand(line, idx, length);
+				break;
+			case 'M':
+				idx = processMiscCommand(line, idx, length);
+				break;
+			case 'X':
+				idx = processXAxis(line, idx, length);
+				break;
+			case 'Y':
+				idx = processYAxis(line, idx, length);
+				break;
+			case 'U':
+				idx = processUAxis(line, idx, length);
+				break;
+			case 'V':
+				idx = processVAxis(line, idx, length);
+				break;
+			case 'F':
+				idx = processFeedRate(line, idx, length);
+				break;
+			case 'P':
+				idx = processDwellTimeMilliSeconds(line, idx, length);
+				break;
+			case 'S':
+				idx = processDwellTimeSeconds(line, idx, length);
+				break;
+
+			default:
+				if (pContext) {
+					std::string err = "Unknown command: <";
+					err.append(1, ch).append(">");
+					pContext->showError(line, idx, err);
+					idx = length; // abort processing.
+				}
+				status = 1;
+			}
 		}
+
+		// now line is parsed have we a command to run? If so, do it...
+		if (command) {
+			status = ((*this).*(command))();
+			command = 0; // as now run.
+		}
+
+	}
+	catch (std::exception & e) {
+		if (pContext) {
+			std::string err(e.what());
+			pContext->showError(line, idx, err);
+			idx = length; // abort processing.
+		}
+		status = 1;
+		throw; 
 	}
 
-	// now line is parsed have we a command to run? If so, do it...
-	if (command) {
-		status = ((*this).*(command))();
-		command = 0; // as now run.
-	}
 	return status;
 }
 
@@ -492,6 +505,7 @@ int GCodeInterpreter::home()
 	assert(this);
 	assert(pCutter);
 	pCutter->home();
+	x = y = u = v = 0; // home equivalent to move to 0,0,0,0
 	return 0;
 }
 

@@ -25,6 +25,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ComPortEnumerator.h"
 #include "CutterDlg.h"
 #include "../Kernel/Cutter.h"
+#include "CNCFoamCutter.h"
+
 // CConfigDialog dialog
 
 IMPLEMENT_DYNAMIC(CConfigDialog, CDialogEx)
@@ -45,7 +47,7 @@ CConfigDialog::~CConfigDialog()
 
 void CConfigDialog::initialize(CCutterDlg * pApp )
 {
-	this->pCutter = pCutter;
+	this->pCutter = pApp->getCutter();
 
 	ComPortEnumerator cpe;
 	std::vector< tstring > ports;
@@ -114,14 +116,21 @@ END_MESSAGE_MAP()
 
 void CConfigDialog::OnBnClickedBtnUpdateCutter()
 {
-	// TODO: Add your control notification handler code here
+	if (UpdateData(TRUE)) {
+		pCutter->setBlockLeft(config->blockLeft);
+		pCutter->setBlockRight(config->blockRight);
+		pCutter->setWidth(config->cutterWidth);
+		pCutter->setFeedRate(config->defaultFeedRate);
+	}
 }
 
 
 void CConfigDialog::OnBnClickedBtnSaveConfig()
 {
-	if (!config->save(std::string("cutter_config.xml"))) {
-		::MessageBox(0, "Problem", "Unable to save configuration", MB_OK | MB_ICONERROR);
+	if (UpdateData(TRUE)) {
+		if (!config->save(std::string("cutter_config.xml"))) {
+			::MessageBox(0, "Problem", "Unable to save configuration", MB_OK | MB_ICONERROR);
+		}
 	}
 }
 

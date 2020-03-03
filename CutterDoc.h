@@ -101,4 +101,6 @@ public:
 	afx_msg void OnFileCncsetup();
 	afx_msg void OnFileGcode();
 
+	afx_msg void OnCutterTooloffset();
+	afx_msg void OnCutterFeedrate();
 };

@@ -33,6 +33,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 Cut::Cut()
 	: toolOffset(0.5)
+	, feedRate(1.0)
 {
 }
 
@@ -76,6 +77,7 @@ void Cut::cut(COutputDevice & pdev)
 	}
 	catch (COutputDevice::OutputException& ex) {
 		// NOP for the time being.
+		throw; // Just rethrow
 	}
 
 }
@@ -244,6 +246,7 @@ void Cut::serializeTo(CObjectSerializer & os)
 {
 	os.startSection("cut", this);
 	os.write("toolOffset", toolOffset);
+	os.write("feedRate", feedRate);
 	os.startCollection("structures", (int)structures.size());
 	for (StructureIterator si = structures.begin();
 		si != structures.end();
@@ -272,6 +275,9 @@ void Cut::serializeFrom(CObjectSerializer & os)
 
 	os.startReadSection("cut", this);
 	os.read("toolOffset", toolOffset);
+	if (os.ifExists("feedRate")) {
+		os.read("feedRate", feedRate);
+	}
 	int count = os.startReadCollection("structures");
 	for (int i = 0; i<count; ++i)
 	{

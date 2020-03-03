@@ -31,7 +31,7 @@ class SerialLink
 	char readBuffer[256];
 
 public:
-	enum ErrorT {
+	enum class ErrorT {
 		SUCCESS=0,
 		CANNOT_CONNECT,
 		BUILD_DCB,
@@ -48,7 +48,7 @@ public:
 	boolean isConnected();
 
 	virtual bool canSend();
-	virtual void send(std::string& str);
+	virtual void send(const std::string& str);
 	void read(size_t bytesToRead);
 	bool readComplete();
 	void getReadData(std::string& str);

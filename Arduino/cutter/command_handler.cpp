@@ -13,7 +13,7 @@ void CommandHandler::registerHandler(CommandHandler* handler){
 }
 
 CommandHandler* CommandHandler::lookup(byte idx){
-  if(idx >= _handlerCount){
+  if(idx <0 || idx >= _handlerCount){
     idx = 0;  // should refer to the abort handler!
   }
   return _handlers[idx];
@@ -58,5 +58,3 @@ long CommandHandler::hexLong(char* str){
   }
   return acc;
 }
-
-
