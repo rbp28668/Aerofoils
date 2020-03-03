@@ -45,7 +45,9 @@ class Cut
 	StructureList structures;
 	CutList cut_structures;
 
+	// Cutter parameters
 	double toolOffset;
+	double feedRate;
 
 public:
 
@@ -54,6 +56,11 @@ public:
 
 	Cut();
 	~Cut();
+
+	inline double getToolOffset() const { return toolOffset; }
+	inline void setToolOffset(double offset) { toolOffset = offset; }
+	inline double getFeedRate() const { return feedRate; }
+	inline void setFeedRate(double rate) { feedRate = rate; }
 
 	void cut(COutputDevice& pdev);
 

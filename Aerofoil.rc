@@ -165,179 +165,75 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// String Table
+// Dialog
 //
 
-STRINGTABLE
+IDD_TOOL_OFFSET DIALOGEX 0, 0, 307, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set Tool Offset"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    IDR_MAINFRAME           "Aerofoil"
-    IDR_AEROFOTYPE          "\nAerofoil\nAerofoil\nAerofoil Plot Files (*.plt)\n.PLT\nAerofoil.Document\nAerofoil Document"
-    IDR_CUTTERTYPE          """\nCutter\nCutter\nCutter Files (*.cut)\n.cut\nCutter.Document\n Wing cutter file"""
+    DEFPUSHBUTTON   "OK",IDOK,198,79,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,250,79,50,14
+    EDITTEXT        IDC_EDIT_TOOL_OFFSET,67,46,40,14,ES_AUTOHSCROLL
+    LTEXT           "Tool Offset",IDC_STATIC,18,49,37,8
+    LTEXT           "mm",IDC_STATIC,115,49,12,8
+    LTEXT           "Tool offset should be set to half the width of the kerf produced by the hot wire",IDC_STATIC,19,24,263,15
 END
 
-STRINGTABLE
+IDD_FEED_RATE DIALOGEX 0, 0, 197, 78
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set Feed Rate"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    AFX_IDS_APP_TITLE       "Aerofoil"
-    AFX_IDS_IDLEMESSAGE     "Ready"
+    DEFPUSHBUTTON   "OK",IDOK,83,57,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,57,50,14
+    LTEXT           "Feed rate",IDC_STATIC,23,26,32,8
+    LTEXT           "mm per second",IDC_STATIC,111,26,49,8
+    EDITTEXT        IDC_EDIT_FEED_RATE,63,23,40,14,ES_AUTOHSCROLL
 END
 
-STRINGTABLE
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
 BEGIN
-    ID_INDICATOR_EXT        "EXT"
-    ID_INDICATOR_CAPS       "CAP"
-    ID_INDICATOR_NUM        "NUM"
-    ID_INDICATOR_SCRL       "SCRL"
-    ID_INDICATOR_OVR        "OVR"
-    ID_INDICATOR_REC        "REC"
+    IDD_TOOL_OFFSET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 300
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 93
+    END
+
+    IDD_FEED_RATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 190
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 71
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_TOOL_OFFSET AFX_DIALOG_LAYOUT
+BEGIN
+    0
 END
 
-STRINGTABLE
+IDD_FEED_RATE AFX_DIALOG_LAYOUT
 BEGIN
-    ID_FILE_NEW             "Create a new document\nNew"
-    ID_FILE_OPEN            "Open an existing document\nOpen"
-    ID_FILE_CLOSE           "Close the active document\nClose"
-    ID_FILE_SAVE            "Save the active document\nSave"
-    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
-    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
-    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
-    ID_FILE_PRINT           "Print the active document\nPrint"
-    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
-END
-
-STRINGTABLE
-BEGIN
-    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
-    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
-END
-
-STRINGTABLE
-BEGIN
-    ID_FILE_MRU_FILE1       "Open this document"
-    ID_FILE_MRU_FILE2       "Open this document"
-    ID_FILE_MRU_FILE3       "Open this document"
-    ID_FILE_MRU_FILE4       "Open this document"
-    ID_FILE_MRU_FILE5       "Open this document"
-    ID_FILE_MRU_FILE6       "Open this document"
-    ID_FILE_MRU_FILE7       "Open this document"
-    ID_FILE_MRU_FILE8       "Open this document"
-    ID_FILE_MRU_FILE9       "Open this document"
-    ID_FILE_MRU_FILE10      "Open this document"
-    ID_FILE_MRU_FILE11      "Open this document"
-    ID_FILE_MRU_FILE12      "Open this document"
-    ID_FILE_MRU_FILE13      "Open this document"
-    ID_FILE_MRU_FILE14      "Open this document"
-    ID_FILE_MRU_FILE15      "Open this document"
-    ID_FILE_MRU_FILE16      "Open this document"
-END
-
-STRINGTABLE
-BEGIN
-    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
-    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
-END
-
-STRINGTABLE
-BEGIN
-    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
-    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
-    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
-    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
-    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
-    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
-END
-
-STRINGTABLE
-BEGIN
-    ID_EDIT_CLEAR           "Erase the selection\nErase"
-    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
-    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
-    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
-    ID_EDIT_FIND            "Find the specified text\nFind"
-    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
-    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
-    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
-    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
-    ID_EDIT_UNDO            "Undo the last action\nUndo"
-    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
-END
-
-STRINGTABLE
-BEGIN
-    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
-    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
-END
-
-STRINGTABLE
-BEGIN
-    AFX_IDS_SCSIZE          "Change the window size"
-    AFX_IDS_SCMOVE          "Change the window position"
-    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
-    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
-    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
-    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
-    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
-END
-
-STRINGTABLE
-BEGIN
-    AFX_IDS_SCRESTORE       "Restore the window to normal size"
-    AFX_IDS_SCTASKLIST      "Activate Task List"
-    AFX_IDS_MDICHILD        "Activate this window"
-END
-
-STRINGTABLE
-BEGIN
-    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
-END
-
-STRINGTABLE
-BEGIN
-    ID_WING_NEW             "Create a new wing"
-    ID_WING_NEW_SECTION     "Creates a new wing section"
-    ID_WING_NEW_CORE        "Creates a new wing core"
-    ID_WING_FLAGS           "Edits the flags for a given wing."
-    ID_WING_SELECT          "Select a wing to be current"
-    ID_WING_EDIT            "Edit the current wing"
-    ID_VIEW_ZOOM            "Change the zoom factor of the window"
-    ID_FILE_PLOT_SIZE       "Sets the size of the plot."
-    ID_ELLIPSE_NEW          "Create a new ellipse pair"
-    ID_ELLIPSE_SELECT       "Select an ellipse pair for edit"
-    ID_ELLIPSE_NEW_SECTION  "Create a new cross section through ellipse pair."
-    ID_ELLIPSE_EDIT         "Edit an ellipse pair"
-    ID_ELLIPSE_FLAGS        "Edit plot flags for an ellipse pair."
-END
-
-STRINGTABLE
-BEGIN
-    ID_FILE_DXF             "Output plot as DXF file."
-    ID_FILE_POSTSCRIPT      "Output plot to a postscript file or device"
-    ID_FILE_LASERJET        "Output HPGL for a LaserJet to a file or device"
-    ID_POPUP_WING_EDIT      "Edit this "
-    ID_POPUP_WING_POSITION  "Edit this section's wing"
-    ID_POPUP_WING_SET_POSITION "Set the position of this section on the wing"
-    ID_POPUP_WING_SELECT    "Select this section's wing as the current wing"
-    ID__DELETE              "Delete this section"
-    ID__EDIT                "Edit this ellipse pair"
-    ID_POPUP_ELLIPSE_DELETE "Delete this ellipse section"
-    ID_POPUP_ELLIPSE_POSITION "Edit the position of this ellipse section"
-    ID_EDIT_POSITION        "Edit position of the slice"
-    ID_EDIT_DELETE          "Delete this section"
-END
-
-STRINGTABLE
-BEGIN
-    ID_EDIT_STRUCTURE       "Edit the underlying structure"
-    ID_VIEW_PREVIEW_CUT_PATH "Preview the cutter path."
-    ID_EDIT_PLOTFLAGS       "Edit the plot flags for this section"
-    ID_EDIT_SELECTSTRUCTURE "Select the structure this section belongs to"
-    ID_POINT_NEW            "Create a new plot point"
-    ID_POINT_SILENT         "Set all points so they are silent (do not plot any lines)"
-    ID_EDIT_PLOTORDER       "Edit the order in which the structures are plotted (for CNC)"
-    ID_FILE_CNCSETUP        "Setup connection details to CNC system"
-    ID_FILE_CNCOUTPUT       "Output to CNC device"
-    ID_POINT_EDIT           "Edit the parameters of the selected point"
-    ID_EDIT_DELETESTRUCTURE "Delete one of the underlying structures"
-    ID_FILE_SETGRID         "Setup a background grid."
+    0
 END
 
 #endif    // English (United States) resources
@@ -473,6 +369,11 @@ BEGIN
         MENUITEM "&Preview Cut Path",           ID_VIEW_PREVIEW_CUT_PATH
         MENUITEM "Draw Moves",                  ID_VIEW_DRAWMOVES
     END
+    POPUP "Cutter"
+    BEGIN
+        MENUITEM "Tool Offset",                 ID_CUTTER_TOOLOFFSET
+        MENUITEM "Feed Rate",                   ID_CUTTER_FEEDRATE
+    END
     POPUP "&Window"
     BEGIN
         MENUITEM "&New Window",                 ID_WINDOW_NEW
@@ -580,7 +481,7 @@ BEGIN
             VALUE "FileDescription", "Aerofoil MFC Application"
             VALUE "FileVersion", "6.0.0.0"
             VALUE "InternalName", "Aerofoil"
-            VALUE "LegalCopyright", "Copyright (C) Bruce Porteous 2002-2019"
+            VALUE "LegalCopyright", "Copyright (C) Bruce Porteous 2002-2020"
             VALUE "OriginalFilename", "Aerofoil.EXE"
             VALUE "ProductName", "Aerofoil Application"
             VALUE "ProductVersion", "6.0.0.0"
@@ -1172,6 +1073,178 @@ END
 //
 // String Table
 //
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "Aerofoil"
+    IDR_AEROFOTYPE          "\nAerofoil\nAerofoil\nAerofoil Plot Files (*.plt)\n.PLT\nAerofoil.Document\nAerofoil Document"
+    IDR_CUTTERTYPE          """\nCutter\nCutter\nCutter Files (*.cut)\n.cut\nCutter.Document\n Wing cutter file"""
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "Aerofoil"
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this document"
+    ID_FILE_MRU_FILE2       "Open this document"
+    ID_FILE_MRU_FILE3       "Open this document"
+    ID_FILE_MRU_FILE4       "Open this document"
+    ID_FILE_MRU_FILE5       "Open this document"
+    ID_FILE_MRU_FILE6       "Open this document"
+    ID_FILE_MRU_FILE7       "Open this document"
+    ID_FILE_MRU_FILE8       "Open this document"
+    ID_FILE_MRU_FILE9       "Open this document"
+    ID_FILE_MRU_FILE10      "Open this document"
+    ID_FILE_MRU_FILE11      "Open this document"
+    ID_FILE_MRU_FILE12      "Open this document"
+    ID_FILE_MRU_FILE13      "Open this document"
+    ID_FILE_MRU_FILE14      "Open this document"
+    ID_FILE_MRU_FILE15      "Open this document"
+    ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WING_NEW             "Create a new wing"
+    ID_WING_NEW_SECTION     "Creates a new wing section"
+    ID_WING_NEW_CORE        "Creates a new wing core"
+    ID_WING_FLAGS           "Edits the flags for a given wing."
+    ID_WING_SELECT          "Select a wing to be current"
+    ID_WING_EDIT            "Edit the current wing"
+    ID_VIEW_ZOOM            "Change the zoom factor of the window"
+    ID_FILE_PLOT_SIZE       "Sets the size of the plot."
+    ID_ELLIPSE_NEW          "Create a new ellipse pair"
+    ID_ELLIPSE_SELECT       "Select an ellipse pair for edit"
+    ID_ELLIPSE_NEW_SECTION  "Create a new cross section through ellipse pair."
+    ID_ELLIPSE_EDIT         "Edit an ellipse pair"
+    ID_ELLIPSE_FLAGS        "Edit plot flags for an ellipse pair."
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_DXF             "Output plot as DXF file."
+    ID_FILE_POSTSCRIPT      "Output plot to a postscript file or device"
+    ID_FILE_LASERJET        "Output HPGL for a LaserJet to a file or device"
+    ID_POPUP_WING_EDIT      "Edit this "
+    ID_POPUP_WING_POSITION  "Edit this section's wing"
+    ID_POPUP_WING_SET_POSITION "Set the position of this section on the wing"
+    ID_POPUP_WING_SELECT    "Select this section's wing as the current wing"
+    ID__DELETE              "Delete this section"
+    ID__EDIT                "Edit this ellipse pair"
+    ID_POPUP_ELLIPSE_DELETE "Delete this ellipse section"
+    ID_POPUP_ELLIPSE_POSITION "Edit the position of this ellipse section"
+    ID_EDIT_POSITION        "Edit position of the slice"
+    ID_EDIT_DELETE          "Delete this section"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_STRUCTURE       "Edit the underlying structure"
+    ID_VIEW_PREVIEW_CUT_PATH "Preview the cutter path."
+    ID_EDIT_PLOTFLAGS       "Edit the plot flags for this section"
+    ID_EDIT_SELECTSTRUCTURE "Select the structure this section belongs to"
+    ID_POINT_NEW            "Create a new plot point"
+    ID_POINT_SILENT         "Set all points so they are silent (do not plot any lines)"
+    ID_EDIT_PLOTORDER       "Edit the order in which the structures are plotted (for CNC)"
+    ID_FILE_CNCSETUP        "Setup connection details to CNC system"
+    ID_FILE_CNCOUTPUT       "Output to CNC device"
+    ID_POINT_EDIT           "Edit the parameters of the selected point"
+    ID_EDIT_DELETESTRUCTURE "Delete one of the underlying structures"
+    ID_FILE_SETGRID         "Setup a background grid."
+END
 
 STRINGTABLE
 BEGIN

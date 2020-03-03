@@ -32,8 +32,9 @@
 #define IDR_CUTTER_POPUPS               149
 #define IDD_CUT_TRANSFORM               153
 #define IDD_GCODE_EDIT                  155
-#define IDD_WING_FLAGS1                 156
 #define IDD_WING_CUT_FLAGS              156
+#define IDD_TOOL_OFFSET                 158
+#define IDD_FEED_RATE                   160
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -137,6 +138,9 @@
 #define IDC_CHK_CUT_LE                  1089
 #define IDC_CHK_CUT_TE                  1090
 #define IDC_CHK_CUT_SPARS               1091
+#define IDC_EDIT_TOOL_OFFSET            1092
+#define IDC_EDIT1                       1093
+#define IDC_EDIT_FEED_RATE              1093
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -240,15 +244,17 @@
 #define ID_POINTCUT_TRANSFORM           32873
 #define ID_VIEW_DRAWMOVES               32874
 #define ID_WING_PLOTFLAGS               32875
+#define ID_CUTTER_TOOLOFFSET            32876
+#define ID_CUTTER_FEEDRATE              32877
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        158
-#define _APS_NEXT_COMMAND_VALUE         32876
-#define _APS_NEXT_CONTROL_VALUE         1092
+#define _APS_NEXT_RESOURCE_VALUE        162
+#define _APS_NEXT_COMMAND_VALUE         32878
+#define _APS_NEXT_CONTROL_VALUE         1094
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
