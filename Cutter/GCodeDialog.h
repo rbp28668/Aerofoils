@@ -52,6 +52,7 @@ public:
 #endif
 
 	virtual void showError(const std::string& line, size_t where, const std::string& msg);
+	virtual void showLine(const std::string& line);
 	virtual bool canPause();
 	virtual void pause();
 	virtual void complete();
@@ -101,4 +102,13 @@ public:
 	virtual BOOL OnInitDialog();
 	CEdit currentLine;
 	CButton clearButton;
+	afx_msg void OnBnClickedBtnWireOn();
+	afx_msg void OnBnClickedBtnHome();
+	afx_msg void OnBnClickedBtnWireOff();
+	afx_msg void OnBnClickedBtnMotorsOn();
+	afx_msg void OnBnClickedBtnMotorsOff();
+	afx_msg void OnBnClickedBtnAbsolute();
+	afx_msg void OnBnClickedBtnRelative();
+	afx_msg void OnBnClickedBtnMirror();
+	afx_msg void OnBnClickedBtnNormal();
 };

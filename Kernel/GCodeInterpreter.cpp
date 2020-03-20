@@ -90,7 +90,9 @@ int GCodeInterpreter::process(const std::string & line)
 	size_t idx = 0;
 	int status = 0;
 	command = 0;
-
+	
+	pContext->showLine(line);
+	
 	try {
 		while (idx < length) {
 			char ch = line[idx++];
@@ -317,6 +319,10 @@ size_t GCodeInterpreter::processMiscCommand(const std::string & line, size_t idx
 		break;
 
 	case END_AND_RESTART: //M30 - End program and reset to beginning
+		pCurrentState->mirrored = false;
+		pCurrentState->zeroShift();
+		pCurrentState->moveType = ABSOLUTE_MOVE;
+
 		if (pContext) {
 			pContext->complete();
 			pContext->restart();
@@ -523,7 +529,7 @@ int GCodeInterpreter::workshift()
 		umm *= 25.4;
 		vmm *= 25.4;
 	}
-	pCurrentState->offsets.add(xmm, ymm, umm, vmm);
+	pCurrentState->offsets.set(xmm, ymm, umm, vmm);
 	return 0;
 }
 

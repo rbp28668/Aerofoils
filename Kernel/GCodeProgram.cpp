@@ -74,6 +74,13 @@ void GCodeProgram::showError(const std::string & line, size_t where, const std::
 	}
 }
 
+void GCodeProgram::showLine(const std::string& line)
+{
+	if (upstreamContext) {
+		upstreamContext->showLine(line);
+	}
+}
+
 bool GCodeProgram::canPause() {
 	if (upstreamContext) {
 		upstreamContext->canPause();

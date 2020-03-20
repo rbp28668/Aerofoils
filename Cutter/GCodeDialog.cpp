@@ -88,10 +88,8 @@ void CGCodeDialog::showData() {
 
 	// show next line
 	if (pProgram->isRunning() && !pProgram->isComplete()) {
-		currentLine.SetWindowTextA(pProgram->nextLine().c_str());
 		programEditor.EnableWindow(false);
 	} else {
-		currentLine.SetWindowTextA("");
 		programEditor.EnableWindow(true);
 	}
 
@@ -163,6 +161,11 @@ void CGCodeDialog::showError(const std::string & line, size_t where, const std::
 	errorText.SetWindowTextA(error.c_str());
 }
 
+void CGCodeDialog::showLine(const std::string& line)
+{
+	currentLine.SetWindowTextA(line.c_str());
+}
+
 bool CGCodeDialog::canPause()
 {
 	return canPauseCheckbox.GetCheck() == BST_CHECKED;
@@ -228,6 +231,15 @@ BEGIN_MESSAGE_MAP(CGCodeDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_CLEAR, &CGCodeDialog::OnBnClickedBtnClear)
 	ON_BN_CLICKED(IDC_BTN_LOAD, &CGCodeDialog::OnBnClickedBtnLoad)
 	ON_BN_CLICKED(IDC_BTN_SAVE, &CGCodeDialog::OnBnClickedBtnSave)
+	ON_BN_CLICKED(IDC_BTN_HOME, &CGCodeDialog::OnBnClickedBtnHome)
+	ON_BN_CLICKED(IDC_BTN_WIRE_ON, &CGCodeDialog::OnBnClickedBtnWireOn)
+	ON_BN_CLICKED(IDC_BTN_WIRE_OFF, &CGCodeDialog::OnBnClickedBtnWireOff)
+	ON_BN_CLICKED(IDC_BTN_MOTORS_ON, &CGCodeDialog::OnBnClickedBtnMotorsOn)
+	ON_BN_CLICKED(IDC_BTN_MOTORS_OFF, &CGCodeDialog::OnBnClickedBtnMotorsOff)
+	ON_BN_CLICKED(IDC_BTN_ABSOLUTE, &CGCodeDialog::OnBnClickedBtnAbsolute)
+	ON_BN_CLICKED(IDC_BTN_RELATIVE, &CGCodeDialog::OnBnClickedBtnRelative)
+	ON_BN_CLICKED(IDC_BTN_MIRROR, &CGCodeDialog::OnBnClickedBtnMirror)
+	ON_BN_CLICKED(IDC_BTN_NORMAL, &CGCodeDialog::OnBnClickedBtnNormal)
 END_MESSAGE_MAP()
 
 
@@ -368,4 +380,67 @@ BOOL CGCodeDialog::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+
+void CGCodeDialog::OnBnClickedBtnHome()
+{
+	pInterpreter->process("G28");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnWireOn()
+{
+	pInterpreter->process("M03");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnWireOff()
+{
+	pInterpreter->process("M05");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnMotorsOn()
+{
+	pInterpreter->process("M17");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnMotorsOff()
+{
+	pInterpreter->process("M18");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnAbsolute()
+{
+	pInterpreter->process("G90");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnRelative()
+{
+	pInterpreter->process("G91");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnMirror()
+{
+	pInterpreter->process("G38");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnNormal()
+{
+	pInterpreter->process("G39");
+	showData();
 }

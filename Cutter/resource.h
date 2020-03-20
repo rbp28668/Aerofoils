@@ -93,6 +93,15 @@
 #define IDC_BTN_ABORT_NOW               1074
 #define IDC_BTN_RESTART                 1075
 #define IDC_BTN_CLEAR                   1076
+#define IDC_BTN_WIRE_ON                 1078
+#define IDC_BTN_WIRE_OFF                1079
+#define IDC_BTN_MOTORS_ON               1080
+#define IDC_BTN_MOTORS_OFF              1081
+#define IDC_BTN_ABSOLUTE                1082
+#define IDC_BTN_RELATIVE                1083
+#define IDC_BTN_MIRROR                  1084
+#define IDC_BUTTON9                     1085
+#define IDC_BTN_NORMAL                  1085
 
 // Next default values for new objects
 // 
@@ -100,7 +109,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1075
+#define _APS_NEXT_CONTROL_VALUE         1086
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

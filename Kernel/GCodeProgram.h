@@ -49,6 +49,7 @@ public:
 
 	// Parser Context
 	virtual void showError(const std::string& line, size_t where, const std::string& msg);
+	virtual void showLine(const std::string& line);
 	virtual bool canPause();
 	virtual void pause();
 	virtual void complete();
