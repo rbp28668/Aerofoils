@@ -43,6 +43,7 @@ public:
 	virtual double getFeedRate() = 0;
 	virtual bool hasFeedRateError() = 0;
 	virtual void resetFeedRateError() = 0;
+	virtual void stop() = 0; // and dump any queued commands
 
 	virtual Position<double> getCurrentPosition() = 0;
 

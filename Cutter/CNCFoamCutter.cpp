@@ -317,6 +317,12 @@ void CNCFoamCutter::disableMotors()
 	validate(status);
 }
 
+void CNCFoamCutter::stop()
+{
+	int status = pHardware->abortNow();
+	validate(status);
+}
+
 double CNCFoamCutter::getFeedRate()
 {
 	return feedRate;

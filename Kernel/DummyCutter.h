@@ -40,6 +40,7 @@ public:
 	virtual double getFeedRate() { return 0.0; }
 	virtual bool hasFeedRateError() { return false; }
 	virtual void resetFeedRateError()  {}
+	virtual void stop() {}
 
 	virtual Position<double> getCurrentPosition() { return Position<double>(); }
 

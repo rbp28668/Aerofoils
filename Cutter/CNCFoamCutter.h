@@ -99,5 +99,5 @@ public:
 	virtual void wireOff();
 	virtual void enableMotors();
 	virtual void disableMotors();
-
+	virtual void stop();
 };

@@ -95,13 +95,16 @@ public:
 	
 	void programUpdated();
 
+	CBitmap stopBitmap;
 	CButton runButton;
 	CButton startButton;
 	CButton stepButton;
 	CButton restartButton;
-	virtual BOOL OnInitDialog();
 	CEdit currentLine;
 	CButton clearButton;
+	CButton stopButton;
+
+	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtnWireOn();
 	afx_msg void OnBnClickedBtnHome();
 	afx_msg void OnBnClickedBtnWireOff();
@@ -111,4 +114,5 @@ public:
 	afx_msg void OnBnClickedBtnRelative();
 	afx_msg void OnBnClickedBtnMirror();
 	afx_msg void OnBnClickedBtnNormal();
+	afx_msg void OnBnClickedBtnStop();
 };

@@ -28,6 +28,7 @@ GCodeProgram::GCodeProgram(GCodeInterpreter* pi) :
 	bPaused(false),
 	bComplete(false),
 	bRunning(false),
+	bPausable(false),
 	upstreamContext(0)
 {
 }

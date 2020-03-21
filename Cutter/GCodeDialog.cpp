@@ -122,6 +122,11 @@ void CGCodeDialog::updateButtons()
 
 CGCodeDialog::CGCodeDialog(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_GCODE, pParent)
+	, isStepping(false)
+	, pCutter(0)
+	, pInterpreter(0)
+	, pMainDialog(0)
+	, pProgram(0)
 {
 
 }
@@ -218,6 +223,7 @@ void CGCodeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_STEP, stepButton);
 	DDX_Control(pDX, IDC_BTN_RESTART, restartButton);
 	DDX_Control(pDX, IDC_EDT_CURRENT_LINE, currentLine);
+	DDX_Control(pDX, IDC_BTN_STOP, stopButton);
 }
 
 
@@ -240,6 +246,7 @@ BEGIN_MESSAGE_MAP(CGCodeDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_RELATIVE, &CGCodeDialog::OnBnClickedBtnRelative)
 	ON_BN_CLICKED(IDC_BTN_MIRROR, &CGCodeDialog::OnBnClickedBtnMirror)
 	ON_BN_CLICKED(IDC_BTN_NORMAL, &CGCodeDialog::OnBnClickedBtnNormal)
+	ON_BN_CLICKED(IDC_BTN_STOP, &CGCodeDialog::OnBnClickedBtnStop)
 END_MESSAGE_MAP()
 
 
@@ -378,6 +385,10 @@ BOOL CGCodeDialog::OnInitDialog()
 {
 	__super::OnInitDialog();
 
+	stopBitmap.LoadBitmap(IDB_STOP);
+	HBITMAP hBitmap = (HBITMAP)stopBitmap.GetSafeHandle();
+	stopButton.SetBitmap(hBitmap);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -442,5 +453,13 @@ void CGCodeDialog::OnBnClickedBtnMirror()
 void CGCodeDialog::OnBnClickedBtnNormal()
 {
 	pInterpreter->process("G39");
+	showData();
+}
+
+
+void CGCodeDialog::OnBnClickedBtnStop()
+{
+	pProgram->reset(); // stop execution of program so don't send more commands
+	pCutter->stop();
 	showData();
 }

@@ -11,6 +11,7 @@
 #define IDD_HARDWARE                    130
 #define IDD_GCODE                       131
 #define IDD_CONFIG                      132
+#define IDB_STOP                        137
 #define IDC_EDT_PORT                    1000
 #define IDC_CMD_LISTEN                  1001
 #define IDC_LBL_STATUS                  1002
@@ -100,16 +101,17 @@
 #define IDC_BTN_ABSOLUTE                1082
 #define IDC_BTN_RELATIVE                1083
 #define IDC_BTN_MIRROR                  1084
-#define IDC_BUTTON9                     1085
 #define IDC_BTN_NORMAL                  1085
+#define IDC_BUTTON1                     1086
+#define IDC_BTN_STOP                    1086
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1086
+#define _APS_NEXT_CONTROL_VALUE         1087
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
