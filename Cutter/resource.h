@@ -102,8 +102,16 @@
 #define IDC_BTN_RELATIVE                1083
 #define IDC_BTN_MIRROR                  1084
 #define IDC_BTN_NORMAL                  1085
-#define IDC_BUTTON1                     1086
 #define IDC_BTN_STOP                    1086
+#define IDC_EDT_X                       1087
+#define IDC_EDT_Y                       1088
+#define IDC_EDT_U                       1089
+#define IDC_EDT_V                       1090
+#define IDC_BTN_MOVE                    1091
+#define IDC_BTN_CUT                     1092
+#define IDC_BTN_OFFSET                  1093
+#define IDC_BTN_CLEAR_OFFSET            1094
+#define IDC_LBL_FEED_RATE               1095
 
 // Next default values for new objects
 // 
@@ -111,7 +119,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1087
+#define _APS_NEXT_CONTROL_VALUE         1096
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -38,6 +38,7 @@ class CGCodeDialog : public CDialogEx, ParserContext
 	void getProgramFromEdit();
 	void showData();
 	void updateButtons();
+	void sendAxisCommand(const char* cmd);
 
 public:
 	CGCodeDialog(CWnd* pParent = NULL);   // standard constructor
@@ -83,6 +84,20 @@ public:
 	CStatic vOffset;
 	CEdit programEditor;
 
+	CBitmap stopBitmap;
+	CButton runButton;
+	CButton startButton;
+	CButton stepButton;
+	CButton restartButton;
+	CEdit currentLine;
+	CButton clearButton;
+	CButton stopButton;
+
+	CEdit xValue;
+	CEdit yValue;
+	CEdit uValue;
+	CEdit vValue;
+
 	afx_msg void OnBnClickedButtonSend();
 	afx_msg void OnBnClickedBtnClearFr();
 	afx_msg void OnBnClickedBtnRun();
@@ -95,15 +110,6 @@ public:
 	
 	void programUpdated();
 
-	CBitmap stopBitmap;
-	CButton runButton;
-	CButton startButton;
-	CButton stepButton;
-	CButton restartButton;
-	CEdit currentLine;
-	CButton clearButton;
-	CButton stopButton;
-
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtnWireOn();
 	afx_msg void OnBnClickedBtnHome();
@@ -115,4 +121,11 @@ public:
 	afx_msg void OnBnClickedBtnMirror();
 	afx_msg void OnBnClickedBtnNormal();
 	afx_msg void OnBnClickedBtnStop();
+	
+	afx_msg void OnBnClickedBtnMove();
+	afx_msg void OnBnClickedBtnCut();
+	afx_msg void OnBnClickedBtnOffset();
+	afx_msg void OnBnClickedBtnClearOffset();
+	
+	CStatic feedRateDisplay;
 };

@@ -77,7 +77,10 @@ void CGCodeDialog::showData() {
 	ss << offsets.v;
 	vOffset.SetWindowTextA(ss.str().c_str());
 
-	// Show any feed rate error
+	// Show feed rate and any feed rate error
+	ss.str("");
+	ss << pCutter->getFeedRate();
+	feedRateDisplay.SetWindowTextA(ss.str().c_str());
 	feedRateError.SetCheck(pCutter->hasFeedRateError() ? BST_CHECKED : BST_UNCHECKED);
 
 	// General status
@@ -117,6 +120,41 @@ void CGCodeDialog::updateButtons()
 	stepButton.EnableWindow(pProgram->isPaused() && !pProgram->isComplete());
 	restartButton.EnableWindow(pProgram->isComplete());
 
+	showData();
+}
+
+void CGCodeDialog::sendAxisCommand(const char* cmd)
+{
+	std::ostringstream os;
+	CString value;
+
+	os << cmd << " ";
+
+	xValue.GetWindowTextA(value);
+	value.Trim();
+	if (value.GetLength() > 0) {
+		os << "X" << value.GetBuffer() << " ";
+	}
+
+	yValue.GetWindowTextA(value);
+	value.Trim();
+	if (value.GetLength() > 0) {
+		os << "Y" << value.GetBuffer() << " ";
+	}
+
+	uValue.GetWindowTextA(value);
+	value.Trim();
+	if (value.GetLength() > 0) {
+		os << "U" << value.GetBuffer() << " ";
+	}
+
+	vValue.GetWindowTextA(value);
+	value.Trim();
+	if (value.GetLength() > 0) {
+		os << "V" << value.GetBuffer() << " ";
+	}
+
+	pInterpreter->process(os.str());
 	showData();
 }
 
@@ -224,6 +262,11 @@ void CGCodeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_RESTART, restartButton);
 	DDX_Control(pDX, IDC_EDT_CURRENT_LINE, currentLine);
 	DDX_Control(pDX, IDC_BTN_STOP, stopButton);
+	DDX_Control(pDX, IDC_EDT_X, xValue);
+	DDX_Control(pDX, IDC_EDT_Y, yValue);
+	DDX_Control(pDX, IDC_EDT_U, uValue);
+	DDX_Control(pDX, IDC_EDT_V, vValue);
+	DDX_Control(pDX, IDC_LBL_FEED_RATE, feedRateDisplay);
 }
 
 
@@ -247,6 +290,10 @@ BEGIN_MESSAGE_MAP(CGCodeDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_MIRROR, &CGCodeDialog::OnBnClickedBtnMirror)
 	ON_BN_CLICKED(IDC_BTN_NORMAL, &CGCodeDialog::OnBnClickedBtnNormal)
 	ON_BN_CLICKED(IDC_BTN_STOP, &CGCodeDialog::OnBnClickedBtnStop)
+	ON_BN_CLICKED(IDC_BTN_MOVE, &CGCodeDialog::OnBnClickedBtnMove)
+	ON_BN_CLICKED(IDC_BTN_CUT, &CGCodeDialog::OnBnClickedBtnCut)
+	ON_BN_CLICKED(IDC_BTN_OFFSET, &CGCodeDialog::OnBnClickedBtnOffset)
+	ON_BN_CLICKED(IDC_BTN_CLEAR_OFFSET, &CGCodeDialog::OnBnClickedBtnClearOffset)
 END_MESSAGE_MAP()
 
 
@@ -461,5 +508,36 @@ void CGCodeDialog::OnBnClickedBtnStop()
 {
 	pProgram->reset(); // stop execution of program so don't send more commands
 	pCutter->stop();
+	pCutter->wireOff();
+	pCutter->disableMotors();
 	showData();
 }
+
+
+
+
+void CGCodeDialog::OnBnClickedBtnMove()
+{
+	sendAxisCommand("G00");
+}
+
+
+void CGCodeDialog::OnBnClickedBtnCut()
+{
+	sendAxisCommand("G01");
+}
+
+
+void CGCodeDialog::OnBnClickedBtnOffset()
+{
+	sendAxisCommand("G52");
+}
+
+
+void CGCodeDialog::OnBnClickedBtnClearOffset()
+{
+	pInterpreter->process("G53");
+	showData();
+}
+
+
