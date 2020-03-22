@@ -34,15 +34,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 IMPLEMENT_DYNAMIC(CMainTabCtrl, CTabCtrl)
 
 CMainTabCtrl::CMainTabCtrl()
+	: currentTabIndex(0)
+	, pGCodeDialog(0)
+	, pHardwareDialog(0)
+	, pConfigDialog(0)
+	, tabCount(0)
 {
-	pGCodeDialog = new CGCodeDialog();
-	pHardwareDialog = new CHardwareDialog();
-	pConfigDialog = new CConfigDialog();
-
-	tabs[0] = pGCodeDialog;
-	tabs[1] = pHardwareDialog;
-	tabs[2] = pConfigDialog;
-	tabCount = 3;
 }
 
 CMainTabCtrl::~CMainTabCtrl()
@@ -58,18 +55,30 @@ void CMainTabCtrl::init(CCutterDlg* pApp)
 	assert(this);
 	assert(pApp);
 
+	pGCodeDialog = new CGCodeDialog(pApp->getInterpreter(), pApp->getProgram(), pApp->getCutter(), pApp->getConfig());
+	pHardwareDialog = new CHardwareDialog(pApp->getHardware());
+	pConfigDialog = new CConfigDialog(pApp->getConfig(), pApp->getCutter());
+
+	pGCodeDialog->setMainDialog(pApp);
+	pHardwareDialog->setMainDialog(pApp);
+	pConfigDialog->setMainDialog(pApp);
+
+	tabs[0] = pGCodeDialog;
+	tabs[1] = pHardwareDialog;
+	tabs[2] = pConfigDialog;
+	tabCount = 3;
+
 	currentTabIndex = 0;
 
 	tabs[0]->Create(IDD_GCODE, GetParent());
 	tabs[1]->Create(IDD_HARDWARE, GetParent());
 	tabs[2]->Create(IDD_CONFIG, GetParent());
 
-	pGCodeDialog->setModelObjects(pApp->getInterpreter(), pApp->getProgram(), pApp->getCutter());
+	/*pGCodeDialog->setModelObjects(pApp->getInterpreter(), pApp->getProgram(), pApp->getCutter());
+	pGCodeDialog->setConfig(pApp->getConfig());
 	pHardwareDialog->setHardware(pApp->getHardware());
-	pConfigDialog->initialize(pApp);
+	pConfigDialog->initialize(pApp);*/
 
-	pGCodeDialog->setMainDialog(pApp);
-	pHardwareDialog->setMainDialog(pApp);
 
 	tabs[0]->ShowWindow(SW_SHOW);
 	tabs[1]->ShowWindow(SW_HIDE);

@@ -57,8 +57,10 @@ void CHardwareDialog::showStatus(int status)
 	}
 }
 
-CHardwareDialog::CHardwareDialog(CWnd* pParent /*=NULL*/)
+CHardwareDialog::CHardwareDialog(CutterHardware* pCutter, CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_HARDWARE, pParent)
+	, pCutter(pCutter)
+	, pMainDialog(0)
 	, lxSteps(0)
 	, lySteps(0)
 	, rxSteps(0)
@@ -72,18 +74,16 @@ CHardwareDialog::~CHardwareDialog()
 {
 }
 
-void CHardwareDialog::setHardware(CutterHardware * pHardware)
-{
-	assert(this);
-	assert(pHardware);
-	pCutter = pHardware;
-}
 
 void CHardwareDialog::setMainDialog(CCutterDlg * pDlg)
 {
 	assert(this);
 	assert(pDlg);
 	pMainDialog = pDlg;
+}
+
+void CHardwareDialog::configUpdated(CutterConfig* pConfig)
+{
 }
 
 void CHardwareDialog::DoDataExchange(CDataExchange* pDX)

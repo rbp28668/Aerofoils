@@ -26,31 +26,42 @@ class CNCFoamCutter;
 class CConfigDialog : public CDialogEx
 {
 	DECLARE_DYNAMIC(CConfigDialog)
+	CCutterDlg* pMainDialog;
 	CutterConfig* config;
 	CNCFoamCutter* pCutter;
 
 public:
-	CConfigDialog(CWnd* pParent = NULL);   // standard constructor
+	CConfigDialog(CutterConfig* pConfig, CNCFoamCutter* pCutter, CWnd* pParent = NULL);   
 	virtual ~CConfigDialog();
 
-	void initialize(CCutterDlg* pCutter);
+	void setMainDialog(CCutterDlg* pCutter);
+	void configUpdated(CutterConfig* pConfig);
+
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_CONFIG };
 #endif
 
+	CComboBox defaultComPort;
+	CButton connectAutomatically;
+	CButton listenAutomatically;
+	CListBox buttonList;
+	CEdit editCode;
+	CEdit editLabel;
+	CButton buttonUpdate;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CComboBox defaultComPort;
-	CButton connectAutomatically;
-	CButton listenAutomatically;
 	afx_msg void OnBnClickedBtnUpdateCutter();
 	afx_msg void OnBnClickedBtnSaveConfig();
 	afx_msg void OnBnClickedChkConnectAuto();
 	afx_msg void OnBnClickedChkListenAuto();
 	afx_msg void OnCbnSelchangeCmbDefaultCom();
+	afx_msg void OnBnClickedBtnUpdate();
+	virtual BOOL OnInitDialog();
+	afx_msg void OnSelchangeLstButtons();
 };

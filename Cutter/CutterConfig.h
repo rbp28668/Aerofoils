@@ -36,7 +36,14 @@ struct CutterConfig
 	int yMicroStepping;
 	double stepFrequency;
 
+	struct Button {
+		std::string label;
+		std::string code;
+	};
 	
+	const static int BUTTON_COUNT = 16;
+	Button buttons[BUTTON_COUNT];
+
 public:
 	CutterConfig();
 	~CutterConfig();

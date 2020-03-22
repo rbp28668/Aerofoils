@@ -37,10 +37,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "CutterHardware.h"
 #include "CNCFoamCutter.h"
+#include "CutterConfig.h"
 #include "../Kernel/GCodeInterpreter.h"
 #include "../Kernel/GCodeProgram.h"
 
-struct CutterConfig;
 
 class CCutterDlg : public CDialog, CSocketEventHandler
 {
@@ -49,6 +49,7 @@ class CCutterDlg : public CDialog, CSocketEventHandler
 	CNCFoamCutter * pCNCCutter;
 	GCodeInterpreter* pGCodeInterpreter;
 	GCodeProgram* pProgram;
+	CutterConfig* pConfig;
 
 	CListenerSocket* pListener;
 	CLinkSocket* pLink;
@@ -67,7 +68,10 @@ public:
 	inline CNCFoamCutter * getCutter() { return pCNCCutter; }
 	inline GCodeInterpreter* getInterpreter() { return pGCodeInterpreter; }
 	inline GCodeProgram* getProgram() { return pProgram; }
+	inline CutterConfig* getConfig() { return pConfig; }
+
 	void configLoaded(CutterConfig* pConfig);
+	void configUpdated(CutterConfig* pConfig);
 	void showLimitSwitches(int status);
 
 // Dialog Data

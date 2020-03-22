@@ -19,11 +19,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "stdafx.h"
 #include <assert.h>
+#include "sstream"
+#include "fstream"
 #include "GCodeDialog.h"
 #include "afxdialogex.h"
 #include "resource.h"
-#include "sstream"
-#include "fstream"
+#include "CutterConfig.h"
 #include "../Kernel/Cutter.h"
 #include "../Kernel/GCodeInterpreter.h"
 #include "../Kernel/GCodeProgram.h"
@@ -96,7 +97,7 @@ void CGCodeDialog::showData() {
 		programEditor.EnableWindow(true);
 	}
 
-	
+	// TODO update status buttons on main dialog. (see hardware dialog)
 }
 
 
@@ -158,14 +159,17 @@ void CGCodeDialog::sendAxisCommand(const char* cmd)
 	showData();
 }
 
-CGCodeDialog::CGCodeDialog(CWnd* pParent /*=NULL*/)
+CGCodeDialog::CGCodeDialog(GCodeInterpreter* pInterpreter, GCodeProgram* pProgram, Cutter* pCutter, CutterConfig* pConfig, CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_GCODE, pParent)
 	, isStepping(false)
-	, pCutter(0)
-	, pInterpreter(0)
+	, pCutter(pCutter)
+	, pInterpreter(pInterpreter)
 	, pMainDialog(0)
-	, pProgram(0)
+	, pProgram(pProgram)
+	, pConfig(pConfig)
 {
+	// want program to forward interpreter events to this dialog
+	pProgram->setUpstreamContext(this);
 
 }
 
@@ -173,25 +177,35 @@ CGCodeDialog::~CGCodeDialog()
 {
 }
 
-void CGCodeDialog::setModelObjects(GCodeInterpreter* pInterpreter, GCodeProgram* pProgram, Cutter* pCutter)
-{
-	assert(this);
-	assert(pInterpreter);
-	assert(pCutter);
-	assert(pProgram);
-	this->pProgram = pProgram;
-	this->pInterpreter = pInterpreter;
-	this->pCutter = pCutter;
-
-	// want program to forward interpreter events to this dialog
-	pProgram->setUpstreamContext(this); 
-}
 
 void CGCodeDialog::setMainDialog(CCutterDlg * pDlg)
 {
 	assert(this);
 	assert(pDlg);
 	pMainDialog = pDlg;
+}
+
+void CGCodeDialog::configUpdated(CutterConfig* pConfig)
+{
+	assert(this);
+	assert(pConfig);
+
+	buttonProg1.SetWindowTextA(pConfig->buttons[0].label.c_str());
+	buttonProg2.SetWindowTextA(pConfig->buttons[1].label.c_str());
+	buttonProg3.SetWindowTextA(pConfig->buttons[2].label.c_str());
+	buttonProg4.SetWindowTextA(pConfig->buttons[3].label.c_str());
+	buttonProg5.SetWindowTextA(pConfig->buttons[4].label.c_str());
+	buttonProg6.SetWindowTextA(pConfig->buttons[5].label.c_str());
+	buttonProg7.SetWindowTextA(pConfig->buttons[6].label.c_str());
+	buttonProg8.SetWindowTextA(pConfig->buttons[7].label.c_str());
+	buttonProg9.SetWindowTextA(pConfig->buttons[8].label.c_str());
+	buttonProg10.SetWindowTextA(pConfig->buttons[9].label.c_str());
+	buttonProg11.SetWindowTextA(pConfig->buttons[10].label.c_str());
+	buttonProg12.SetWindowTextA(pConfig->buttons[11].label.c_str());
+	buttonProg13.SetWindowTextA(pConfig->buttons[12].label.c_str());
+	buttonProg14.SetWindowTextA(pConfig->buttons[13].label.c_str());
+	buttonProg15.SetWindowTextA(pConfig->buttons[14].label.c_str());
+	buttonProg16.SetWindowTextA(pConfig->buttons[15].label.c_str());
 }
 
 void CGCodeDialog::showError(const std::string & line, size_t where, const std::string & msg)
@@ -267,6 +281,22 @@ void CGCodeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDT_U, uValue);
 	DDX_Control(pDX, IDC_EDT_V, vValue);
 	DDX_Control(pDX, IDC_LBL_FEED_RATE, feedRateDisplay);
+	DDX_Control(pDX, IDC_BTN_PROG_1, buttonProg1);
+	DDX_Control(pDX, IDC_BTN_PROG_2, buttonProg2);
+	DDX_Control(pDX, IDC_BTN_PROG_3, buttonProg3);
+	DDX_Control(pDX, IDC_BTN_PROG_4, buttonProg4);
+	DDX_Control(pDX, IDC_BTN_PROG_5, buttonProg5);
+	DDX_Control(pDX, IDC_BTN_PROG_6, buttonProg6);
+	DDX_Control(pDX, IDC_BTN_PROG_7, buttonProg7);
+	DDX_Control(pDX, IDC_BTN_PROG_8, buttonProg8);
+	DDX_Control(pDX, IDC_BTN_PROG_9, buttonProg9);
+	DDX_Control(pDX, IDC_BTN_PROG_10, buttonProg10);
+	DDX_Control(pDX, IDC_BTN_PROG_11, buttonProg11);
+	DDX_Control(pDX, IDC_BTN_PROG_12, buttonProg12);
+	DDX_Control(pDX, IDC_BTN_PROG_13, buttonProg13);
+	DDX_Control(pDX, IDC_BTN_PROG_14, buttonProg14);
+	DDX_Control(pDX, IDC_BTN_PROG_15, buttonProg15);
+	DDX_Control(pDX, IDC_BTN_PROG_16, buttonProg16);
 }
 
 
@@ -294,6 +324,22 @@ BEGIN_MESSAGE_MAP(CGCodeDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_CUT, &CGCodeDialog::OnBnClickedBtnCut)
 	ON_BN_CLICKED(IDC_BTN_OFFSET, &CGCodeDialog::OnBnClickedBtnOffset)
 	ON_BN_CLICKED(IDC_BTN_CLEAR_OFFSET, &CGCodeDialog::OnBnClickedBtnClearOffset)
+	ON_BN_CLICKED(IDC_BTN_PROG_1, &CGCodeDialog::OnBnClickedBtnProg1)
+	ON_BN_CLICKED(IDC_BTN_PROG_2, &CGCodeDialog::OnBnClickedBtnProg2)
+	ON_BN_CLICKED(IDC_BTN_PROG_3, &CGCodeDialog::OnBnClickedBtnProg3)
+	ON_BN_CLICKED(IDC_BTN_PROG_4, &CGCodeDialog::OnBnClickedBtnProg4)
+	ON_BN_CLICKED(IDC_BTN_PROG_5, &CGCodeDialog::OnBnClickedBtnProg5)
+	ON_BN_CLICKED(IDC_BTN_PROG_6, &CGCodeDialog::OnBnClickedBtnProg6)
+	ON_BN_CLICKED(IDC_BTN_PROG_7, &CGCodeDialog::OnBnClickedBtnProg7)
+	ON_BN_CLICKED(IDC_BTN_PROG_8, &CGCodeDialog::OnBnClickedBtnProg8)
+	ON_BN_CLICKED(IDC_BTN_PROG_9, &CGCodeDialog::OnBnClickedBtnProg9)
+	ON_BN_CLICKED(IDC_BTN_PROG_10, &CGCodeDialog::OnBnClickedBtnProg10)
+	ON_BN_CLICKED(IDC_BTN_PROG_11, &CGCodeDialog::OnBnClickedBtnProg11)
+	ON_BN_CLICKED(IDC_BTN_PROG_12, &CGCodeDialog::OnBnClickedBtnProg12)
+	ON_BN_CLICKED(IDC_BTN_PROG_13, &CGCodeDialog::OnBnClickedBtnProg13)
+	ON_BN_CLICKED(IDC_BTN_PROG_14, &CGCodeDialog::OnBnClickedBtnProg14)
+	ON_BN_CLICKED(IDC_BTN_PROG_15, &CGCodeDialog::OnBnClickedBtnProg15)
+	ON_BN_CLICKED(IDC_BTN_PROG_16, &CGCodeDialog::OnBnClickedBtnProg16)
 END_MESSAGE_MAP()
 
 
@@ -435,7 +481,7 @@ BOOL CGCodeDialog::OnInitDialog()
 	stopBitmap.LoadBitmap(IDB_STOP);
 	HBITMAP hBitmap = (HBITMAP)stopBitmap.GetSafeHandle();
 	stopButton.SetBitmap(hBitmap);
-
+	configUpdated(pConfig);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -514,8 +560,6 @@ void CGCodeDialog::OnBnClickedBtnStop()
 }
 
 
-
-
 void CGCodeDialog::OnBnClickedBtnMove()
 {
 	sendAxisCommand("G00");
@@ -540,4 +584,99 @@ void CGCodeDialog::OnBnClickedBtnClearOffset()
 	showData();
 }
 
+void CGCodeDialog::runProgramButton(int buttonIndex)
+{
+	assert(this);
+	assert(pConfig);
+	assert(buttonIndex >= 0 && buttonIndex <= pConfig->BUTTON_COUNT);
 
+	std::string code = pConfig->buttons[buttonIndex].code;
+
+	// Rather than using a proper GCodeProgram we just push the lines to the interpreter
+	// one at a time.
+	std::istringstream is(code);
+	std::string line;
+	while (std::getline(is, line)) {
+		pInterpreter->process(line);
+	}
+}
+
+void CGCodeDialog::OnBnClickedBtnProg1()
+{
+	runProgramButton(0);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg2()
+{
+	runProgramButton(1);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg3()
+{
+	runProgramButton(2);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg4()
+{
+	runProgramButton(3);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg5()
+{
+	runProgramButton(4);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg6()
+{
+	runProgramButton(5);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg7()
+{
+	runProgramButton(6);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg8()
+{
+	runProgramButton(7);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg9()
+{
+	runProgramButton(8);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg10()
+{
+	runProgramButton(9);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg11()
+{
+	runProgramButton(10);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg12()
+{
+	runProgramButton(11);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg13()
+{
+	runProgramButton(12);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg14()
+{
+	runProgramButton(13);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg15()
+{
+	runProgramButton(14);
+}
+
+void CGCodeDialog::OnBnClickedBtnProg16()
+{
+	runProgramButton(15);
+}

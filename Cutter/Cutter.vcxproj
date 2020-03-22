@@ -354,7 +354,6 @@
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\bitmap1.bmp" />
     <Image Include="res\Cutter.ico" />
     <Image Include="res\stop.bmp" />
     <Image Include="res\stop.png" />

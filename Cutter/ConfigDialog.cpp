@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "stdafx.h"
+#include <sstream>
 #include "ConfigDialog.h"
 #include "afxdialogex.h"
 #include "resource.h"
@@ -31,43 +32,31 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 IMPLEMENT_DYNAMIC(CConfigDialog, CDialogEx)
 
-CConfigDialog::CConfigDialog(CWnd* pParent /*=NULL*/)
+CConfigDialog::CConfigDialog(CutterConfig* pConfig, CNCFoamCutter* pCutter, CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_CONFIG, pParent)
-	, config(0)
+	, config(pConfig)
+	, pCutter(pCutter)
+	, pMainDialog(0)
 {
-	config = new CutterConfig();
-
+	assert(pConfig);
+	assert(pCutter);
 }
 
 CConfigDialog::~CConfigDialog()
 {
-	delete config;
-
 }
 
-void CConfigDialog::initialize(CCutterDlg * pApp )
+void CConfigDialog::setMainDialog(CCutterDlg* pApp)
 {
-	this->pCutter = pApp->getCutter();
-
-	ComPortEnumerator cpe;
-	std::vector< tstring > ports;
-	cpe.detect(ports, 16);
-
-	for (std::vector< tstring >::const_iterator it = ports.begin(); it != ports.end(); ++it) {
-		defaultComPort.AddString(it->c_str());
-	}
-
-	if (config->load(std::string("cutter_config.xml"))) {
-
-		pApp->configLoaded(config);
-
-		// Make UI controls match settings
-		defaultComPort.SelectString(-1, config->defaultComPort.c_str());
-		connectAutomatically.SetCheck(config->connectAutomatically ? BST_CHECKED : BST_UNCHECKED);
-		listenAutomatically.SetCheck(config->listenAutomatically ? BST_CHECKED : BST_UNCHECKED);
-	}
-
+	assert(this);
+	assert(pApp);
+	pMainDialog = pApp;
 }
+
+void CConfigDialog::configUpdated(CutterConfig* pConfig)
+{
+}
+
 
 void CConfigDialog::DoDataExchange(CDataExchange* pDX)
 {
@@ -99,6 +88,11 @@ void CConfigDialog::DoDataExchange(CDataExchange* pDX)
 	DDV_MinMaxInt(pDX, config->yMicroStepping, 0, 64);
 	DDX_Text(pDX, IDC_EDT_STEP_FREQUENCY, config->stepFrequency);
 	DDV_MinMaxDouble(pDX, config->stepFrequency, 0, 10000);
+
+	DDX_Control(pDX, IDC_LST_BUTTONS, buttonList);
+	DDX_Control(pDX, IDC_EDT_CODE, editCode);
+	DDX_Control(pDX, IDC_EDT_LABEL, editLabel);
+	DDX_Control(pDX, IDC_BTN_UPDATE, buttonUpdate);
 }
 
 
@@ -108,6 +102,8 @@ BEGIN_MESSAGE_MAP(CConfigDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_CHK_CONNECT_AUTO, &CConfigDialog::OnBnClickedChkConnectAuto)
 	ON_BN_CLICKED(IDC_CHK_LISTEN_AUTO, &CConfigDialog::OnBnClickedChkListenAuto)
 	ON_CBN_SELCHANGE(IDC_CMB_DEFAULT_COM, &CConfigDialog::OnCbnSelchangeCmbDefaultCom)
+	ON_BN_CLICKED(IDC_BTN_UPDATE, &CConfigDialog::OnBnClickedBtnUpdate)
+	ON_LBN_SELCHANGE(IDC_LST_BUTTONS, &CConfigDialog::OnSelchangeLstButtons)
 END_MESSAGE_MAP()
 
 
@@ -116,11 +112,16 @@ END_MESSAGE_MAP()
 
 void CConfigDialog::OnBnClickedBtnUpdateCutter()
 {
+	assert(this);
+	assert(pMainDialog);
+
 	if (UpdateData(TRUE)) {
 		pCutter->setBlockLeft(config->blockLeft);
 		pCutter->setBlockRight(config->blockRight);
 		pCutter->setWidth(config->cutterWidth);
 		pCutter->setFeedRate(config->defaultFeedRate);
+
+		pMainDialog->configUpdated(config);
 	}
 }
 
@@ -131,6 +132,7 @@ void CConfigDialog::OnBnClickedBtnSaveConfig()
 		if (!config->save(std::string("cutter_config.xml"))) {
 			::MessageBox(0, "Problem", "Unable to save configuration", MB_OK | MB_ICONERROR);
 		}
+		pMainDialog->configUpdated(config);
 	}
 }
 
@@ -154,5 +156,93 @@ void CConfigDialog::OnCbnSelchangeCmbDefaultCom()
 		CString value;
 		defaultComPort.GetLBText(idx, value);
 		config->defaultComPort = value;
+	}
+}
+
+
+void CConfigDialog::OnBnClickedBtnUpdate()
+{
+	assert(this);
+	assert(config);
+
+	int sel = buttonList.GetCurSel();
+	if (sel != LB_ERR) {
+		CString label;
+		CString code;
+		editLabel.GetWindowTextA(label);
+		editCode.GetWindowTextA(code);
+		config->buttons[sel].label = label.GetBuffer();
+		config->buttons[sel].code = code.GetBuffer();
+
+		// Faff about to set the sel-th entry to the updated label.
+		if (label.IsEmpty()) {
+			label = "------";
+		}
+		buttonList.SetRedraw(FALSE);
+		buttonList.DeleteString(sel);
+		buttonList.InsertString(sel, label);
+		buttonList.SetRedraw(TRUE);
+		buttonList.UpdateWindow();
+
+		// Will have deselected so disable edit etc.
+		editLabel.EnableWindow(FALSE);
+		editCode.EnableWindow(FALSE);
+		buttonUpdate.EnableWindow(FALSE);
+
+		pMainDialog->configUpdated(config);
+	}
+}
+
+
+BOOL CConfigDialog::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	ComPortEnumerator cpe;
+	std::vector< tstring > ports;
+	cpe.detect(ports, 16);
+
+	for (std::vector< tstring >::const_iterator it = ports.begin(); it != ports.end(); ++it) {
+		defaultComPort.AddString(it->c_str());
+	}
+
+	if (config->load(std::string("cutter_config.xml"))) {
+
+
+		pMainDialog->configLoaded(config);
+
+		// Make UI controls match settings
+		defaultComPort.SelectString(-1, config->defaultComPort.c_str());
+		connectAutomatically.SetCheck(config->connectAutomatically ? BST_CHECKED : BST_UNCHECKED);
+		listenAutomatically.SetCheck(config->listenAutomatically ? BST_CHECKED : BST_UNCHECKED);
+	}
+
+	for (int i = 0; i < config->BUTTON_COUNT; ++i) {
+		std::string label = config->buttons[i].label;
+		if (label.empty()) {
+			label = "------";
+		}
+		buttonList.AddString(label.c_str());
+	}
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+
+void CConfigDialog::OnSelchangeLstButtons()
+{
+	int sel = buttonList.GetCurSel();
+	if (sel != LB_ERR) {
+		editLabel.SetWindowTextA(config->buttons[sel].label.c_str());
+		editCode.SetWindowTextA(config->buttons[sel].code.c_str());
+		editLabel.EnableWindow(TRUE);
+		editCode.EnableWindow(TRUE);
+		buttonUpdate.EnableWindow(TRUE);
+	}
+	else {
+		editLabel.EnableWindow(FALSE);
+		editCode.EnableWindow(FALSE);
+		buttonUpdate.EnableWindow(FALSE);
 	}
 }

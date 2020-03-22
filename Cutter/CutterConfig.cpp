@@ -93,6 +93,14 @@ void CutterConfig::serializeTo(CObjectSerializer & os)
 	os.write("connectAutomatically", connectAutomatically);
 	os.write("defaultListenPort", defaultListenPort);
 	os.write("listenAutomatically", listenAutomatically);
+	os.startCollection("buttons", BUTTON_COUNT);
+	for (int i = 0; i < BUTTON_COUNT; ++i) {
+		os.startSection("button", buttons + i);
+		os.write("label", buttons[i].label.c_str());
+		os.write("code", buttons[i].code.c_str());
+		os.endSection();
+	}
+	os.endCollection();
 	os.endSection();
 }
 
@@ -114,5 +122,23 @@ void CutterConfig::serializeFrom(CObjectSerializer & os)
 	os.read("connectAutomatically", connectAutomatically);
 	os.read("defaultListenPort", defaultListenPort);
 	os.read("listenAutomatically", listenAutomatically);
+
+	if (os.ifExists("buttons")) {
+		int values = os.startReadCollection("buttons");
+		for (int i = 0; i < values; ++i) {
+			std::string label;
+			std::string code;
+			os.startReadSection("button", buttons + i);
+			os.read("label", label);
+			os.read("code", code);
+			os.endReadSection();
+			if (i < BUTTON_COUNT) {
+				buttons[i].label = label;
+				buttons[i].code = code;
+			}
+
+		}
+		os.endReadCollection();
+	}
 	os.endReadSection();
 }

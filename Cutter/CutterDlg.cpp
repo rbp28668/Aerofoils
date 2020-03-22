@@ -26,6 +26,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutterConfig.h"
 #include "MainTabCtrl.h"
 #include "GCodeDialog.h"
+#include "HardwareDialog.h"
+#include "ConfigDialog.h"
 #include "afxwin.h"
 #include "../Kernel/Cutter.h"
 
@@ -138,6 +140,8 @@ CCutterDlg::CCutterDlg(CWnd* pParent /*=NULL*/)
 	, pProgram(0)
 	, pListener(0)
 	, pLink(0)
+	, pConfig(0)
+	, progress(0)
 	
 {
 	//{{AFX_DATA_INIT(CCutterDlg)
@@ -150,6 +154,7 @@ CCutterDlg::CCutterDlg(CWnd* pParent /*=NULL*/)
 	pCNCCutter = new CNCFoamCutter(pCutterHardware);
 	pGCodeInterpreter = new GCodeInterpreter();
 	pProgram = new GCodeProgram();
+	pConfig = new CutterConfig();
 
 	pGCodeInterpreter->setCutter(pCNCCutter);
 	pGCodeInterpreter->setContext(pProgram);
@@ -159,6 +164,7 @@ CCutterDlg::CCutterDlg(CWnd* pParent /*=NULL*/)
 
 CCutterDlg::~CCutterDlg()
 {
+	delete pConfig;
 	delete pProgram;
 	delete pGCodeInterpreter;
 	delete pCNCCutter;
@@ -170,7 +176,23 @@ CCutterDlg::~CCutterDlg()
 	pCutterHardware = 0;
 }
 
+// Called when initial config is loaded
 void CCutterDlg::configLoaded(CutterConfig * pConfig)
+{
+	configUpdated(pConfig);
+
+	if (pConfig->connectAutomatically && pConfig->defaultComPort.length() > 0) {
+		connectHardware(pConfig->defaultComPort.c_str());
+	}
+
+	if (pConfig->listenAutomatically) {
+		m_port = pConfig->defaultListenPort;
+		listen();
+	}
+}
+
+// Called when config is updated.
+void CCutterDlg::configUpdated(CutterConfig* pConfig)
 {
 	pCNCCutter->setWidth(pConfig->cutterWidth);
 	pCNCCutter->setBlockLeft(pConfig->blockLeft);
@@ -185,14 +207,9 @@ void CCutterDlg::configLoaded(CutterConfig * pConfig)
 	pCNCCutter->setYMicroStepping(pConfig->yMicroStepping);
 	pCNCCutter->setStepFrequency(pConfig->stepFrequency);
 
-	if (pConfig->connectAutomatically && pConfig->defaultComPort.length() > 0) {
-		connectHardware(pConfig->defaultComPort.c_str());
-	}
-
-	if (pConfig->listenAutomatically) {
-		m_port = pConfig->defaultListenPort;
-		listen();
-	}
+	mainTabs.getGCodeDialog()->configUpdated(pConfig);
+	mainTabs.getHardwareDialog()->configUpdated(pConfig);
+	mainTabs.getConfigDialog()->configUpdated(pConfig);
 }
 
 void CCutterDlg::showLimitSwitches(int status) {

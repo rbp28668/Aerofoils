@@ -123,9 +123,6 @@
     <Image Include="res\stop.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\bitmap1.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\stop.bmp">
       <Filter>Resource Files</Filter>
     </Image>

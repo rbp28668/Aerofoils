@@ -18,8 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 class CutterHardware;
 class CCutterDlg;
-
-// CHardwareDialog dialog
+struct CutterConfig;
 
 class CHardwareDialog : public CDialogEx
 {
@@ -47,11 +46,11 @@ class CHardwareDialog : public CDialogEx
 	void showStatus(int stat);
 
 public:
-	CHardwareDialog(CWnd* pParent = NULL);   // standard constructor
+	CHardwareDialog(CutterHardware* pCutter, CWnd* pParent = NULL);   // standard constructor
 	virtual ~CHardwareDialog();
 
-	void setHardware(CutterHardware* pHardware);
 	void setMainDialog(CCutterDlg* pDlg);
+	void configUpdated(CutterConfig* pConfig);
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
