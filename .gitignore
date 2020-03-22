@@ -10,10 +10,10 @@
 Plots/*
 
 # Output folders
-ipch/*
-x64/*
-Debug/*
-Release/*
+**/ipch/*
+**/x64/*
+**/Debug/*
+**/Release/*
 
 *.tlog
 *.cache

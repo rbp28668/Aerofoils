@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "stdafx.h"
+#include <assert.h>
 #include <sstream>
 #include "ConfigDialog.h"
 #include "afxdialogex.h"
