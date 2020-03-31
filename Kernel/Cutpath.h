@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #ifndef _CUTPATH_H
 #define _CUTPATH_H
 
+#include <list>
 #include "CutStructure.h"
 #include "PlotCommonImpl.h"
 #include "PlotFlags.h"
@@ -28,75 +29,121 @@ class PointT;
 class COutputDevice;
 class CWing;
 class CObjectSerializer;
+class CSpar;
 
 class CPathCutter  : public CutStructure, private CPlotCommonImpl
 {
+	// Frame sets the cutting parameters during a cut.
+	class Frame
+	{
+		float ru0, tu0;  /* start values for u */
+		float ruf, tuf;  /* forward (at le) values for u */
+		float ru1, tu1;  /* end values for u */
+
+	public:
+		Frame(float ru0, float tu0, float ruf, float tuf, float ru1, float tu1);
+		float rootStart() const { return ru0; }
+		float tipStart() const { return tu0; }
+		float rootForward() const { return ruf; }
+		float tipForward() const { return tuf; }
+		float rootFinish() const { return ru1; }
+		float tipFinish() const { return tu1; }
+	};
+
+	// A position during the cut where the cutter should stop cutting the profile and do something different.
+	class Intercept
+	{
+		float ru;             /* root U for this intercept */
+		float tu;             /* tip .... */
+	public:
+		Intercept(float root_u, float tip_u);
+		float rootPosition() const { return ru; }
+		float tipPosition() const { return tu; }
+
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame) = 0;
+	};
+
+	// Ordered list of intercepts.
+	class Intercepts {
+		std::list<Intercept*> intercepts;
+		bool isSorted;
+
+		static bool compare_intercepts(const CPathCutter::Intercept* first, const CPathCutter::Intercept* second);
+	public:
+		Intercepts();
+		~Intercepts();
+		void add(Intercept* intercept);
+		std::list<Intercept*>::const_iterator begin();
+		std::list<Intercept*>::const_iterator end();
+	};
+
+
+	float tool_offset;
+	bool blToolOffsetSet;
+	CPlotFlags plot_flags;
+	const CWing* pWing;
+
+	void find_forward_PointT(const CAerofoil& foil, float* u);
+	void plot_segment(COutputDevice* pdev, const CWing& wing, Intercept* start, Intercept* finish, float delta);
+	void set_le_intercept(Intercepts& intercepts, Frame* frame);
+	void set_te_intercept(Intercepts& intercepts, Frame* frame);
+	void set_spars_intercept(Intercepts& intercepts, Frame* frame);
 
 public:
 
 	static const std::string TYPE;
 
-	CPathCutter(CWing* pWing);
+	CPathCutter(const CWing* pWing);
 	explicit CPathCutter(); // for serialization
-
 
 	float set_tool_offset(float fNewOffset);
 	float get_tool_offset(void);
+
+	const CWing* wing() const { return pWing; }
 
 	virtual void cut(COutputDevice* pdev, double toolOffset);
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
-
 	virtual void serializeTo(CObjectSerializer& os);
 	virtual void serializeFrom(CObjectSerializer& os);
 
 private:
 
-	struct INTERCEPT;
-	struct FRAME;
 
-	struct INTERCEPT
-	{
-	  int   idx;            /* index (mainly for spars) */
-	  float ru;             /* root U for this intercept */
-	  float tu;             /* tip .... */
-	  void (CPathCutter::*fn)(COutputDevice* pdev, INTERCEPT*, FRAME*);   /* run this fn at the intercept */
-	  void* data;           /* and pass it this ptr. */
+	// Mark a position during the cut (start, finish, forward point) but where no operation is done.
+	class NoOpIntercept : public Intercept {
+	public:
+		NoOpIntercept(float ru, float tu);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 
-	/* FRAME structure: used to pass the cutting parameters to the
-	// cut_ functions
-	*/
-	struct FRAME
-	{
-	  float ru0,tu0;  /* start values for u */
-	  float ruf,tuf;  /* forward (at le) values for u */
-	  float ru1,tu1;  /* end values for u */
-	  const CWing* wing;
+	// Cut the leading edge at this position
+	class LeadingEdgeIntercept : public Intercept {
+	public:
+		LeadingEdgeIntercept(float ru, float tu);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 
+	// Cut the trailing edge at this position
+	class TrailingEdgeIntercept : public Intercept {
+		bool topSurface;
+	public:
+		TrailingEdgeIntercept(float ru, float tu, bool topSurface);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+	};
 
-	void find_forward_PointT(const CAerofoil& foil, float *u);
-	void plot_segment(COutputDevice* pdev, const CWing& wing,INTERCEPT* start, INTERCEPT* finish, float delta);
-	void sort_intercepts(void);
+	// Cut a spar at this position
+	class SparIntercept : public Intercept {
+		const CSpar* pSpar;
+	public:
+		SparIntercept(float ru, float tu, const CSpar* spar);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+	};
 
-	void cut_le(COutputDevice* pdev, INTERCEPT* /*icept*/,FRAME* frame);
-	void cut_te(COutputDevice* pdev, INTERCEPT* icept,FRAME* frame);
-	void cut_spar(COutputDevice* pdev, INTERCEPT* icept,FRAME* frame);
+	
 
-	void set_le_intercept(FRAME* frame);
-	void set_te_intercept(FRAME* frame);
-	void set_spars_intercept(FRAME* frame);
-
-	CPlotFlags plot_flags;
-
-	float tool_offset;
-	bool blToolOffsetSet;
-	INTERCEPT ilist[32];
-	int icount;
-	CWing* pWing;
 };
 
 #endif

@@ -82,7 +82,7 @@ void Cut::cut(COutputDevice & pdev)
 		pdev.Flush();
 		pdev.endPlot();
 	}
-	catch (COutputDevice::OutputException& ex) {
+	catch (COutputDevice::OutputException& /*ex*/) {
 		// NOP for the time being.
 		throw; // Just rethrow
 	}
