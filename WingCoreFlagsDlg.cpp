@@ -34,6 +34,7 @@ WingCoreFlagsDlg::WingCoreFlagsDlg(CWnd* pParent /*=NULL*/)
 	, cutLeadingEdge(FALSE)
 	, cutTrailingEdge(FALSE)
 	, cutSpars(FALSE)
+	, cutCutouts(FALSE)
 {
 
 }
@@ -48,6 +49,7 @@ void WingCoreFlagsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHK_CUT_LE, cutLeadingEdge);
 	DDX_Check(pDX, IDC_CHK_CUT_TE, cutTrailingEdge);
 	DDX_Check(pDX, IDC_CHK_CUT_SPARS, cutSpars);
+	DDX_Check(pDX, IDC_CHK_CUT_CUTOUTS, cutCutouts);
 }
 
 

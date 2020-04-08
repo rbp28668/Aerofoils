@@ -26,13 +26,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Kernel/Kernel.h"
+
 class PointT;
 class RectT;
 
 class CCoordMap  
 {
 public:
-	CCoordMap(float sizex, float sizey, CDC* pdc, float zoom);
+	CCoordMap(NumericT sizex, NumericT sizey, CDC* pdc, NumericT zoom);
 	virtual ~CCoordMap();
 
 	POINT toDevice(const PointT& pt);
@@ -40,10 +42,10 @@ public:
 
 	PointT toLogical(POINT pt);
 private:
-	float scalex;   // factor for mm to pixels
-	float scaley;
-	float xoffset;
-	float yoffset;
+	NumericT scalex;   // factor for mm to pixels
+	NumericT scaley;
+	NumericT xoffset;
+	NumericT yoffset;
 
 };
 

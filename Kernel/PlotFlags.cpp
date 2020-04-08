@@ -32,9 +32,11 @@ CPlotFlags::CPlotFlags() :
 	plot_chord(false),    /* True if chord plot wanted */
 	plot_markers(false),  /* True if 10% markers wanted */
 	plot_spars(false),    /* True if plot of spars wanted */
+	plot_cutouts(false),  /* True if plot of cutouts wanted*/
 	plot_le(false),       /* True if LE wanted */
 	plot_te(false),       /* True if TE wanted */
 	plot_labels(false),   /* True if annotated drawing wanted */
+	
 //	bool plot_ellipse_markers; /* True if we want ellipse markers */
 	plot_inverted(false) /* True if should plot inverted section */
 
@@ -56,6 +58,7 @@ void CPlotFlags::serializeTo(CObjectSerializer& os)
 	os.write("plotChord",plot_chord);    /* True if chord plot wanted */
 	os.write("plotMarkers",plot_markers);  /* True if 10% markers wanted */
 	os.write("plotSpars",plot_spars);    /* True if plot of spars wanted */
+	os.write("plotCutouts", plot_cutouts); /* True if plot of cutouts wanted*/
 	os.write("plotLe",plot_le);       /* True if LE wanted */
 	os.write("plotTe",plot_te);       /* True if TE wanted */
 	os.write("plotLabels",plot_labels);   /* True if annotated drawing wanted */
@@ -83,6 +86,10 @@ void CPlotFlags::serializeFrom(CObjectSerializer& os)
 
 	os.read("plotMarkers",plot_markers);  /* True if 10% markers wanted */
 	os.read("plotSpars",plot_spars);    /* True if plot of spars wanted */
+
+	if (os.ifExists("plotCutouts"))
+		os.read("plotCutouts", plot_cutouts);
+
 	os.read("plotLe",plot_le);       /* True if LE wanted */
 	os.read("plotTe",plot_te);       /* True if TE wanted */
 	os.read("plotLabels",plot_labels);   /* True if annotated drawing wanted */

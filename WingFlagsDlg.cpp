@@ -37,24 +37,22 @@ static char THIS_FILE[] = __FILE__;
 CWingFlagsDlg::CWingFlagsDlg(CPlotFlags* pf, CWnd* pParent /*=NULL*/)
 	: CDialog(CWingFlagsDlg::IDD, pParent)
 	, flags(pf)
+	, m_blPlotChord(FALSE)
+	, m_blPlotLabels(FALSE)
+	, m_blPlotMarkers(FALSE)
+	, m_blPlotSection(FALSE)
+	, m_blPlotSkin(FALSE)
+	, m_blPlotSpars(FALSE)
+	, m_blPlotTE(FALSE)
+	, m_blPlotLE(FALSE)
+	, m_blPlotCutouts(FALSE)
 {
-	//{{AFX_DATA_INIT(CWingFlagsDlg)
-	m_blPlotChord = FALSE;
-	m_blPlotLabels = FALSE;
-	m_blPlotMarkers = FALSE;
-	m_blPlotSection = FALSE;
-	m_blPlotSkin = FALSE;
-	m_blPlotSpars = FALSE;
-	m_blPlotTE = FALSE;
-	m_blPlotLE = FALSE;
-	//}}AFX_DATA_INIT
 }
 
 
 void CWingFlagsDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CWingFlagsDlg)
 	DDX_Check(pDX, IDC_CHK_PLOT_CHORD, m_blPlotChord);
 	DDX_Check(pDX, IDC_CHK_PLOT_LABELS, m_blPlotLabels);
 	DDX_Check(pDX, IDC_CHK_PLOT_MARKERS, m_blPlotMarkers);
@@ -63,7 +61,7 @@ void CWingFlagsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHK_PLOT_SPARS, m_blPlotSpars);
 	DDX_Check(pDX, IDC_CHK_PLOT_TE, m_blPlotTE);
 	DDX_Check(pDX, IDC_CHK_PLOT_LE, m_blPlotLE);
-	//}}AFX_DATA_MAP
+	DDX_Check(pDX, IDC_CHK_PLOT_CUTOUTS, m_blPlotCutouts);
 }
 
 
@@ -87,7 +85,7 @@ void CWingFlagsDlg::OnOK()
 		flags->plot_le =		m_blPlotLE != FALSE;       /* True if LE wanted */
 		flags->plot_te =		m_blPlotTE != FALSE;       /* True if TE wanted */
 		flags->plot_labels =	m_blPlotLabels != FALSE;   /* True if annotated drawing wanted */
-
+		flags->plot_cutouts = m_blPlotCutouts != FALSE;
 		CDialog::OnOK();
 	}
 }
@@ -104,6 +102,7 @@ BOOL CWingFlagsDlg::OnInitDialog()
 	m_blPlotLE		= (flags->plot_le 		) ? TRUE : FALSE;       /* True if LE wanted */
 	m_blPlotTE		= (flags->plot_te 		) ? TRUE : FALSE;       /* True if TE wanted */
 	m_blPlotLabels	= (flags->plot_labels 	) ? TRUE : FALSE;   /* True if annotated drawing wanted */
+	m_blPlotCutouts = (flags->plot_cutouts) ? TRUE : FALSE;
 	
 	UpdateData(FALSE);
 	return TRUE;  // return TRUE unless you set the focus to a control

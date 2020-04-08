@@ -26,15 +26,17 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Kernel.h"
+
 class PointT  
 {
 public:
-	PointT(float x = 0.0f, float y = 0.0f);
+	PointT(NumericT x = 0, NumericT y = 0);
 	PointT(const PointT& pt);
 	~PointT();
 
-	float fx;
-	float fy;
+	NumericT fx;
+	NumericT fy;
 	inline PointT operator+= (const PointT& other) { fx += other.fx; fy += other.fy; return *this; }
 };
 

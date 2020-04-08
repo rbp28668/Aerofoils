@@ -59,12 +59,12 @@ Revision History:
 /** SPLINE calculates a second derivative vector for    **/
 /** calculating natural splines.              **/
 /************************************************************/
-void CSpline::spline(float *x,float *y,int n, float *y2)
+void CSpline::spline(NumericT *x,NumericT *y,int n, NumericT *y2)
 {
   int i,k;
-  float p,qn,sig,un,*u;
+  NumericT p,qn,sig,un,*u;
   
-  u = new float[n-1];
+  u = new NumericT[n-1];
   if(u)
     {
   
@@ -103,12 +103,12 @@ void CSpline::spline(float *x,float *y,int n, float *y2)
 /** SPLINT is the spline interpolation routine that     **/
 /** calculates y and dy/dx at a given x.          **/
 /************************************************************/
-void CSpline::splint(float *xa, float *ya, float *y2a, int n, float x,
-  float *y,float *dydx) const
+void CSpline::splint(NumericT *xa, NumericT *ya, NumericT *y2a, int n, NumericT x,
+  NumericT *y,NumericT *dydx) const
 {
   bool blOK = true;
   int klo,khi,k;
-  float h,b,a;
+  NumericT h,b,a;
 
   klo=0;
   khi=n-1;
@@ -141,11 +141,11 @@ CSpline::CSpline(PointT* curve, int n)
   m_blBad = false;
   npts = 0;
   
-  xx = new float[n];
-  yy = new float[n];
-  uu = new float[n];
-  xx2 = new float[n];
-  yy2 =  new float[n];
+  xx = new NumericT[n];
+  yy = new NumericT[n];
+  uu = new NumericT[n];
+  xx2 = new NumericT[n];
+  yy2 =  new NumericT[n];
 
   if( (xx == 0)
     ||(yy == 0)
@@ -165,12 +165,12 @@ CSpline::CSpline(PointT* curve, int n)
     /** first point to point x[n],y[n]. This will be used to approx **/
     /* a constant velocity of drawing (or cutting tool !) as u runs **/
     /* in equal steps from 0 to 1                   **/
-    float totdist = 0;
+    NumericT totdist = 0;
     for(i=0;i<n-1;++i)
       {
-      float dx = curve[i+1].fx - curve[i].fx;
-      float dy = curve[i+1].fy - curve[i].fy;
-      float dist = (float)sqrt(dx*dx + dy*dy);
+      NumericT dx = curve[i+1].fx - curve[i].fx;
+      NumericT dy = curve[i+1].fy - curve[i].fy;
+      NumericT dist = (NumericT)sqrt(dx*dx + dy*dy);
       uu[i] = totdist;
       totdist += dist;
       }
@@ -205,57 +205,57 @@ CSpline::~CSpline()
   delete [] xx;
 }
 
-PointT CSpline::Point(float u) const
+PointT CSpline::Point(NumericT u) const
 {
-  float x = 0;
-  float y = 0;
-  float dxdu = 0;
-  float dydu = 0;
+  NumericT x = 0;
+  NumericT y = 0;
+  NumericT dxdu = 0;
+  NumericT dydu = 0;
   splint(uu,xx,xx2,npts,u,&x,&dxdu);    /* get x coord at posn u */
   splint(uu,yy,yy2,npts,u,&y,&dydu);    /* and y coord at posn u */
   return PointT(x,y);
 }
 
-PointT CSpline::Point(float u, PointT& tangent) const
+PointT CSpline::Point(NumericT u, PointT& tangent) const
 {
-  float x = 0;
-  float y = 0;
-  float dxdu = 0;
-  float dydu = 0;
+  NumericT x = 0;
+  NumericT y = 0;
+  NumericT dxdu = 0;
+  NumericT dydu = 0;
 
   splint(uu,xx,xx2,npts,u,&x,&dxdu);    /* get x coord at posn u */
   splint(uu,yy,yy2,npts,u,&y,&dydu);    /* and y coord at posn u */
 
-  float dist;
-  dist=(float)sqrt(dxdu*dxdu + dydu*dydu);
+  NumericT dist;
+  dist=(NumericT)sqrt(dxdu*dxdu + dydu*dydu);
   tangent = PointT(dxdu/dist, dydu/dist);
 
   return PointT(x,y);
 }
 
-PointT CSpline::Tangent(float u) const
+PointT CSpline::Tangent(NumericT u) const
 {
-  float x = 0;
-  float y = 0;
-  float dxdu = 0;
-  float dydu = 0;
+  NumericT x = 0;
+  NumericT y = 0;
+  NumericT dxdu = 0;
+  NumericT dydu = 0;
 
   splint(uu,xx,xx2,npts,u,&x,&dxdu);    /* get x coord at posn u */
   splint(uu,yy,yy2,npts,u,&y,&dydu);    /* and y coord at posn u */
 
-  float dist;
-  dist=(float)sqrt(dxdu*dxdu + dydu*dydu);
+  NumericT dist;
+  dist=(NumericT)sqrt(dxdu*dxdu + dydu*dydu);
   return PointT(dxdu/dist, dydu/dist);
 }
 
-float CSpline::FirstX(float req_x, float start, int dirn) const
+NumericT CSpline::FirstX(NumericT req_x, NumericT start, int dirn) const
 {
-  float step;
-  float u;
-  float prev_x;
-  float x0;
-  float low_u,high_u; /* bracketing for final seach */
-  float low_x,high_x; /* ditto */
+  NumericT step;
+  NumericT u;
+  NumericT prev_x;
+  NumericT x0;
+  NumericT low_u,high_u; /* bracketing for final seach */
+  NumericT low_x,high_x; /* ditto */
 
   if(dirn <0)
     step=-0.01f;

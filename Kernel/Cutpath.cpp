@@ -60,6 +60,8 @@ using namespace std;
 const std::string CPathCutter::TYPE("pathCutter");
 static CObjectFactory<CPathCutter> factory(CPathCutter::TYPE.c_str());
 
+#define DELTA 0.1f   /* angle increment for plotting */
+#define PI 3.14159265358979323846264338
 
 /************************************************************/
 /** CPathCutter::CPathCutter                               **/
@@ -82,9 +84,9 @@ CPathCutter::CPathCutter()
 /************************************************************/
 /** SET_TOOL_OFFSET                                        **/
 /************************************************************/
-float CPathCutter::set_tool_offset(float fNewOffset)
+NumericT CPathCutter::set_tool_offset(NumericT fNewOffset)
 {
-	float fOldOffset = tool_offset;
+	NumericT fOldOffset = tool_offset;
 	tool_offset = fNewOffset;
 	blToolOffsetSet = 1;
 	return fOldOffset;
@@ -93,7 +95,7 @@ float CPathCutter::set_tool_offset(float fNewOffset)
 /************************************************************/
 /** GET_TOOL_OFFSET                                        **/
 /************************************************************/
-float CPathCutter::get_tool_offset(void)
+NumericT CPathCutter::get_tool_offset(void)
 {
 	return tool_offset;
 }
@@ -104,16 +106,16 @@ float CPathCutter::get_tool_offset(void)
 /** This find the value of u which gives the least value **/
 /** of x. This should be right on the leading edge.      **/
 /**********************************************************/
-void CPathCutter::find_forward_PointT(const CAerofoil& foil,float *u)
+void CPathCutter::find_forward_PointT(const CAerofoil& foil,NumericT *u)
 {
-	float u0,u1;
-	float um;
+	NumericT u0,u1;
+	NumericT um;
 	PointT middle_pt;
 	PointT middle_tangent;
 	int i;
 	
-	u0=(float)WEENY;        /* initial search posn */
-	u1=(float)(1.0f-WEENY);
+	u0=(NumericT)WEENY;        /* initial search posn */
+	u1=(NumericT)(1.0f-WEENY);
 	
 	for(i=0;i<FORWARD_ITER;++i)
     {
@@ -135,14 +137,14 @@ void CPathCutter::find_forward_PointT(const CAerofoil& foil,float *u)
 /************************************************************/
 /** PLOT_SEGMENT                                           **/
 /************************************************************/
-void CPathCutter::plot_segment(COutputDevice* pdev, const CWing& wing, Intercept* start, Intercept* finish, float delta)
+void CPathCutter::plot_segment(COutputDevice* pdev, const CWing& wing, Intercept* start, Intercept* finish, NumericT delta)
 {
 	PointT tangent;
-	float r_skin,t_skin;
-	float ru0,ru1;
-	float tu0,tu1;
+	NumericT r_skin,t_skin;
+	NumericT ru0,ru1;
+	NumericT tu0,tu1;
 	PointT r_here,t_here;
-	float ru,tu;
+	NumericT ru,tu;
 	
 	const CAerofoil* root = wing.getRoot();
 	const CAerofoil* tip = wing.getTip();
@@ -231,11 +233,11 @@ void CPathCutter::set_le_intercept(Intercepts& intercepts, Frame* frame)
 	*/
 	if((pWing->getLE() - tool_offset) > 0.0f)
     {
-		float rx=(pWing->getLE() - tool_offset) / pWing->getRootTransform()->getChord();
-		float ru1 = root->FirstX(rx,0.75f,-1);  /* lower surface */
+		NumericT rx=(pWing->getLE() - tool_offset) / pWing->getRootTransform()->getChord();
+		NumericT ru1 = root->FirstX(rx,0.75f,-1);  /* lower surface */
 		
 		/* Get tu in segment ruf..ru1. */
-		float tu1 = frame->tipForward() + (ru1-frame->rootForward()) * (frame->tipFinish() - frame->tipForward())/
+		NumericT tu1 = frame->tipForward() + (ru1-frame->rootForward()) * (frame->tipFinish() - frame->tipForward())/
 			(frame->rootFinish() - frame->rootForward());
 		
 		Intercept* intercept = new LeadingEdgeIntercept(ru1, tu1);
@@ -253,16 +255,16 @@ void CPathCutter::set_te_intercept(Intercepts& intercepts, Frame* frame)
 	assert(this);
 	assert(frame);
 	
-	float rx;
-	float tu0,tu1;
-	float ru0,ru1;
+	NumericT rx;
+	NumericT tu0,tu1;
+	NumericT ru0,ru1;
 	
 	const CAerofoil *root = pWing->getRoot();
 	
 	/* TE has an upper and a lower intercept */
 	if((pWing->getTE() - tool_offset) > 0.0f)
     {
-		float root_chord = pWing->getRootTransform()->getChord();
+		NumericT root_chord = pWing->getRootTransform()->getChord();
 		rx=(root_chord - pWing->getTE() + tool_offset) / root_chord;
 		
 		ru0 = root->FirstX(rx,frame->rootForward(),-1); /* upper surface */
@@ -294,9 +296,9 @@ void CPathCutter::set_spars_intercept(Intercepts& intercepts, Frame* frame)
 	assert(this);
 	assert(frame);
 	
-	float rx;
-	float tu0,tu1;
-	float ru0,ru1;
+	NumericT rx;
+	NumericT tu0,tu1;
+	NumericT ru0,ru1;
 	
 	const CAerofoil *root = pWing->getRoot();
 	const CTransform* rootTransform = pWing->getRootTransform();
@@ -340,6 +342,40 @@ void CPathCutter::set_spars_intercept(Intercepts& intercepts, Frame* frame)
 	return;
 }
 
+void CPathCutter::set_cutouts_intercept(Intercepts& intercepts, Frame* frame)
+{
+	const CAerofoil* root = pWing->getRoot();
+	const CAerofoil* tip = pWing->getTip();
+	const CTransform* rootTransform = pWing->getRootTransform();
+	const CTransform* tipTransform = pWing->getTipTransform();
+
+	NumericT root_chord = rootTransform->getChord();
+	NumericT tip_chord = tipTransform->getChord();
+
+	for (int i = 0; i < pWing->getCutoutCount(); ++i)
+	{
+		NumericT ru, tu;
+		const Cutout* cutout = pWing->getCutout(i);
+
+		NumericT rx = cutout->getRootX() / root_chord;
+		//NumericT tx = cutout->getTipX() / tip_chord;
+
+		// Doesn't mater whether centred vertically.  Need to pick upper or lower intercept
+		if (cutout->getTopSurface()) {
+			ru = root->FirstX(rx, frame->rootForward(), -1); /* upper surface */
+			tu = frame->tipStart() + (ru - frame->rootStart()) * (frame->tipForward() - frame->tipStart()) /
+				(frame->rootForward() - frame->rootStart());
+		} else { // bottom surface
+			ru = root->FirstX(rx, frame->rootForward(), 1);
+			tu = frame->tipForward() + (ru - frame->rootForward()) * (frame->tipFinish() - frame->tipForward()) /
+				(frame->rootFinish() - frame->rootForward());
+		}
+
+		intercepts.add(new CutoutIntercept(ru, tu, cutout));
+	}
+
+}
+
 
 /************************************************************/
 /** CUT_CORE  cuts the core in a single pass of the cutter.**/
@@ -352,22 +388,22 @@ void CPathCutter::cut(COutputDevice* pdev, double toolOffset)
 	assert(this);
 	assert(pdev);
 	
-	set_tool_offset((float)toolOffset);
+	set_tool_offset((NumericT)toolOffset);
 
 	plot_flags = *(pWing->getPlotFlags());
 
 	const CAerofoil *root = pWing->getRoot();
 	const CAerofoil *tip = pWing->getTip();
 	
-	float ru0,ru1;
-	float tu0,tu1;
-	float delta;
-	float r_skin,t_skin;
-	float ruf,tuf;
+	NumericT ru0,ru1;
+	NumericT tu0,tu1;
+	NumericT delta;
+	NumericT r_skin,t_skin;
+	NumericT ruf,tuf;
 
 	
-	float root_chord = pWing->getRootTransform()->getChord();
-	float tip_chord = pWing->getTipTransform()->getChord();
+	NumericT root_chord = pWing->getRootTransform()->getChord();
+	NumericT tip_chord = pWing->getTipTransform()->getChord();
 	
 	/* Work out delta (in U) to give a line segment length of about 0.2 mm */
 	delta = max(root_chord, tip_chord);
@@ -413,21 +449,22 @@ void CPathCutter::cut(COutputDevice* pdev, double toolOffset)
 	/* Set up coordinate frame for le/te & spars */
 	Frame frame(ru0, tu0, ruf, tuf, ru1, tu1);
 	
-	if(plot_flags.plot_le)
-    {
+	if(plot_flags.plot_le) {
 		set_le_intercept(intercepts, &frame);
     }
 	
-	if(plot_flags.plot_te)
-    {
+	if(plot_flags.plot_te) {
 		set_te_intercept(intercepts, &frame);
     }
 	
-	if(plot_flags.plot_spars)
-    {
+	if(plot_flags.plot_spars) {
 		set_spars_intercept(intercepts, &frame);
     }
-			
+
+	if (plot_flags.plot_cutouts) {
+		set_cutouts_intercept(intercepts, &frame);
+	}
+
 	// Run the plot....
 	line(pdev, rte,tte);
 
@@ -495,7 +532,7 @@ void CPathCutter::serializeFrom(CObjectSerializer& os)
 }
 
 /****************************************************************************************************/
-CPathCutter::Intercept::Intercept(float root_u, float tip_u)
+CPathCutter::Intercept::Intercept(NumericT root_u, NumericT tip_u)
 	: ru(root_u)
 	, tu(tip_u)
 {
@@ -503,7 +540,7 @@ CPathCutter::Intercept::Intercept(float root_u, float tip_u)
 
 /****************************************************************************************************/
 
-CPathCutter::NoOpIntercept::NoOpIntercept(float ru, float tu)
+CPathCutter::NoOpIntercept::NoOpIntercept(NumericT ru, NumericT tu)
 	: Intercept(ru, tu)
 {
 }
@@ -516,7 +553,7 @@ void CPathCutter::NoOpIntercept::process(CPathCutter* cutter, COutputDevice* out
 
 /****************************************************************************************************/
 
-CPathCutter::LeadingEdgeIntercept::LeadingEdgeIntercept(float ru, float tu)
+CPathCutter::LeadingEdgeIntercept::LeadingEdgeIntercept(NumericT ru, NumericT tu)
 	: Intercept(ru, tu)
 {
 }
@@ -531,16 +568,16 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 	const CTransform* rootTransform = wing->getRootTransform();
 	const CTransform* tipTransform = wing->getTipTransform();
 
-	float tool_offset = cutter->tool_offset;
+	NumericT tool_offset = cutter->tool_offset;
 
-	float rx;
-	float ru0, ru1;
-	float tu0, tu1;
+	NumericT rx;
+	NumericT ru0, ru1;
+	NumericT tu0, tu1;
 	PointT rt, rb, tt, tb;      /* root top, root bottom, tip top, tip bottom */
 	PointT rtt, rbt, ttt, tbt;  /* root top tangent ... etc */
 	//ROTATE r_washout,t_washout;
-	float r_skin, t_skin;
-	float ru, tu;
+	NumericT r_skin, t_skin;
+	NumericT ru, tu;
 	PointT ri, ti;
 
 	/* Get, & Scale the skin thickness to aerofoil space */
@@ -627,7 +664,7 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 
 /****************************************************************************************************/
 
-CPathCutter::TrailingEdgeIntercept::TrailingEdgeIntercept(float ru, float tu, bool topSurface)
+CPathCutter::TrailingEdgeIntercept::TrailingEdgeIntercept(NumericT ru, NumericT tu, bool topSurface)
 	: Intercept(ru, tu)
 	, topSurface(topSurface)
 {
@@ -640,16 +677,16 @@ void CPathCutter::TrailingEdgeIntercept::process(CPathCutter* cutter, COutputDev
 	const CAerofoil* tip = wing->getTip();
 	const CTransform* rootTransform = wing->getRootTransform();
 	const CTransform* tipTransform = wing->getTipTransform();
-	const float tool_offset = cutter->tool_offset;
+	const NumericT tool_offset = cutter->tool_offset;
 
-	float ru0, ru1;
-	float tu0, tu1;
+	NumericT ru0, ru1;
+	NumericT tu0, tu1;
 	PointT rt, rb, tt, tb;      /* root top, root bottom, tip top, tip bottom */
 	PointT rtt, rbt, ttt, tbt;  /* root top tangent ... etc */
 	PointT rm, tm;            /* middle PointTs */
 	//  ROTATE r_washout,t_washout;
-	float r_skin, t_skin;
-	float rx;
+	NumericT r_skin, t_skin;
+	NumericT rx;
 
 	/* Get, & Scale the skin thickness to aerofoil space */
 	r_skin = wing->getSkinThickness() - tool_offset;
@@ -658,7 +695,7 @@ void CPathCutter::TrailingEdgeIntercept::process(CPathCutter* cutter, COutputDev
 	t_skin /= tipTransform->getChord();
 
 	/* Calculate top and bottom PointTs */
-	float root_chord = rootTransform->getChord();
+	NumericT root_chord = rootTransform->getChord();
 	rx = (root_chord - wing->getTE() + tool_offset) / root_chord;
 
 	ru0 = root->FirstX(rx, frame->rootForward(), -1); /* upper surface */
@@ -720,7 +757,7 @@ void CPathCutter::TrailingEdgeIntercept::process(CPathCutter* cutter, COutputDev
 }
 
 /****************************************************************************************************/
-CPathCutter::SparIntercept::SparIntercept(float ru, float tu, const CSpar* spar)
+CPathCutter::SparIntercept::SparIntercept(NumericT ru, NumericT tu, const CSpar* spar)
 	: Intercept(ru, tu)
 	, pSpar(spar)
 {
@@ -734,27 +771,27 @@ void CPathCutter::SparIntercept::process(CPathCutter* cutter, COutputDevice* out
 	const CTransform* rootTransform = wing->getRootTransform();
 	const CTransform* tipTransform = wing->getTipTransform();
 
-	const float tool_offset = cutter->tool_offset;
+	const NumericT tool_offset = cutter->tool_offset;
 
 	int i;
 	PointT rpos[5];
 	PointT tpos[5];
 	PointT rp, tp;
 	PointT ros, tos;
-	float ru, tu;
+	NumericT ru, tu;
 
 	/* Get, & Scale the skin thickness to aerofoil space */
-	float r_skin = wing->getSkinThickness() - tool_offset;
+	NumericT r_skin = wing->getSkinThickness() - tool_offset;
 	r_skin /= rootTransform->getChord();
-	float t_skin = wing->getSkinThickness() - tool_offset;
+	NumericT t_skin = wing->getSkinThickness() - tool_offset;
 	t_skin /= tipTransform->getChord();
 
 
 	/* Work out the spar dimensions */
-	float root_height = pSpar->getRootHeight();
-	float root_width = pSpar->getRootWidth() - 2 * tool_offset;
-	float tip_height = pSpar->getTipHeight();
-	float tip_width = pSpar->getTipWidth() - 2 * tool_offset;
+	NumericT root_height = pSpar->getRootHeight();
+	NumericT root_width = pSpar->getRootWidth() - 2 * tool_offset;
+	NumericT tip_height = pSpar->getTipHeight();
+	NumericT tip_width = pSpar->getTipWidth() - 2 * tool_offset;
 	if (!pSpar->isSubmerged())
 	{
 		root_height -= wing->getSkinThickness();
@@ -875,10 +912,146 @@ void CPathCutter::SparIntercept::process(CPathCutter* cutter, COutputDevice* out
 	return;
 }
 
+CPathCutter::CutoutIntercept::CutoutIntercept(NumericT ru, NumericT tu, const Cutout* cutout)
+	: Intercept(ru, tu)
+	, pCutout(cutout)
+{
+	assert(this);
+	assert(cutout);
+}
+
+void CPathCutter::CutoutIntercept::process(CPathCutter* cutter, COutputDevice* output, Frame* frame)
+{
+	assert(this);
+	assert(cutter);
+	assert(output);
+	assert(frame);
+
+	const CWing* wing = cutter->wing();
+	const CAerofoil* root = wing->getRoot();
+	const CAerofoil* tip = wing->getTip();
+	const CTransform* rootTransform = wing->getRootTransform();
+	const CTransform* tipTransform = wing->getTipTransform();
+
+	NumericT root_chord = rootTransform->getChord();
+	NumericT tip_chord = tipTransform->getChord();
+
+	/* Convert cutout sizes & position to aerofoil coords. */
+	NumericT r_xpos = pCutout->getRootX() / root_chord;
+	NumericT r_ypos = pCutout->getRootY() / root_chord;
+	NumericT r_width = pCutout->getRootWidth() / root_chord;
+	NumericT r_height = pCutout->getRootHeight() / root_chord;
+	NumericT t_xpos = pCutout->getTipX() / tip_chord;
+	NumericT t_ypos = pCutout->getTipY() / tip_chord;
+	NumericT t_width = pCutout->getTipWidth() / tip_chord;
+	NumericT t_height = pCutout->getTipHeight() / tip_chord;
+
+	/* and convert skin thickness and tool offset to aerofoil space */
+	NumericT r_skin = (wing->getSkinThickness()-cutter->get_tool_offset()) / root_chord;
+	NumericT t_skin = (wing->getSkinThickness()-cutter->get_tool_offset()) / tip_chord;
+
+	/* Figure out where on the wing (in u) the cutout sits*/
+	NumericT rut, rub, tut, tub;
+	rut = root->FirstX(r_xpos, 0.0f, 1);
+	tut = tip->FirstX(t_xpos, 0.0f, 1);
+	rub = root->FirstX(r_xpos, 1.0f, -1);
+	tub = tip->FirstX(t_xpos, 1.0f, -1);
+
+	/* Centre points of the cutout in aerofoil space*/
+	NumericT rx, ry, tx, ty;
+
+	/* Figure out where the centre points are */
+	/* Note this is common to plotting as centre will be the same in both cases. */
+	if (pCutout->getIsCentred()) {
+		PointT top = root->Point(rut);
+		PointT bottom = root->Point(rub);
+		rx = (top.fx + bottom.fx) / 2;
+		ry = (top.fy + bottom.fy) / 2;
+
+		top = root->Point(tut);
+		bottom = root->Point(tub);
+		tx = (top.fx + bottom.fx) / 2;
+		ty = (top.fy + bottom.fy) / 2;
+	}
+	else {  // not centred
+		NumericT rdist = r_skin + r_ypos + r_height / 2;
+		NumericT tdist = t_skin + t_ypos + t_height / 2;
+
+		if (pCutout->getTopSurface()) {
+			PointT rtan, ttan;
+			PointT rpos = root->Point(rut, rtan);
+			PointT tpos = tip->Point(tut, ttan);
+
+			rx = rpos.fx - rdist * rtan.fy;
+			ry = rpos.fy + rdist * rtan.fx;
+			tx = tpos.fx - tdist * ttan.fy;
+			ty = tpos.fy + tdist * ttan.fx;
+		}
+		else { // calculate from bottom surface
+			PointT rtan, ttan;
+			PointT rpos = root->Point(rub, rtan);
+			PointT tpos = tip->Point(tub, ttan);
+
+			rx = rpos.fx - rdist * rtan.fy;
+			ry = rpos.fy + rdist * rtan.fx;
+			tx = tpos.fx - tdist * ttan.fy;
+			ty = tpos.fy + tdist * ttan.fx;
+		}
+	}
+
+
+	/* Ok, so one way or another we've got the centre points of the cutout in rx,ry,tx,ty*/
+	/* Plot it.... */
+
+	/* So initially find the start point with the given ru & tu.  This is the same formula irrespective of whether
+	top or buottom surface.  Note r_skin & t_skin already have tool offset included*/
+	PointT rtan, ttan;
+	PointT rpos = root->Point(rootPosition(), rtan);
+	PointT tpos = tip->Point(tipPosition(), ttan);
+	PointT root_start(rpos.fx - r_skin * rtan.fy, rpos.fy + r_skin * rtan.fx);
+	PointT tip_start(tpos.fx - t_skin * ttan.fy, tpos.fy + t_skin * ttan.fx);
+
+	/* So transform back into real space and cut*/
+	cutter->line(output, rootTransform->transform(root_start), tipTransform->transform(tip_start));
+	
+	/* Find where the line from the start points heading inwards hits the cutout.  Need to go there!*/
+	/* Note we've got the centre of the ellipse in aerofoil space and the root and tip start points*/
+	/* Find angle going from centre to start point.  Cutting should start at that angle*/
+	/* Note also that as it may be an ellipse we need to scale dy & dx by height and width to compensate*/
+	NumericT dx, dy;
+	dx = (root_start.fx - rx) * pCutout->getRootHeight(); // height is deliberate as swap to scale for ellipse using *
+	dy = (root_start.fy - ry) * pCutout->getRootWidth();
+	double root_start_angle = atan2(dy, dx);
+	dx = (tip_start.fx - tx) * pCutout->getTipHeight();
+	dy = (tip_start.fy - ty) * pCutout->getTipWidth();
+	double tip_start_angle = atan2(dy, dx);
+
+
+	// Need to use radius rather than diameter also allowing for tool offset.  
+	double rw2 = (pCutout->getRootWidth() / 2 - cutter->get_tool_offset()) / root_chord;
+	double rh2 = (pCutout->getRootHeight() / 2 - cutter->get_tool_offset()) / root_chord;
+	double tw2 = (pCutout->getTipWidth() / 2 - cutter->get_tool_offset()) / tip_chord;
+	double th2 = (pCutout->getTipHeight() / 2 - cutter->get_tool_offset()) / tip_chord;
+
+	for (double theta = 0; theta <= 2 * PI + DELTA; theta += DELTA) {
+
+		double angle = (theta > 2 * PI) ? 2 * PI : theta;
+		PointT r(rx + cos(angle + root_start_angle) * rw2, ry + sin(angle + root_start_angle) * rh2);
+		PointT t(tx + cos(angle + tip_start_angle) * tw2, ty + sin(angle + tip_start_angle) * th2);
+		r = rootTransform->transform(r);
+		t = tipTransform->transform(t);
+		cutter->line(output, r, t);
+	}
+
+	// Need to move back to where we started.
+	cutter->line(output, rootTransform->transform(root_start), tipTransform->transform(tip_start));
+
+}
+
 
 /****************************************************************************************************/
 
-CPathCutter::Frame::Frame(float ru0, float tu0, float ruf, float tuf, float ru1, float tu1)
+CPathCutter::Frame::Frame(NumericT ru0, NumericT tu0, NumericT ruf, NumericT tuf, NumericT ru1, NumericT tu1)
 	: ru0(ru0)
 	, tu0(tu0)
 	, ruf(ruf)
@@ -930,3 +1103,4 @@ std::list<CPathCutter::Intercept*>::const_iterator CPathCutter::Intercepts::end(
 {
 	return intercepts.end();
 }
+

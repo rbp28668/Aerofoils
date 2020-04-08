@@ -1,4 +1,5 @@
 #pragma once
+#include "Kernel.h"
 #include "OutputDevice.h"
 
 class CutterSimulation;

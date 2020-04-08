@@ -91,12 +91,12 @@ BOOL CPlotPointDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	m_rootX = point->getRoot().fx;
-	m_rootY  = point->getRoot().fy;
-	m_tipX = point->getTip().fx;
-	m_tipY = point->getTip().fy;
+	m_rootX = (float)point->getRoot().fx;
+	m_rootY  = (float)point->getRoot().fy;
+	m_tipX = (float)point->getTip().fx;
+	m_tipY = (float)point->getTip().fy;
 
-	m_span = point->getSpan();
+	m_span = (float)point->getSpan();
 
 	UpdateData(FALSE);
 	

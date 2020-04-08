@@ -610,8 +610,8 @@ void CAerofoilDoc::OnEditPosition()
 	if(selected)
 	{
 		CSectionPositionDlg dlg;
-		dlg.m_maxPosition = selected->getSpan();
-		dlg.m_position = selected->getSectionPos();
+		dlg.m_maxPosition = (float)selected->getSpan();
+		dlg.m_position = (float)selected->getSectionPos();
 
 		if(dlg.DoModal() == IDOK)
 		{

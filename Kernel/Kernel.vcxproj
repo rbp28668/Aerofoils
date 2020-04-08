@@ -241,6 +241,7 @@
     <ClCompile Include="CNCConnectionOutputDevice.cpp" />
     <ClCompile Include="CNCSocket.cpp" />
     <ClCompile Include="Cut.cpp" />
+    <ClCompile Include="Cutout.cpp" />
     <ClCompile Include="Cutpath.cpp" />
     <ClCompile Include="CutStructure.cpp" />
     <ClCompile Include="CutterGeometry.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="CNCConnectionOutputDevice.h" />
     <ClInclude Include="CNCSocket.h" />
     <ClInclude Include="Cut.h" />
+    <ClInclude Include="Cutout.h" />
     <ClInclude Include="Cutpath.h" />
     <ClInclude Include="CutStructure.h" />
     <ClInclude Include="Cutter.h" />
@@ -318,6 +320,7 @@
     <ClInclude Include="GCodeSnippet.h" />
     <ClInclude Include="GCodeSnippetCutter.h" />
     <ClInclude Include="HomeCutter.h" />
+    <ClInclude Include="Kernel.h" />
     <ClInclude Include="KernelError.h" />
     <ClInclude Include="ObjectSerializer.h" />
     <ClInclude Include="OutputDevice.h" />

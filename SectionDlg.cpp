@@ -89,12 +89,12 @@ BOOL CSectionDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	m_chord = transform->getChord();
-	m_height = transform->getHeight();
-	m_sweep = transform->getSweep();
-	m_washout = transform->getWashout();
+	m_chord = (float)transform->getChord();
+	m_height = (float)transform->getHeight();
+	m_sweep = (float)transform->getSweep();
+	m_washout = (float)transform->getWashout();
 
-	m_thicknessMod = aerofoil->getThicknessModifier();
+	m_thicknessMod = (float)aerofoil->getThicknessModifier();
 	m_lblSectionName.SetWindowText(aerofoil->getName().c_str());
 
 	UpdateData(FALSE);

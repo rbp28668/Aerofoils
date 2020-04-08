@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 #include <list>
+#include "Kernel.h"
 
 class COutputDevice;
 class CWing;

@@ -28,6 +28,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #endif // _MSC_VER > 1000
 
 #include <list>
+#include "Kernel.h"
 #include "OutputDevice.h"
 #include "PointT.h"
 
@@ -55,7 +56,7 @@ public:
 	void plot(COutputDevice& pdev);
 
 	// Add structure
-	CWing* addWing(const char* rootSection, float rootThickness, const char* tipSection, float tipThickness);
+	CWing* addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness);
 	CEllipsePair* addEllipsePair(const CEllipsePair& pair);
 	CPointStructure* addPointStructure(const CPointStructure& point);
 
@@ -66,7 +67,7 @@ public:
 
 	// plotter manipulation
 	void deletePlotStructure(CPlotStructure* toDelete);
-	CPlotStructure* closestTo(float x, float y, float& minDist) const;
+	CPlotStructure* closestTo(NumericT x, NumericT y, NumericT& minDist) const;
 
 	void deleteStructure(CStructure* toDelete);
 
@@ -91,7 +92,7 @@ private:
 	class CClosest : public COutputDevice
 	{
 	public:
-		CClosest(float x, float y);
+		CClosest(NumericT x, NumericT y);
 
 		virtual void MoveTo(int iStream, const PointT& pt) {};
 		virtual void LineTo(int iStream, const PointT& pt);
@@ -100,10 +101,10 @@ private:
 		virtual void Flush() {};
 		virtual PointT position(int iStream) { return PointT(); }
 
-		float getMinDist() const {return d2min;}
+		NumericT getMinDist() const {return d2min;}
 	private:
-		float d2min;		// square of min distance from plot to test point
-		float xpos, ypos;	// position of test point
+		NumericT d2min;		// square of min distance from plot to test point
+		NumericT xpos, ypos;	// position of test point
 
 	};
 

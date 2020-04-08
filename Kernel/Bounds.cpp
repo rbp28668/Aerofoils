@@ -66,8 +66,8 @@ RectT Bounds::getBounds() const
 
 void Bounds::reset()
 {
-	minx = miny = std::numeric_limits<float>::max();
-	maxx = maxy = -std::numeric_limits<float>::max();
+	minx = miny = std::numeric_limits<NumericT>::max();
+	maxx = maxy = -std::numeric_limits<NumericT>::max();
 	lastOpIsMove[0] = lastOpIsMove[1] = false;
 	lastMove[0] = lastMove[1] = PointT();
 }

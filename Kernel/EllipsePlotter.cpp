@@ -22,6 +22,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <math.h>
 #include <sstream>
+#include "Kernel.h"
 #include "EllipsePlotter.h"
 #include "Ellipse.h"
 #include "EllipsePair.h"
@@ -74,9 +75,9 @@ void CEllipsePlotter::plot(COutputDevice* pdev)
 	assert(this);
 	assert(pdev);
 
-	float theta;
-	float x0,y0;
-	float x1,y1;
+	NumericT theta;
+	NumericT x0,y0;
+	NumericT x1,y1;
 	PointT h0,h1;
 	double rads;
 	

@@ -30,6 +30,7 @@ to paper.  Compare with CutStructure which is the analogue for driving CNC.
 #endif // _MSC_VER > 1000
 
 #include <string>
+#include "Kernel.h"
 #include "PointT.h"
 #include "RectT.h"
 #include "OutputDevice.h"
@@ -49,10 +50,10 @@ public:
 	virtual CStructure* getStructure() = 0;
 	virtual const CStructure* getStructure() const = 0;
 
-	inline float getSpan() const {	return getStructure()->getSpan(); }
+	inline NumericT getSpan() const {	return getStructure()->getSpan(); }
 	RectT getBounds();
-	float getSectionPos() const;
-	void setSectionPos(float pos);
+	NumericT getSectionPos() const;
+	void setSectionPos(NumericT pos);
 
 	void setRootSide(bool isLeft);
 	bool isRootLeft() const {return rootIsOnLeft;}
@@ -67,9 +68,9 @@ public:
 	void setUIProxy(CUIProxy* pp);
 	CUIProxy* getUIProxy();
 
-	void setPosition(float x, float y);
-	float getX() const { return xpos; }
-	float getY() const { return ypos; }
+	void setPosition(NumericT x, NumericT y);
+	NumericT getX() const { return xpos; }
+	NumericT getY() const { return ypos; }
 	
 
 	virtual void serializeTo(CObjectSerializer& os);
@@ -85,8 +86,8 @@ private:
 
 	PointT offset(PointT pos) const;
 
-	float xpos,ypos;	// position of section on plot
-	float section_pos;		// position for cross section.
+	NumericT xpos,ypos;	// position of section on plot
+	NumericT section_pos;		// position for cross section.
 	bool shouldInterpolate;
 
 	bool rootIsOnLeft;

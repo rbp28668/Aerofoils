@@ -38,35 +38,35 @@ public:
 
 	PointT transform(PointT pos) const;
 
-	void setChord(float _chord);
-	void setSweep(float _sweep);
-	void setWashout(float _washout);
-	void setHeight(float _height);
+	void setChord(NumericT _chord);
+	void setSweep(NumericT _sweep);
+	void setWashout(NumericT _washout);
+	void setHeight(NumericT _height);
 	void setInvert(bool _invert);
 
 
-	float getChord() const {return chord;}
-	float getSweep() const {return sweep;}
-	float getWashout() const {return washout;}
-	float getHeight() const {return height;}
+	NumericT getChord() const {return chord;}
+	NumericT getSweep() const {return sweep;}
+	NumericT getWashout() const {return washout;}
+	NumericT getHeight() const {return height;}
 
 	void serializeTo(CObjectSerializer& os);
 	void serializeFrom(CObjectSerializer& os);
 
 private:
 
-	void set_rotate(float degrees);
+	void set_rotate(NumericT degrees);
 
-	float chord;          /* chord in mm */
-	float sweep;          /* offset of x=0 from datum */
-	float washout;        /* in degrees, +ve is washout -ve washin */
-	float height;         /* height of l/e above base (in mm) */
+	NumericT chord;          /* chord in mm */
+	NumericT sweep;          /* offset of x=0 from datum */
+	NumericT washout;        /* in degrees, +ve is washout -ve washin */
+	NumericT height;         /* height of l/e above base (in mm) */
 	bool invert;
 
 	struct ROTATE
 	{
-		float cos_theta;
-		float sin_theta;
+		NumericT cos_theta;
+		NumericT sin_theta;
 	};
 
 	ROTATE rotate;

@@ -37,19 +37,19 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #undef max
 #endif
 
-CPlot::CClosest::CClosest(float x, float y)
+CPlot::CClosest::CClosest(NumericT x, NumericT y)
 : xpos(x)
 , ypos(y)
 {
-	d2min = std::numeric_limits<float>::max();
+	d2min = std::numeric_limits<NumericT>::max();
 }
 
 void CPlot::CClosest::LineTo(int iStream, const PointT& pt)
 {
-	float dx = pt.fx - xpos;
-	float dy = pt.fy - ypos;
+	NumericT dx = pt.fx - xpos;
+	NumericT dy = pt.fy - ypos;
 
-	float d2 = dx * dx + dy * dy;
+	NumericT d2 = dx * dx + dy * dy;
 
 	if(d2 < d2min)
 		d2min = d2;
@@ -101,7 +101,7 @@ void CPlot::plot(COutputDevice& pdev)
 	pdev.endPlot();
 }
 
-CWing* CPlot::addWing(const char* rootSection, float rootThickness, const char* tipSection, float tipThickness)
+CWing* CPlot::addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness)
 {
 	assert(this);
 	CWing* pWing = new CWing(rootSection, rootThickness, tipSection, tipThickness);
@@ -191,12 +191,12 @@ void CPlot::deleteStructure(CStructure* toDelete)
 	structures.remove(toDelete);
 }
 
-CPlotStructure* CPlot::closestTo(float x, float y, float& minDist) const
+CPlotStructure* CPlot::closestTo(NumericT x, NumericT y, NumericT& minDist) const
 {
 	assert(this);
 
 	CPlotStructure* closest = 0;
-	float d2min = std::numeric_limits<float>::max();
+	NumericT d2min = std::numeric_limits<NumericT>::max();
 
 	for(PLOT_STRUCTURES::const_iterator psi = plot_structures.begin();
 	psi != plot_structures.end();
@@ -205,7 +205,7 @@ CPlotStructure* CPlot::closestTo(float x, float y, float& minDist) const
 		CClosest measure(x,y);
 		(*psi)->plot(&measure);
 
-		float d = measure.getMinDist();
+		NumericT d = measure.getMinDist();
 		if(d < d2min)
 		{
 			d2min = d;
@@ -214,7 +214,7 @@ CPlotStructure* CPlot::closestTo(float x, float y, float& minDist) const
 	}
 
 	if(closest)
-		minDist = float(sqrt(d2min));
+		minDist = NumericT(sqrt(d2min));
 	else
 		minDist = 0.0f;
 

@@ -18,13 +18,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #ifndef _ParametricCurve2D
 #define _ParametricCurve2D
 
+#include "Kernel.h"
 #include "PointT.h"
 
 struct ParametricCurve2D
 {
-	PointT Point(float u);
-	PointT Point(float u, PointT& tangent);
-	float FirstX(float req_x, float start, int dirn);
+	PointT Point(NumericT u);
+	PointT Point(NumericT u, PointT& tangent);
+	NumericT FirstX(NumericT req_x, NumericT start, int dirn);
 };
 
 

@@ -28,9 +28,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include <vector>
 #include <string>
+#include "Kernel.h"
 #include "aerofoil.h"
 #include "transform.h"
 #include "spar.h"
+#include "Cutout.h"
 #include "PlotFlags.h"
 #include "Structure.h"
 
@@ -40,7 +42,7 @@ public:
 
 	static const std::string TYPE;
 
-	CWing(const char* rootSection, float rootThickness, const char* tipSection, float tipThickness);
+	CWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness);
 	explicit CWing(const CWing& rhs);
 	explicit CWing();
 
@@ -61,20 +63,26 @@ public:
 	const CTransform* getTipTransform() const {return &tipTransform;}
 	CTransform* getTipTransform() {return &tipTransform;}
 
-	float getSkinThickness() const {return skin_thickness;}
-	float getLE() const {return le;}
-	float getTE() const {return te;}
+	NumericT getSkinThickness() const {return skin_thickness;}
+	NumericT getLE() const {return le;}
+	NumericT getTE() const {return te;}
 
-	void setSkinThickness(float st) {skin_thickness = st;}
-	void setLE( float width) {le = width;}
-	void setTE( float width) {te = width;}
+	void setSkinThickness(NumericT st) {skin_thickness = st;}
+	void setLE( NumericT width) {le = width;}
+	void setTE( NumericT width) {te = width;}
 
 	const CSpar* getSpar(int idx) const;
 	CSpar* getSpar(int idx);
 	int getSparCount() const {return (int)spars.size();}
-
 	CSpar* addSpar(const CSpar& spar);
 	void deleteSpar(const CSpar* spar);
+
+	const Cutout* getCutout(int idx) const;
+	Cutout* getCutout(int idx);
+	int getCutoutCount() const { return (int)cutouts.size(); }
+	Cutout* addCutout(const Cutout& spar);
+	void deleteCutout(const Cutout* spar);
+
 
 	CPlotFlags* getPlotFlags() {return &flags;}
 	const CPlotFlags* getPlotFlags() const {return &flags;}
@@ -86,9 +94,9 @@ private:
 
 	void copy(const CWing& rhs);
 
-	float skin_thickness; /* */
-	float le;             /* Leading edge width */
-	float te;             /* trailing edge width */
+	NumericT skin_thickness; /* */
+	NumericT le;             /* Leading edge width */
+	NumericT te;             /* trailing edge width */
 
 	CAerofoil root;			/* root section */
 	CAerofoil tip;			// tip section
@@ -97,6 +105,10 @@ private:
 
 	typedef std::vector<CSpar> SPARS;
 	SPARS spars;		   /* list of spars in this wing */
+
+	typedef std::vector<Cutout> CUTOUTS;
+	CUTOUTS cutouts;
+
 	CPlotFlags flags;		// how this wing should be plotted.
 
 };

@@ -20,6 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #ifndef _PLOTFOIL_H
 #define _PLOTFOIL_H
 
+#include "Kernel.h"
 #include "PlotFlags.h"
 #include "PlotStructure.h"
 #include "PlotCommonImpl.h"
@@ -28,6 +29,7 @@ class PointT;
 class COutputDevice;
 class CWing;
 class CSpar;
+class Cutout;
 
 class CPathPlotter : public CPlotStructure, private CPlotCommonImpl
 {
@@ -37,7 +39,7 @@ public:
 	CPathPlotter(CWing* pWing);
 	explicit CPathPlotter(); // for serialization
 
-	float getSpan() const;
+	NumericT getSpan() const;
 	CWing* getWing() { return wing; }
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
@@ -56,9 +58,11 @@ private:
 	void plot_te(COutputDevice* pdev, const CWing& wing) const;
 	void plot_labels(COutputDevice* pdev, const CWing& wing) const;
 	void plot_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const;
-	void plot_full_depth_spar_side(COutputDevice* pdev, const CWing& wing, float rx,float tx, bool submerged) const;
+	void plot_full_depth_spar_side(COutputDevice* pdev, const CWing& wing, NumericT rx,NumericT tx, bool submerged) const;
 	void plot_full_depth_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const;
 	void plot_all_spars(COutputDevice* pdev, const CWing& wing) const;
+	void plot_cutout(COutputDevice* pdev, const CWing& wing, const Cutout& cutout) const;
+	void plot_cutouts(COutputDevice* pdev, const CWing& wing) const;
 
 	CPlotFlags plot_flags;
 

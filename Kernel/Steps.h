@@ -16,17 +16,19 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
+#include "Kernel.h"
+
 class Steps
 {
-	long dist;
-	long steps;
-	long count;
-	long err;
+	long long dist;
+	long long steps;
+	long long count;
+	long long err;
 
 public:
 	Steps();
 	~Steps();
-	void start(long dist, long steps);
+	void start(long long dist, long long steps);
 	bool isRunning();
 	bool step();
 	void stop();

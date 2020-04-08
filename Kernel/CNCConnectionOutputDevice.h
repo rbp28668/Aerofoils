@@ -20,6 +20,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma warning(disable : 4786) // > 255 chars in debug
 
 #include <string>
+#include "Kernel.h"
 
 #include "CNCSocket.h"
 #include "GCodeOutputDevice.h"

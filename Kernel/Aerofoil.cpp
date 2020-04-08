@@ -35,7 +35,7 @@ using namespace std;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CAerofoil::CAerofoil(const char* path, float tmod)
+CAerofoil::CAerofoil(const char* path, NumericT tmod)
 : spline(0)
 , list(0)
 , npts(0)
@@ -77,7 +77,7 @@ PointT CAerofoil::operator[](int idx) const
 
 }
 
-void CAerofoil::modifyThickness(float tm)
+void CAerofoil::modifyThickness(NumericT tm)
 {
 	thick_mod = tm;
 	createSpline();
@@ -101,8 +101,8 @@ void CAerofoil::read(const char *path)
   char lnbuff[256];
   int n;
   int i;
-  float x,y;
-  float maxx;
+  NumericT x,y;
+  NumericT maxx;
 
   infp=fopen(path,"r");
   
@@ -141,13 +141,16 @@ void CAerofoil::read(const char *path)
         }
 
     if (strstr(lnbuff,"end")!=NULL) break;
-    if (sscanf(lnbuff,"%f %f",&x,&y)==2)
-      {
-      ++n;    /* valid coordinate pair */
-      if(x > maxx)
-        maxx=x;
-      }
-    }
+
+	istringstream is(lnbuff);
+	is >> x >> ws >> y;
+	if (!is.fail()) {
+		++n;    /* valid coordinate pair */
+		if (x > maxx)
+			maxx = x;
+	}
+  
+  }
 
 
   /* Now that we know how many points there are in the file */
@@ -170,7 +173,10 @@ void CAerofoil::read(const char *path)
         }
 
     if (strstr(lnbuff,"end")!=NULL) break;
-    if (sscanf(lnbuff,"%f %f",&x,&y)==2)
+
+	istringstream is(lnbuff);
+	is >> x >> ws >> y;
+	if(!is.fail())
       {
       list[n].fx = x/maxx;
       list[n].fy = y/maxx;
@@ -203,19 +209,19 @@ void CAerofoil::read(const char *path)
 
 
 
-PointT CAerofoil::Point(float u) const
+PointT CAerofoil::Point(NumericT u) const
 {
 	assert(this);
 	return spline->Point(u);
 }
 
-PointT CAerofoil::Point(float u, PointT& tangent) const
+PointT CAerofoil::Point(NumericT u, PointT& tangent) const
 {
 	assert(this);
 	return spline->Point(u,tangent);
 }
 
-float CAerofoil::FirstX(float req_x, float start, int dirn) const
+NumericT CAerofoil::FirstX(NumericT req_x, NumericT start, int dirn) const
 {
 	assert(this);
 	return spline->FirstX(req_x, start, dirn);

@@ -67,7 +67,7 @@ void Cut::cut(COutputDevice & pdev)
 		pdev.startPlot();
 
 		if (useFeedRate) {
-			pdev.feedRate(feedRate);
+			pdev.feedRate((float)feedRate);
 		}
 
 		for (CutIterator iter = cut_structures.begin();

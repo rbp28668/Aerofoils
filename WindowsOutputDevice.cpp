@@ -33,7 +33,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CWindowsOutputDevice::CWindowsOutputDevice(float sx, float sy, CDC* pdc, float zoom)
+CWindowsOutputDevice::CWindowsOutputDevice(NumericT sx, NumericT sy, CDC* pdc, float zoom)
 : map(sx, sy, pdc, zoom)
 , plotDC(pdc)
 , selected(0)

@@ -20,9 +20,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #define _CUTPATH_H
 
 #include <list>
+#include "Kernel.h"
 #include "CutStructure.h"
 #include "PlotCommonImpl.h"
 #include "PlotFlags.h"
+#include "Cutout.h"
 
 class CAerofoil;
 class PointT;
@@ -36,29 +38,29 @@ class CPathCutter  : public CutStructure, private CPlotCommonImpl
 	// Frame sets the cutting parameters during a cut.
 	class Frame
 	{
-		float ru0, tu0;  /* start values for u */
-		float ruf, tuf;  /* forward (at le) values for u */
-		float ru1, tu1;  /* end values for u */
+		NumericT ru0, tu0;  /* start values for u */
+		NumericT ruf, tuf;  /* forward (at le) values for u */
+		NumericT ru1, tu1;  /* end values for u */
 
 	public:
-		Frame(float ru0, float tu0, float ruf, float tuf, float ru1, float tu1);
-		float rootStart() const { return ru0; }
-		float tipStart() const { return tu0; }
-		float rootForward() const { return ruf; }
-		float tipForward() const { return tuf; }
-		float rootFinish() const { return ru1; }
-		float tipFinish() const { return tu1; }
+		Frame(NumericT ru0, NumericT tu0, NumericT ruf, NumericT tuf, NumericT ru1, NumericT tu1);
+		NumericT rootStart() const { return ru0; }
+		NumericT tipStart() const { return tu0; }
+		NumericT rootForward() const { return ruf; }
+		NumericT tipForward() const { return tuf; }
+		NumericT rootFinish() const { return ru1; }
+		NumericT tipFinish() const { return tu1; }
 	};
 
 	// A position during the cut where the cutter should stop cutting the profile and do something different.
 	class Intercept
 	{
-		float ru;             /* root U for this intercept */
-		float tu;             /* tip .... */
+		NumericT ru;             /* root U for this intercept */
+		NumericT tu;             /* tip .... */
 	public:
-		Intercept(float root_u, float tip_u);
-		float rootPosition() const { return ru; }
-		float tipPosition() const { return tu; }
+		Intercept(NumericT root_u, NumericT tip_u);
+		NumericT rootPosition() const { return ru; }
+		NumericT tipPosition() const { return tu; }
 
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame) = 0;
 	};
@@ -78,16 +80,17 @@ class CPathCutter  : public CutStructure, private CPlotCommonImpl
 	};
 
 
-	float tool_offset;
+	NumericT tool_offset;
 	bool blToolOffsetSet;
 	CPlotFlags plot_flags;
 	const CWing* pWing;
 
-	void find_forward_PointT(const CAerofoil& foil, float* u);
-	void plot_segment(COutputDevice* pdev, const CWing& wing, Intercept* start, Intercept* finish, float delta);
+	void find_forward_PointT(const CAerofoil& foil, NumericT* u);
+	void plot_segment(COutputDevice* pdev, const CWing& wing, Intercept* start, Intercept* finish, NumericT delta);
 	void set_le_intercept(Intercepts& intercepts, Frame* frame);
 	void set_te_intercept(Intercepts& intercepts, Frame* frame);
 	void set_spars_intercept(Intercepts& intercepts, Frame* frame);
+	void set_cutouts_intercept(Intercepts& intercepts, Frame* frame);
 
 public:
 
@@ -96,8 +99,8 @@ public:
 	CPathCutter(const CWing* pWing);
 	explicit CPathCutter(); // for serialization
 
-	float set_tool_offset(float fNewOffset);
-	float get_tool_offset(void);
+	NumericT set_tool_offset(NumericT fNewOffset);
+	NumericT get_tool_offset(void);
 
 	const CWing* wing() const { return pWing; }
 
@@ -115,14 +118,14 @@ private:
 	// Mark a position during the cut (start, finish, forward point) but where no operation is done.
 	class NoOpIntercept : public Intercept {
 	public:
-		NoOpIntercept(float ru, float tu);
+		NoOpIntercept(NumericT ru, NumericT tu);
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 
 	// Cut the leading edge at this position
 	class LeadingEdgeIntercept : public Intercept {
 	public:
-		LeadingEdgeIntercept(float ru, float tu);
+		LeadingEdgeIntercept(NumericT ru, NumericT tu);
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 
@@ -130,7 +133,7 @@ private:
 	class TrailingEdgeIntercept : public Intercept {
 		bool topSurface;
 	public:
-		TrailingEdgeIntercept(float ru, float tu, bool topSurface);
+		TrailingEdgeIntercept(NumericT ru, NumericT tu, bool topSurface);
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 
@@ -138,11 +141,18 @@ private:
 	class SparIntercept : public Intercept {
 		const CSpar* pSpar;
 	public:
-		SparIntercept(float ru, float tu, const CSpar* spar);
+		SparIntercept(NumericT ru, NumericT tu, const CSpar* spar);
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 
-	
+	// Cut a Cutout at this position
+	class CutoutIntercept : public Intercept {
+		const Cutout* pCutout;
+	public:
+		CutoutIntercept(NumericT ru, NumericT tu, const Cutout* cutout);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+	};
+
 
 };
 

@@ -65,6 +65,9 @@ using namespace std;
 #undef max
 #endif
 
+#define DELTA 0.1f   /* angle increment for plotting */
+#define PI 3.14159265358979323846264338
+
 static CObjectFactory<CPathPlotter> factory("pathPlotter");
 
 /************************************************************/
@@ -82,7 +85,7 @@ CPathPlotter::CPathPlotter()
 	assert(this);
 }
 
-float CPathPlotter::getSpan() const
+NumericT CPathPlotter::getSpan() const
 {
 	assert(this);
 	assert(wing);
@@ -120,12 +123,12 @@ const CStructure* CPathPlotter::getStructure() const
 void CPathPlotter::plot_skin(COutputDevice* pdev, const CWing& wing) const
 {
 	PointT tangent;
-	float r_skin,t_skin;
-	float ru0,ru1;
-	float tu0,tu1;
+	NumericT r_skin,t_skin;
+	NumericT ru0,ru1;
+	NumericT tu0,tu1;
 	PointT r_here,t_here;
-	float delta;
-	float ru,tu;
+	NumericT delta;
+	NumericT ru,tu;
 	
 	const CAerofoil* root = wing.getRoot();
 	const CAerofoil* tip = wing.getTip();
@@ -148,7 +151,7 @@ void CPathPlotter::plot_skin(COutputDevice* pdev, const CWing& wing) const
 	/* section u0 and u1 (start & finish of skin) by linear    */
 	/* interpolation.                      */
 	
-	float span = wing.getSpan();
+	NumericT span = wing.getSpan();
 	if(plot_flags.plot_section)
     {
 		ru0 = tu0= (ru0 * (span - getSectionPos()) + tu0 * getSectionPos()) / span;
@@ -238,9 +241,9 @@ void CPathPlotter::plot_chord(COutputDevice* pdev, const CWing& wing) const
 void CPathPlotter::plot_markers(COutputDevice* pdev, const CWing& wing) const
 {
 	int i;
-	float x;
-	float urt,urb;    /* u for root top and bottom */
-	float utt,utb;    /* u for tip top and bottom */
+	NumericT x;
+	NumericT urt,urb;    /* u for root top and bottom */
+	NumericT utt,utb;    /* u for tip top and bottom */
 	
 	const CAerofoil* root = wing.getRoot();
 	const CAerofoil* tip = wing.getTip();
@@ -253,9 +256,9 @@ void CPathPlotter::plot_markers(COutputDevice* pdev, const CWing& wing) const
 		
 		/* find parametric positions for the given x, top & bottom, root & tip */
 		urt = root->FirstX(x,WEENY,1); 
-		urb = root->FirstX(x,(float)(1.0f-WEENY),-1);  /* lower surface u */
+		urb = root->FirstX(x,(NumericT)(1.0f-WEENY),-1);  /* lower surface u */
 		utt = tip->FirstX(x,WEENY,1); 
-		utb = tip->FirstX(x,(float)(1.0f-WEENY),-1);  /* lower surface u */
+		utb = tip->FirstX(x,(NumericT)(1.0f-WEENY),-1);  /* lower surface u */
 		
 		PointT pt_rt = root->Point(urt);
 		PointT pt_rb = root->Point(urb);
@@ -279,7 +282,7 @@ void CPathPlotter::plot_markers(COutputDevice* pdev, const CWing& wing) const
 /************************************************************/
 void CPathPlotter::plot_le(COutputDevice* pdev, const CWing& wing) const
 {
-	float u0,u1;
+	NumericT u0,u1;
 	PointT rt,rb,tt,tb;
 	
 	const CAerofoil* root = wing.getRoot();
@@ -289,8 +292,8 @@ void CPathPlotter::plot_le(COutputDevice* pdev, const CWing& wing) const
 	
 	
 	/* Do LE first */
-	float rx = wing.getLE() / rootTransform->getChord();
-	float tx = wing.getLE() / tipTransform->getChord();
+	NumericT rx = wing.getLE() / rootTransform->getChord();
+	NumericT tx = wing.getLE() / tipTransform->getChord();
 	
 	if( rx > 0.0f && tx > 0.0f)
 	{
@@ -322,7 +325,7 @@ void CPathPlotter::plot_le(COutputDevice* pdev, const CWing& wing) const
 /************************************************************/
 void CPathPlotter::plot_te(COutputDevice* pdev, const CWing& wing) const
 {
-	float u0,u1;
+	NumericT u0,u1;
 	PointT rt,rb,tt,tb;
 	
 	const CAerofoil* root = wing.getRoot();
@@ -333,13 +336,13 @@ void CPathPlotter::plot_te(COutputDevice* pdev, const CWing& wing) const
 	if(wing.getTE() > 0.0f)
 	{
 		/* Now do the TE */
-		float rx = (rootTransform->getChord() - wing.getTE()) / rootTransform->getChord();
+		NumericT rx = (rootTransform->getChord() - wing.getTE()) / rootTransform->getChord();
 		u0 = root->FirstX(rx,0.25f,-1);  /* upper surface */
 		u1 = root->FirstX(rx,0.75f,1);  /* lower surface */
 		rt = root->Point(u0);
 		rb = root->Point(u1);
 		
-		float tx = (tipTransform->getChord() - wing.getTE()) / tipTransform->getChord();
+		NumericT tx = (tipTransform->getChord() - wing.getTE()) / tipTransform->getChord();
 		u0 = tip->FirstX(tx,0.25f,-1);  /* upper surface */
 		u1 = tip->FirstX(tx,0.75f,1);    /* lower surface */
 		tt = tip->Point(u0);
@@ -361,8 +364,8 @@ void CPathPlotter::plot_te(COutputDevice* pdev, const CWing& wing) const
 /************************************************************/
 void CPathPlotter::plot_labels(COutputDevice* pdev, const CWing& wing) const
 {
-	float u,delta;
-	float root_lowest,tip_lowest;
+	NumericT u,delta;
+	NumericT root_lowest,tip_lowest;
 	PointT r_here,t_here;
 	
 	const CAerofoil* root = wing.getRoot();
@@ -371,7 +374,7 @@ void CPathPlotter::plot_labels(COutputDevice* pdev, const CWing& wing) const
 	const CTransform* tipTransform = wing.getTipTransform();
 	
 	/* Look for the lowest point on each aerofoil or on the section */
-	root_lowest = tip_lowest = numeric_limits<float>::max();
+	root_lowest = tip_lowest = numeric_limits<NumericT>::max();
 	delta=0.05f;          /* Coarse search */
 	for(u=0.0f;u<=1.0f;u+=delta)
     {
@@ -448,7 +451,7 @@ void CPathPlotter::plot_labels(COutputDevice* pdev, const CWing& wing) const
 /************************************************************/
 void CPathPlotter::plot_spar(COutputDevice* pdev, const CWing& wing, const CSpar& spar) const
 {
-	float ru,tu;
+	NumericT ru,tu;
 	PointT here;
 	PointT r_tangent,t_tangent;
 	PointT r_here,t_here;
@@ -459,27 +462,27 @@ void CPathPlotter::plot_spar(COutputDevice* pdev, const CWing& wing, const CSpar
 	const CTransform* rootTransform = wing.getRootTransform();
 	const CTransform* tipTransform = wing.getTipTransform();
 	
-	float root_chord = rootTransform->getChord();
-	float tip_chord = tipTransform->getChord();
+	NumericT root_chord = rootTransform->getChord();
+	NumericT tip_chord = tipTransform->getChord();
 	
 	/* Convert spar sizes & position to aerofoil coords. */
-	float r_xpos = spar.getRootX() / root_chord;
-	float r_width = spar.getRootWidth() / root_chord;
-	float r_height = spar.getRootHeight() / root_chord;
-	float t_xpos = spar.getTipX() / tip_chord;
-	float t_width = spar.getTipWidth() / tip_chord;
-	float t_height = spar.getTipHeight() / tip_chord;
+	NumericT r_xpos = spar.getRootX() / root_chord;
+	NumericT r_width = spar.getRootWidth() / root_chord;
+	NumericT r_height = spar.getRootHeight() / root_chord;
+	NumericT t_xpos = spar.getTipX() / tip_chord;
+	NumericT t_width = spar.getTipWidth() / tip_chord;
+	NumericT t_height = spar.getTipHeight() / tip_chord;
 	
 	/* and convert skin thickness to aerofoil space */
-	float r_skin = wing.getSkinThickness() / root_chord;
-	float t_skin = wing.getSkinThickness() / tip_chord;
+	NumericT r_skin = wing.getSkinThickness() / root_chord;
+	NumericT t_skin = wing.getSkinThickness() / tip_chord;
 	
 	if(!spar.isSubmerged())     /* ignore skin if spar not under it */
 		r_skin = t_skin=0.0f;
 	
 	// centre x coordinates
-	float crx=r_xpos+r_width/2.0f;
-	float ctx=t_xpos+t_width/2.0f;
+	NumericT crx=r_xpos+r_width/2.0f;
+	NumericT ctx=t_xpos+t_width/2.0f;
 	
 	if(wing.getSkinThickness() != 0.0f)
     {
@@ -590,16 +593,16 @@ void CPathPlotter::plot_spar(COutputDevice* pdev, const CWing& wing, const CSpar
 /** local gradient of the surface/skin thickness at the   **/
 /** spar but ignores second order corrections.        **/
 /************************************************************/
-void CPathPlotter::plot_full_depth_spar_side(COutputDevice* pdev, const CWing& wing, float rx,float tx, bool submerged) const
+void CPathPlotter::plot_full_depth_spar_side(COutputDevice* pdev, const CWing& wing, NumericT rx,NumericT tx, bool submerged) const
 {
-	float rut,tut;          /* root & tip u (top) */
-	float rub,tub;          /* ditto (bottom) */
-	float r_skin,t_skin;      /* skin thickness in aerofoil space*/
+	NumericT rut,tut;          /* root & tip u (top) */
+	NumericT rub,tub;          /* ditto (bottom) */
+	NumericT r_skin,t_skin;      /* skin thickness in aerofoil space*/
 	PointT here;
 	PointT tangent;
 	PointT rt,tt;
-	float txt,rxt,txb,rxb;
-	float tyt,ryt,tyb,ryb;
+	NumericT txt,rxt,txb,rxb;
+	NumericT tyt,ryt,tyb,ryb;
 	
 	const CAerofoil* root = wing.getRoot();
 	const CAerofoil* tip = wing.getTip();
@@ -740,6 +743,120 @@ void CPathPlotter::plot_all_spars(COutputDevice* pdev, const CWing& wing) const
 	return;
 }
 
+void CPathPlotter::plot_cutouts(COutputDevice* pdev, const CWing& wing) const {
+	for (int i = 0; i < wing.getCutoutCount(); ++i) {
+		const Cutout* cutout = wing.getCutout(i);
+		plot_cutout(pdev, wing, *cutout);
+	}
+}
+
+
+void CPathPlotter::plot_cutout(COutputDevice* pdev, const CWing& wing, const Cutout& cutout) const
+{
+	const CAerofoil* root = wing.getRoot();
+	const CAerofoil* tip = wing.getTip();
+	const CTransform* rootTransform = wing.getRootTransform();
+	const CTransform* tipTransform = wing.getTipTransform();
+
+	NumericT root_chord = rootTransform->getChord();
+	NumericT tip_chord = tipTransform->getChord();
+
+	/* Convert cutout sizes & position to aerofoil coords. */
+	NumericT r_xpos = cutout.getRootX() / root_chord;
+	NumericT r_ypos = cutout.getRootY() / root_chord;
+	NumericT r_width = cutout.getRootWidth() / root_chord;
+	NumericT r_height = cutout.getRootHeight() / root_chord;
+	NumericT t_xpos = cutout.getTipX() / tip_chord;
+	NumericT t_ypos = cutout.getTipY() / tip_chord;
+	NumericT t_width = cutout.getTipWidth() / tip_chord;
+	NumericT t_height = cutout.getTipHeight() / tip_chord;
+
+	/* and convert skin thickness to aerofoil space */
+	NumericT r_skin = wing.getSkinThickness() / root_chord;
+	NumericT t_skin = wing.getSkinThickness() / tip_chord;
+
+	/* Figure out where on the wing (in u) the cutout sits*/
+	NumericT rut, rub, tut, tub;
+	rut = root->FirstX(r_xpos, 0.0f, 1);
+	tut = tip->FirstX(t_xpos, 0.0f, 1);
+	rub = root->FirstX(r_xpos, 1.0f, -1);
+	tub = tip->FirstX(t_xpos, 1.0f, -1);
+
+	/* Centre points of the cutout*/
+	NumericT rx, ry, tx, ty;
+
+	/* Figure out where the centre points are */
+	if (cutout.getIsCentred()) {
+		PointT top = root->Point(rut);
+		PointT bottom = root->Point(rub);
+		rx = (top.fx + bottom.fx) / 2;
+		ry = (top.fy + bottom.fy) / 2;
+
+		top = root->Point(tut);
+		bottom = root->Point(tub);
+		tx = (top.fx + bottom.fx) / 2;
+		ty = (top.fy + bottom.fy) / 2;
+	}
+	else {  // not centred
+		NumericT rdist = r_skin + r_ypos + r_height / 2;
+		NumericT tdist = t_skin + t_ypos + t_height / 2;
+
+		if (cutout.getTopSurface()) {
+			PointT rtan, ttan;
+			PointT rpos = root->Point(rut,rtan);
+			PointT tpos = tip->Point(tut,ttan);
+
+			rx = rpos.fx - rdist * rtan.fy;
+			ry = rpos.fy + rdist * rtan.fx;
+			tx = tpos.fx - tdist * ttan.fy;
+			ty = tpos.fy + tdist * ttan.fx;
+		}
+		else { // calculate from bottom surface
+			PointT rtan, ttan;
+			PointT rpos = root->Point(rub, rtan);
+			PointT tpos = tip->Point(tub, ttan);
+
+			rx = rpos.fx - rdist * rtan.fy;
+			ry = rpos.fy + rdist * rtan.fx;
+			tx = tpos.fx - tdist * ttan.fy;
+			ty = tpos.fy + tdist * ttan.fx;
+		}
+	}
+
+
+	/* Ok, so one way or another we've got the centre points of the cutout in rx,ry,tx,ty*/
+	/* Plot it.... */
+
+	// Need to use radius rather than diameter
+	double rw2 = r_width / 2;
+	double rh2 = r_height / 2;
+	double tw2 = t_width / 2;
+	double th2 = t_height / 2;
+
+	double theta = 0.0;
+	PointT r(rx + cos(theta) * rw2, ry + sin(theta) * rh2);
+	PointT t(tx + cos(theta) * tw2, ty + sin(theta) * th2);
+	r = rootTransform->transform(r);
+	t = tipTransform->transform(t);
+	interp_move_to(pdev, r, t);
+
+
+	for (theta = DELTA; theta <= 2 * PI + DELTA; theta += DELTA) {
+		
+		double angle = (theta > 2 * PI) ? 2 * PI : theta;
+		double ct = cos(angle);
+		double st = sin(angle);
+		r.fx = rx + ct * rw2;
+		r.fy = ry + st * rh2;
+		t.fx = tx + ct * tw2;
+		t.fy = ty + st * th2;
+		r = rootTransform->transform(r);
+		t = tipTransform->transform(t);
+		interp_line_to(pdev, r, t);
+	}
+
+}
+
 /************************************************************/
 /** DRAW_SECTIONS draws a root and a tip aerofoil          **/
 /** simultaneously.                       **/
@@ -754,7 +871,7 @@ void CPathPlotter::plot(COutputDevice* pdev)
 
 	PointT r_here,t_here;
 	int root_stream,tip_stream;    /* output streams for root & tip */
-	float u,delta;
+	NumericT u,delta;
 	
 	const CAerofoil* root = wing->getRoot();
 	const CAerofoil* tip = wing->getTip();
@@ -824,6 +941,11 @@ void CPathPlotter::plot(COutputDevice* pdev)
 		plot_all_spars(pdev, *wing);
     }
 	
+	if (plot_flags.plot_cutouts)
+	{
+		plot_cutouts(pdev, *wing);
+	}
+
 	return;
 }
 

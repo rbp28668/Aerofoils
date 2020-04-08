@@ -43,6 +43,8 @@ Revision History:
 #ifndef _SPLINE_H
 #define _SPLINE_H
 
+#include "Kernel.h"
+
 class PointT;
 
 class CSpline
@@ -52,10 +54,10 @@ public:
 	CSpline(PointT* curve, int n);
 	~CSpline();
 	bool Bad() const {return m_blBad;}
-	PointT Point(float u) const;
-	PointT Point(float u, PointT& tangent) const;
-	PointT Tangent(float u) const;
-	float FirstX(float req_x, float start, int dirn) const;
+	PointT Point(NumericT u) const;
+	PointT Point(NumericT u, PointT& tangent) const;
+	PointT Tangent(NumericT u) const;
+	NumericT FirstX(NumericT req_x, NumericT start, int dirn) const;
 
 private:
 
@@ -63,15 +65,15 @@ private:
 	CSpline(const CSpline& rhs) {}
 	CSpline& operator= (const CSpline& rhs) {return *this;}
 	
-	void spline(float *x,float *y,int n, float *y2);
-	void splint(float *xa, float *ya, float *y2a, int n, float x, float *y,float *dydx) const;
+	void spline(NumericT *x,NumericT *y,int n, NumericT *y2);
+	void splint(NumericT *xa, NumericT *ya, NumericT *y2a, int n, NumericT x, NumericT *y,NumericT *dydx) const;
 
 	bool m_blBad;
-	float *xx;        /* array of x coordinates */
-	float *yy;        /* array of y coordinates */
-	float *uu;        /* array of parametric coordinates */
-	float *xx2;       /* 2nd deriv of x wrt u */
-	float *yy2;       /* 2nd deriv of y wrt u */
+	NumericT *xx;        /* array of x coordinates */
+	NumericT *yy;        /* array of y coordinates */
+	NumericT *uu;        /* array of parametric coordinates */
+	NumericT *xx2;       /* 2nd deriv of x wrt u */
+	NumericT *yy2;       /* 2nd deriv of y wrt u */
 	int npts;       /* number of points on curve */
 };
 

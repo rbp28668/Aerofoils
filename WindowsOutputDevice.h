@@ -27,13 +27,14 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #endif // _MSC_VER > 1000
 
 #include "CoordMap.h"
+#include "Kernel/Kernel.h"
 #include "kernel\OutputDevice.h"
 #include "kernel\PointT.h"
 
 class CWindowsOutputDevice : public COutputDevice
 {
 public:
-	CWindowsOutputDevice(float sizex, float sizey, CDC* pdc, float zoom);
+	CWindowsOutputDevice(NumericT sizex, NumericT sizey, CDC* pdc, float zoom);
 	virtual ~CWindowsOutputDevice();
 
 	void setSelection(CPlotStructure* sel);

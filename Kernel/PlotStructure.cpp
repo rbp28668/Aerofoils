@@ -84,7 +84,7 @@ CUIProxy* CPlotStructure::getUIProxy()
 	return proxy;
 }
 
-void CPlotStructure::setPosition(float x, float y)
+void CPlotStructure::setPosition(NumericT x, NumericT y)
 {
 	assert(this);
 	xpos = x;
@@ -102,7 +102,7 @@ RectT CPlotStructure::getBounds()
 
 /************************************************************/
 /************************************************************/
-void CPlotStructure::setSectionPos(float pos)
+void CPlotStructure::setSectionPos(NumericT pos)
 {
 	assert(this);
 	section_pos = pos;
@@ -110,7 +110,7 @@ void CPlotStructure::setSectionPos(float pos)
 
 /************************************************************/
 /************************************************************/
-float CPlotStructure::getSectionPos() const
+NumericT CPlotStructure::getSectionPos() const
 {
 	assert(this);
 	return section_pos;
@@ -202,7 +202,7 @@ void CPlotStructure::setInvert(bool inv)
 	if(invert != inv)
 	{
 		RectT r = getBounds();
-		float height = r.topLeft.fy - r.bottomRight.fy;
+		NumericT height = r.topLeft.fy - r.bottomRight.fy;
 		if(invert)
 			ypos -= height;
 		else
@@ -217,7 +217,7 @@ void CPlotStructure::setReflect(bool ref)
 	if(reflect != ref) // we're changing!
 	{
 		RectT r = getBounds();
-		float width = r.bottomRight.fx - r.topLeft.fx;
+		NumericT width = r.bottomRight.fx - r.topLeft.fx;
 
 		if(reflect)
 			xpos -= width;

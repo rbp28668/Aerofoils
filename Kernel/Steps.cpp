@@ -34,7 +34,7 @@ Steps::~Steps()
 {
 }
 
-void Steps::start(long dist, long steps) {
+void Steps::start(long long dist, long long steps) {
 	assert(dist >= 0);
 	assert(steps >= 0);
 	assert(dist <= steps);

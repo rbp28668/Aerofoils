@@ -57,8 +57,8 @@ bool CutterPreviewWindow::plot(Position<long long> axes)
 
 	// Create a bitmap if not already done.
 	if (bitmap == 0) {
-		nWidth = round(xTravel * xStepsPerMM) + 2; // +2 to keep a 1 pixel border
-		nHeight = round(yTravel * yStepsPerMM) + 2;
+		nWidth = (int)round(xTravel * xStepsPerMM) + 2; // +2 to keep a 1 pixel border
+		nHeight = (int)round(yTravel * yStepsPerMM) + 2;
 
 		bitmap = new CBitmap();
 		bitmap->CreateCompatibleBitmap(
@@ -80,21 +80,21 @@ bool CutterPreviewWindow::plot(Position<long long> axes)
 	// Write to the screen
 	// Note +1 to allow 1 pixel border to mark attempts to draw/move out of area.
 	if (axesSuperimposed) {
-		pdc->SetPixel(axes.x - xCurrentScroll + 1, axes.y - yCurrentScroll + 1, RGB(255, 0, 255));
+		pdc->SetPixel((int)(axes.x - xCurrentScroll + 1), (int)(axes.y - yCurrentScroll + 1), RGB(255, 0, 255));
 	}
 	else {
-		pdc->SetPixel(axes.x - xCurrentScroll + 1, axes.y - yCurrentScroll + 1, RGB(255, 0, 0));
-		pdc->SetPixel(axes.u - xCurrentScroll + 1, axes.v -yCurrentScroll + 1, RGB(0, 0, 255));
+		pdc->SetPixel((int)(axes.x - xCurrentScroll + 1), (int)(axes.y - yCurrentScroll + 1), RGB(255, 0, 0));
+		pdc->SetPixel((int)(axes.u - xCurrentScroll + 1), (int)(axes.v -yCurrentScroll + 1), RGB(0, 0, 255));
 	}
 	// Write into the bitmap
 	CDC memDC;
 	if (memDC.CreateCompatibleDC(pdc) != 0) { //create a memory DC compatible with pDC
 		CBitmap* pOldBm = memDC.SelectObject(bitmap); //Select the bitmap into the DC
 		if (axesSuperimposed) {
-			memDC.SetPixel(axes.x + 1, axes.y + 1, RGB(255, 0, 255));
+			memDC.SetPixel((int)(axes.x + 1), (int)(axes.y + 1), RGB(255, 0, 255));
 		} else {
-			memDC.SetPixel(axes.x + 1, axes.y + 1, RGB(255, 0, 0));
-			memDC.SetPixel(axes.u + 1, axes.v + 1, RGB(0, 0, 255));
+			memDC.SetPixel((int)(axes.x + 1), (int)(axes.y + 1), RGB(255, 0, 0));
+			memDC.SetPixel((int)(axes.u + 1), (int)(axes.v + 1), RGB(0, 0, 255));
 		}
 		memDC.SelectObject(pOldBm);
 	}

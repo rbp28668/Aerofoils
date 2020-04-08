@@ -59,6 +59,7 @@ public:
 protected:
 
 	void addSparToList(CSpar* ps);
+	void addCutoutToList(Cutout* pc);
 
 	// Generated message map functions
 	//{{AFX_MSG(CWingDlg)
@@ -76,6 +77,12 @@ protected:
 
 	CWing* wing;
 	CWing wingCopy;	// local copy to edit, update wing if ok.
+public:
+	CListBox m_lstCutouts;
+	afx_msg void OnBnClickedBtnAddCutout();
+	afx_msg void OnBnClickedBtnEditCutout();
+	afx_msg void OnBnClickedBtnDeleteCutout();
+	afx_msg void OnLbnDblclkLstCutouts();
 };
 
 //{{AFX_INSERT_LOCATION}}

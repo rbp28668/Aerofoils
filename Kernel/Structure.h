@@ -27,6 +27,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #endif // _MSC_VER > 1000
 
 #include <string>
+#include "Kernel.h"
 
 class CObjectSerializer;
 

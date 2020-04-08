@@ -258,6 +258,7 @@
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="CNCConnectionDlg.cpp" />
     <ClCompile Include="CoordMap.cpp" />
+    <ClCompile Include="CutoutDialog.cpp" />
     <ClCompile Include="CutterDoc.cpp" />
     <ClCompile Include="CutterFrame.cpp" />
     <ClCompile Include="CutterPreviewWindow.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CNCConnectionDlg.h" />
     <ClInclude Include="CoordMap.h" />
+    <ClInclude Include="CutoutDialog.h" />
     <ClInclude Include="CutterDoc.h" />
     <ClInclude Include="CutterFrame.h" />
     <ClInclude Include="CutterPreviewWindow.h" />

@@ -26,6 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Kernel.h"
 #include "Structure.h"
 #include "PointT.h"
 

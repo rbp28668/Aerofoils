@@ -461,10 +461,12 @@ void CutterTreeView::OnWingPlotflags()
 		dlg.cutLeadingEdge = pWing->getPlotFlags()->plot_le;
 		dlg.cutTrailingEdge = pWing->getPlotFlags()->plot_te;
 		dlg.cutSpars = pWing->getPlotFlags()->plot_spars;
+		dlg.cutCutouts = pWing->getPlotFlags()->plot_cutouts;
 		if (dlg.DoModal() == IDOK) {
 			pWing->getPlotFlags()->plot_le = dlg.cutLeadingEdge == TRUE;
 			pWing->getPlotFlags()->plot_te = dlg.cutTrailingEdge == TRUE;
 			pWing->getPlotFlags()->plot_spars = dlg.cutSpars == TRUE;
+			pWing->getPlotFlags()->plot_cutouts = dlg.cutCutouts == TRUE;
 		}
 	}
 }

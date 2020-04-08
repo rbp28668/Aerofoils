@@ -25,7 +25,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-RectT::RectT(float l, float t, float r, float b)
+RectT::RectT(NumericT l, NumericT t, NumericT r, NumericT b)
 : topLeft(l,t)
 , bottomRight(r,b)
 {

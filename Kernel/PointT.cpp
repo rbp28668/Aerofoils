@@ -25,7 +25,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-PointT::PointT(float x, float y)
+PointT::PointT(NumericT x, NumericT y)
 : fx(x), fy(y)
 {
 }

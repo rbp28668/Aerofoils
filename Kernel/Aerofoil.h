@@ -28,6 +28,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #endif // _MSC_VER > 1000
 
 #include <string>
+#include "Kernel.h"
 #include "ParametricCurve2D.h"
 
 class CSpline;
@@ -36,7 +37,7 @@ class CObjectSerializer;
 class CAerofoil : public ParametricCurve2D
 {
 public:
-	CAerofoil(const char* path, float tmod);
+	CAerofoil(const char* path, NumericT tmod);
 	explicit CAerofoil(const CAerofoil& rhs);
 	explicit CAerofoil(); // for serialization
 	virtual ~CAerofoil();
@@ -45,12 +46,12 @@ public:
 	PointT operator[](int idx) const; // gets point on aerofoil.
 
 	// parametric curve
-	PointT Point(float u) const;
-	PointT Point(float u, PointT& tangent) const;
-	float FirstX(float req_x, float start, int dirn) const;
+	PointT Point(NumericT u) const;
+	PointT Point(NumericT u, PointT& tangent) const;
+	NumericT FirstX(NumericT req_x, NumericT start, int dirn) const;
 
-	void modifyThickness(float tm);
-	float getThicknessModifier() const {return thick_mod;}
+	void modifyThickness(NumericT tm);
+	NumericT getThicknessModifier() const {return thick_mod;}
 
 	void read(const char* path);
 
@@ -72,7 +73,7 @@ private:
 
 	void createSpline();
 
-	float thick_mod;      /* thickness modifier, 1.0 = no mod */
+	NumericT thick_mod;      /* thickness modifier, 1.0 = no mod */
 
 	CSpline* spline;      /* spline for smooth interpolation - allows parametric curve */
 	

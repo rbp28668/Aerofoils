@@ -17,6 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
+#include "Kernel.h"
 #include "OutputDevice.h"
 #include "RectT.h"
 
@@ -39,12 +40,12 @@ public:
 	virtual PointT position(int iStream) { return PointT(); }
 
 	RectT getBounds() const;
-	float width() { return maxx - minx; }
-	float height() { return maxy - miny; }
+	NumericT width() { return maxx - minx; }
+	NumericT height() { return maxy - miny; }
 	void reset();
 
 private:
-	float minx, maxx, miny, maxy;
+	NumericT minx, maxx, miny, maxy;
 	PointT lastMove[2];
 	bool lastOpIsMove[2];
 

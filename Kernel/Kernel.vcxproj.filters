@@ -161,6 +161,9 @@
     <ClCompile Include="CutterSimulationOutputDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cutout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aerofoil.h">
@@ -326,6 +329,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutterSimulationOutputDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cutout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Kernel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

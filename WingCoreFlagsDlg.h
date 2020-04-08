@@ -42,4 +42,5 @@ public:
 	BOOL cutLeadingEdge;
 	BOOL cutTrailingEdge;
 	BOOL cutSpars;
+	BOOL cutCutouts;
 };

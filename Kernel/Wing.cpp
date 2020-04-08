@@ -1,3 +1,4 @@
+
 /* Aerofoil
 Aerofoil plotting and CNC cutter driver
 Kernel / core algorithms
@@ -33,7 +34,7 @@ static CObjectFactory<CWing> factory(CWing::TYPE.c_str());
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CWing::CWing(const char* rootSection, float rootThickness, const char* tipSection, float tipThickness)
+CWing::CWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness)
 : root(rootSection, rootThickness)
 , tip(tipSection, tipThickness)
 , le(0.0f)
@@ -88,6 +89,7 @@ void CWing::copy(const CWing& rhs)
 	tipTransform = rhs.tipTransform;
 
 	spars.assign(rhs.spars.begin(), rhs.spars.end());
+	cutouts.assign(rhs.cutouts.begin(), rhs.cutouts.end());
 
 	flags = rhs.flags;	
 }
@@ -147,6 +149,47 @@ void CWing::deleteSpar(const CSpar* spar)
 	}
 }
 
+const Cutout* CWing::getCutout(int idx) const
+{
+	assert(this);
+	assert(idx >= 0);
+	assert(idx < cutouts.size());
+	return &cutouts[idx];
+}
+
+Cutout* CWing::getCutout(int idx)
+{
+	assert(this);
+	assert(idx >= 0);
+	assert(idx < cutouts.size());
+	return &cutouts[idx];
+}
+
+Cutout* CWing::addCutout(const Cutout& cutout)
+{
+	assert(this);
+	cutouts.push_back(cutout);
+	return &cutouts.back();
+}
+
+// Remove the referenced cutout from the collection.
+void CWing::deleteCutout(const Cutout* cutout)
+{
+	assert(this);
+	assert(cutout);
+
+	for (CUTOUTS::iterator iter = cutouts.begin();
+		iter != cutouts.end();
+		++iter)
+	{
+		if (&(*iter) == cutout)	// compare pointers
+		{
+			cutouts.erase(iter);
+			break;
+		}
+	}
+}
+
 void CWing::serializeTo(CObjectSerializer& os)
 {
 	assert(this);
@@ -168,6 +211,15 @@ void CWing::serializeTo(CObjectSerializer& os)
 	for(SPARS::iterator iter = spars.begin();
 	iter != spars.end();
 	++iter)
+	{
+		iter->serializeTo(os);
+	}
+	os.endCollection();
+
+	os.startCollection("cutouts", (int)cutouts.size());
+	for (CUTOUTS::iterator iter = cutouts.begin();
+		iter != cutouts.end();
+		++iter)
 	{
 		iter->serializeTo(os);
 	}
@@ -203,6 +255,18 @@ void CWing::serializeFrom(CObjectSerializer& os)
 
 	}
 	os.endReadCollection();
+
+	if (os.ifExists("cutouts")) {
+		int cCutouts = os.startReadCollection("cutouts");
+		for (int i = 0; i < cCutouts; ++i)
+		{
+			Cutout cutout;
+			cutout.serializeFrom(os);
+			cutouts.push_back(cutout);
+
+		}
+		os.endReadCollection();
+	}
 
 	os.endReadSection();
 }

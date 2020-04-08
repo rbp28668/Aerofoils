@@ -84,6 +84,9 @@ CutStructure::CutStructure()
 
 CutStructure::~CutStructure()
 {
+	if (pBounds) {
+		delete pBounds;
+	}
 }
 
 void CutStructure::setOffsets(const PointT & root, const PointT & tip)

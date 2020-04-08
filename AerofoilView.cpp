@@ -30,6 +30,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ZoomDlg.h"
 #include "WindowsUIProxy.h"
 
+#include "Kernel/Kernel.h"
 #include "kernel/PlotStructure.h"
 
 #define CLICK_DISTANCE 5
@@ -104,7 +105,7 @@ void CAerofoilView::OnDraw(CDC* pDC)
 	CBackgroundGrid& grid = pDoc->getGrid();
 	if(grid.isHorizontalEnabled())
 	{
-		for(float fy = size.fy; fy >= 0.0f; fy -= grid.getHorizontalSize())
+		for(NumericT fy = size.fy; fy >= 0.0f; fy -= grid.getHorizontalSize())
 		{
 			PointT start(0,fy);
 			PointT finish(size.fx,fy);
@@ -120,7 +121,7 @@ void CAerofoilView::OnDraw(CDC* pDC)
 
 	if(grid.isVerticalEnabled())
 	{
-		for(float fx = size.fx; fx >= 0.0f; fx -= grid.getVerticalSize())
+		for(NumericT fx = size.fx; fx >= 0.0f; fx -= grid.getVerticalSize())
 		{
 			PointT start(fx,0);
 			PointT finish(fx,size.fy);
@@ -244,7 +245,7 @@ void CAerofoilView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CPlot& plot = doc->getPlot();
 
-	float minDist;
+	NumericT minDist;
 
 	CPlotStructure* nearest = plot.closestTo(ptmm.fx, ptmm.fy, minDist);
 	if(nearest && (minDist < CLICK_DISTANCE))	// arbitrary neeed to click within this no of mm of point to select
@@ -396,7 +397,7 @@ void CAerofoilView::OnRButtonDown(UINT nFlags, CPoint point)
 
 	CPlot& plot = doc->getPlot();
 
-	float minDist;
+	NumericT minDist;
 
 	CPlotStructure* nearest = plot.closestTo(ptmm.fx, ptmm.fy, minDist);
 	if(nearest && (minDist < CLICK_DISTANCE))	// arbitrary neeed to click within this no of mm of point to select

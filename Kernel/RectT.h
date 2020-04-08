@@ -26,12 +26,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Kernel.h"
 #include "PointT.h"
 
 class RectT  
 {
 public:
-	RectT(float l = 0.0f, float t = 0.0f, float r = 0.0f, float b = 0.0f);
+	RectT(NumericT l = 0, NumericT t = 0, NumericT r = 0, NumericT b = 0);
 	virtual ~RectT();
 
 	PointT topLeft;

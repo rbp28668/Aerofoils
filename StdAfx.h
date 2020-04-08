@@ -12,6 +12,14 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+// Improved memory leak debugging
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
+
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
 #include <afxwin.h>         // MFC core and standard components

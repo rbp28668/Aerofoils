@@ -35,6 +35,7 @@
 #define IDD_WING_CUT_FLAGS              156
 #define IDD_TOOL_OFFSET                 158
 #define IDD_FEED_RATE                   160
+#define IDD_EDIT_CUTOUT                 162
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -139,10 +140,19 @@
 #define IDC_CHK_CUT_TE                  1090
 #define IDC_CHK_CUT_SPARS               1091
 #define IDC_EDIT_TOOL_OFFSET            1092
+#define IDC_CHK_CUT_SPARS2              1092
+#define IDC_CHK_CUT_CUTOUTS             1092
 #define IDC_EDIT1                       1093
 #define IDC_EDIT_FEED_RATE              1093
 #define IDC_CHECK1                      1094
 #define IDC_CHK_INCLUDE_FEED            1094
+#define IDC_CHK_TOP_SURFACE             1094
+#define IDC_CHK_PLOT_CUTOUTS            1094
+#define IDC_CHK_CENTRE                  1095
+#define IDC_LST_CUTOUTS                 1099
+#define IDC_BTN_ADD_CUTOUT              1100
+#define IDC_BTN_EDIT_CUTOUT             1101
+#define IDC_BTN_DELETE_CUTOUT           1102
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -257,9 +267,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        162
+#define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         32881
-#define _APS_NEXT_CONTROL_VALUE         1095
+#define _APS_NEXT_CONTROL_VALUE         1103
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

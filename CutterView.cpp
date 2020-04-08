@@ -105,7 +105,7 @@ void CutterView::OnDraw(CDC* pDC)
 	CBackgroundGrid& grid = pDoc->getGrid();
 	if (grid.isHorizontalEnabled())
 	{
-		for (float fy = size.fy; fy >= 0.0f; fy -= grid.getHorizontalSize())
+		for (NumericT fy = size.fy; fy >= 0.0f; fy -= grid.getHorizontalSize())
 		{
 			PointT start(0, fy);
 			PointT finish(size.fx, fy);
@@ -121,7 +121,7 @@ void CutterView::OnDraw(CDC* pDC)
 
 	if (grid.isVerticalEnabled())
 	{
-		for (float fx = size.fx; fx >= 0.0f; fx -= grid.getVerticalSize())
+		for (NumericT fx = size.fx; fx >= 0.0f; fx -= grid.getVerticalSize())
 		{
 			PointT start(fx, 0);
 			PointT finish(fx, size.fy);

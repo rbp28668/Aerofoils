@@ -35,6 +35,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <iostream>
 #include <exception>
+#include "Kernel.h"
 
 ///////////////////////////////////////////////////////////////////////
 // Class for serialization exceptions

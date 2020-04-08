@@ -24,10 +24,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "PlotCommonImpl.h"
 #include "Aerofoil.h"
 
-const float CPlotCommonImpl::CLOSE = 1.0e-3f;     /* limit of resolution in mm per step */
+const NumericT CPlotCommonImpl::CLOSE = 1.0e-3f;     /* limit of resolution in mm per step */
 const int CPlotCommonImpl::MAX_ITER = 10;			/* max number of runs thro' the iteration */
 const int CPlotCommonImpl::FORWARD_ITER = 14;		/* 1 part in 16000 */
-const float CPlotCommonImpl::WEENY = 1.0e-6f;
+const NumericT CPlotCommonImpl::WEENY = 1.0e-6f;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -52,20 +52,20 @@ CPlotCommonImpl::~CPlotCommonImpl()
 /** Note that skin must be in raw aerofoil units i.e.     **/
 /** made independent of the chord.                        **/
 /***********************************************************/
-void CPlotCommonImpl::find_core_te(const CAerofoil& foil,float skin, float *nu0,float *nu1) const
+void CPlotCommonImpl::find_core_te(const CAerofoil& foil,NumericT skin, NumericT *nu0,NumericT *nu1) const
 {
-  float x0,y0;      /* Starting coord on upper surface */
-  float x1,y1;      /* Starting coord on lower surface */
-  float u0,u1;      /* parametric var at current search posn */
+  NumericT x0,y0;      /* Starting coord on upper surface */
+  NumericT x1,y1;      /* Starting coord on lower surface */
+  NumericT u0,u1;      /* parametric var at current search posn */
   PointT t0,t1;      /* tangents */
   PointT s0,s1;      /* wing surface PointTs */
-  float x /* ,y */ ;/* PointT of intersection */
-   float dist;
-  float m0,m1;      /* gradients  of top & bottom surfaces */
+  NumericT x /* ,y */ ;/* PointT of intersection */
+   NumericT dist;
+  NumericT m0,m1;      /* gradients  of top & bottom surfaces */
   int i;
 
-  u0=(float)WEENY;         /* initial search posn */
-  u1=(float)(1.0f-WEENY);
+  u0=(NumericT)WEENY;         /* initial search posn */
+  u1=(NumericT)(1.0f-WEENY);
 
   if(skin < 0) /* then tool offset > skin thickness */
     {
@@ -87,9 +87,9 @@ void CPlotCommonImpl::find_core_te(const CAerofoil& foil,float skin, float *nu0,
 
 
       /* Find distance between them */
-      dist=(float)sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
+      dist=(NumericT)sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
 
-      if(dist<(float)CLOSE)
+      if(dist<(NumericT)CLOSE)
         {
         *nu0=u0;
         *nu1=u1;
@@ -120,7 +120,7 @@ void CPlotCommonImpl::find_core_te(const CAerofoil& foil,float skin, float *nu0,
       u0=foil.FirstX(x0,WEENY,1); /* get upper surface u for */
                                   /* the given x, starting at */
                                   /* u=WEENY in +ve direction */
-      u1=foil.FirstX(x1,(float)(1.0f-WEENY),-1);  /* lower surface u */
+      u1=foil.FirstX(x1,(NumericT)(1-WEENY),-1);  /* lower surface u */
       }
     /* Note that if the code gets to here the convergence will be poor */
     /* but probably close enough for practical purposes */

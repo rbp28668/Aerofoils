@@ -39,13 +39,13 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCoordMap::CCoordMap(float sizex, float sizey, CDC* pdc, float zoom)
+CCoordMap::CCoordMap(NumericT sizex, NumericT sizey, CDC* pdc, NumericT zoom)
 {
 	assert(this);
 	assert(pdc);
 
-	scalex = float(pdc->GetDeviceCaps(LOGPIXELSX)); // pixels per inch
-	scaley = float(pdc->GetDeviceCaps(LOGPIXELSY));
+	scalex = NumericT(pdc->GetDeviceCaps(LOGPIXELSX)); // pixels per inch
+	scaley = NumericT(pdc->GetDeviceCaps(LOGPIXELSY));
 
 	scalex /= 25.4f;	// to pixels per mm.
 	scaley /= 25.4f;

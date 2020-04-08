@@ -46,6 +46,7 @@ public:
 	BOOL	m_blPlotSpars;
 	BOOL	m_blPlotTE;
 	BOOL	m_blPlotLE;
+	BOOL	m_blPlotCutouts;
 	//}}AFX_DATA
 
 

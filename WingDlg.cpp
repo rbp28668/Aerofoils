@@ -24,6 +24,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "WingDlg.h"
 #include "SectionDlg.h"
 #include "SparDlg.h"
+#include "CutoutDialog.h"
 
 #include "kernel/Wing.h"
 
@@ -67,6 +68,7 @@ void CWingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDT_SKIN, m_fSkin);
 	DDV_MinMaxFloat(pDX, m_fSkin, 0.f, 10.f);
 	//}}AFX_DATA_MAP
+	DDX_Control(pDX, IDC_LST_CUTOUTS, m_lstCutouts);
 }
 
 
@@ -80,6 +82,10 @@ BEGIN_MESSAGE_MAP(CWingDlg, CDialog)
 	ON_LBN_SELCHANGE(IDC_LST_SPARS, OnSelchangeLstSpars)
 	ON_LBN_DBLCLK(IDC_LST_SPARS, OnDblclkLstSpars)
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDC_BTN_ADD_CUTOUT, &CWingDlg::OnBnClickedBtnAddCutout)
+	ON_BN_CLICKED(IDC_BTN_EDIT_CUTOUT, &CWingDlg::OnBnClickedBtnEditCutout)
+	ON_BN_CLICKED(IDC_BTN_DELETE_CUTOUT, &CWingDlg::OnBnClickedBtnDeleteCutout)
+	ON_LBN_DBLCLK(IDC_LST_CUTOUTS, &CWingDlg::OnLbnDblclkLstCutouts)
 END_MESSAGE_MAP()
 
 void CWingDlg::addSparToList(CSpar* ps)
@@ -91,6 +97,15 @@ void CWingDlg::addSparToList(CSpar* ps)
 	if(idx != LB_ERR)
 		m_lstSpars.SetItemDataPtr(idx, ps);
 
+}
+
+void CWingDlg::addCutoutToList(Cutout* pc)
+{
+	assert(this);
+	assert(pc);
+	int idx = m_lstCutouts.AddString(pc->getText());
+	if (idx != LB_ERR)
+		m_lstCutouts.SetItemDataPtr(idx, pc);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -165,6 +180,55 @@ void CWingDlg::OnDblclkLstSpars()
 	
 }
 
+void CWingDlg::OnBnClickedBtnAddCutout()
+{
+	Cutout cutout;
+	CutoutDialog dlg(&cutout);
+	if (dlg.DoModal())
+	{
+		Cutout* pc = wingCopy.addCutout(cutout);
+		addCutoutToList(pc);
+	}
+}
+
+
+void CWingDlg::OnBnClickedBtnEditCutout()
+{
+	int idx = m_lstCutouts.GetCurSel();
+	if (idx != LB_ERR)
+	{
+		Cutout* pc = (Cutout*)m_lstCutouts.GetItemDataPtr(idx);
+		CutoutDialog dlg(pc);
+		if (dlg.DoModal())
+		{
+			m_lstCutouts.DeleteString(idx);
+			m_lstCutouts.InsertString(idx, pc->getText());
+			m_lstCutouts.SetItemDataPtr(idx, pc);
+		}
+	}
+
+}
+
+
+void CWingDlg::OnBnClickedBtnDeleteCutout()
+{
+	int idx = m_lstCutouts.GetCurSel();
+	if (idx != LB_ERR)
+	{
+		// MessageBox()
+		Cutout* pc = (Cutout*)m_lstCutouts.GetItemDataPtr(idx);
+		m_lstCutouts.DeleteString(idx);
+
+		wingCopy.deleteCutout(pc);
+	}
+}
+
+void CWingDlg::OnLbnDblclkLstCutouts()
+{
+	OnBnClickedBtnEditCutout();
+}
+
+
 void CWingDlg::OnOK() 
 {
 
@@ -184,9 +248,9 @@ BOOL CWingDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	m_span = wingCopy.getSpan();
-	m_LE = wingCopy.getLE();
-	m_TE = wingCopy.getTE();
-	m_fSkin = wingCopy.getSkinThickness();
+	m_LE = (float)wingCopy.getLE();
+	m_TE = (float)wingCopy.getTE();
+	m_fSkin = (float)wingCopy.getSkinThickness();
 
 	m_lblRootInfo.SetWindowText(wingCopy.getRoot()->getName().c_str());
 	m_lblTipInfo.SetWindowText(wingCopy.getTip()->getName().c_str());
@@ -197,9 +261,19 @@ BOOL CWingDlg::OnInitDialog()
 		addSparToList(spar);
 	}
 
+	for (int i = 0; i < wingCopy.getCutoutCount(); ++i)
+	{
+		Cutout* cutout = wingCopy.getCutout(i);
+		addCutoutToList(cutout);
+	}
+
 	UpdateData(FALSE);
 
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
+
+
+
+

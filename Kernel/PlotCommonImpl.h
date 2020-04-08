@@ -26,6 +26,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Kernel.h"
+
 #ifndef min
 #define min(a,b) ((a<b)?a:b)
 #define max(a,b) ((a>b)?a:b)
@@ -44,12 +46,12 @@ protected:
 	CPlotCommonImpl();
 	virtual ~CPlotCommonImpl();
 
-	void find_core_te(const CAerofoil& foil,float skin,float *nu0,float *nu1) const;
+	void find_core_te(const CAerofoil& foil,NumericT skin,NumericT *nu0,NumericT *nu1) const;
 
-	const static float CLOSE;  /* limit of resolution in mm per step */
+	const static NumericT CLOSE;  /* limit of resolution in mm per step */
 	const static int MAX_ITER;  /* max number of runs thro' the iteration */
 	const static int FORWARD_ITER;  /* 1 part in 16000 */
-	const static float WEENY; /* very small...*/
+	const static NumericT WEENY; /* very small...*/
 
 };
 

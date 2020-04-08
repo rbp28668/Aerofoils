@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Kernel.h"
+
 class CObjectSerializer;
 
 class CutterGeometry
