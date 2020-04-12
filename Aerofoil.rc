@@ -392,6 +392,24 @@ BEGIN
     END
 END
 
+IDR_CONTROLCUTTER MENU
+BEGIN
+    POPUP "Control "
+    BEGIN
+        MENUITEM "Start",                       ID_CONTROLCUTTER_START
+        MENUITEM "Pause",                       ID_CONTROLCUTTER_PAUSE
+        MENUITEM "Stop",                        ID_CONTROLCUTTER_STOP
+    END
+    POPUP "Speed"
+    BEGIN
+        MENUITEM "x1",                          ID_SPEED_X1
+        MENUITEM "x2",                          ID_SPEED_X2
+        MENUITEM "x5",                          ID_SPEED_X5
+        MENUITEM "x10",                         ID_SPEED_X10
+        MENUITEM "Full",                        ID_SPEED_FULL
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1010,6 +1028,8 @@ IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
 
 IDB_SPLASH              BITMAP                  "Splsh16.bmp"
 
+IDR_CONTROLCUTTER       BITMAP                  "res\\toolbar1.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1029,6 +1049,19 @@ BEGIN
     BUTTON      ID_FILE_PRINT
     SEPARATOR
     BUTTON      ID_APP_ABOUT
+END
+
+IDR_CONTROLCUTTER TOOLBAR 15, 16
+BEGIN
+    BUTTON      ID_BUTTON32884
+    BUTTON      ID_BUTTON32885
+    BUTTON      ID_BUTTON32886
+    SEPARATOR
+    BUTTON      ID_BUTTON32887
+    BUTTON      ID_BUTTON32888
+    BUTTON      ID_BUTTON32889
+    BUTTON      ID_BUTTON32890
+    BUTTON      ID_BUTTON32896
 END
 
 

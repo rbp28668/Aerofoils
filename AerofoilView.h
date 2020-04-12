@@ -87,7 +87,6 @@ protected:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnViewZoom();
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnViewPreviewCutPath();
 	afx_msg void OnTimer(UINT_PTR  nIDEvent);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

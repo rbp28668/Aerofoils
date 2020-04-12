@@ -26,7 +26,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "AerofoilDoc.h"
 #include "AerofoilView.h"
 #include "WindowsOutputDevice.h"
-#include "CutterSimulationOutputDevice.h"
 #include "ZoomDlg.h"
 #include "WindowsUIProxy.h"
 
@@ -54,7 +53,6 @@ BEGIN_MESSAGE_MAP(CAerofoilView, CScrollView)
 	ON_WM_LBUTTONDBLCLK()
 	ON_COMMAND(ID_VIEW_ZOOM, OnViewZoom)
 	ON_WM_RBUTTONDOWN()
-	ON_COMMAND(ID_VIEW_PREVIEW_CUT_PATH, OnViewPreviewCutPath)
 	ON_WM_TIMER()
 	//}}AFX_MSG_MAP
 	// Standard printing commands
@@ -415,30 +413,6 @@ void CAerofoilView::OnRButtonDown(UINT nFlags, CPoint point)
 		doc->clearSelection();
 	}
 	
-}
-
-void CAerofoilView::OnViewPreviewCutPath() 
-{
-	CAerofoilDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-
-	CDC* pDC = GetDC();
-	OnPrepareDC(pDC);
-
-	PointT size(pDoc->sizeX(), pDoc->sizeY());
-	CCoordMap map(size.fx, size.fy, pDC, zoom);
-
-	RectT rLogical(0,size.fy,size.fx,0);
-	CRect rDoc = map.toDevice(rLogical);
-
-	CPen pen(PS_DOT,1,RGB(192,192,192));
-
-	CPen* penOld = pDC->SelectObject(&pen);
-	pDC->Rectangle(&rDoc);
-	pDC->SelectObject(penOld);
-
-	CCutterSimulationOutputDevice output(pDoc->sizeX(), pDoc->sizeY(), pDC, zoom);
-	pDoc->getPlot().plot(output);
 }
 
 void CAerofoilView::OnTimer(UINT_PTR  nIDEvent)

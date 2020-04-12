@@ -29,8 +29,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutterPreviewWindow.h"
 #include "Kernel/PointT.h"
 #include "Kernel/RectT.h"
-#include "Kernel/CutterSimulation.h"
-#include "Kernel/CutterSimulationOutputDevice.h"
 
 
 // CutterView
@@ -224,17 +222,9 @@ void CutterView::OnUpdateViewZoom(CCmdUI *pCmdUI)
 
 void CutterView::OnViewPreviewCutPath()
 {
-	CutterPreviewWindow* preview = new CutterPreviewWindow(this);
-	CutterSimulation* simulation = new CutterSimulation(preview);
-	simulation->setGeometry(GetDocument()->getGeometry());
-	CutterSimulationOutputDevice* device = new CutterSimulationOutputDevice(simulation);
-
+	
+	CutterPreviewWindow* preview = new CutterPreviewWindow(this, &(GetDocument()->cut), &(GetDocument()->getGeometry()));
 	preview->ShowWindow(TRUE);
-	GetDocument()->runCut(*device);
-
-	delete device;
-	delete simulation;
-	delete preview;
 
 }
 

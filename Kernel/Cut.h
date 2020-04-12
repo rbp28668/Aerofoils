@@ -54,7 +54,9 @@ class Cut
 public:
 
 	typedef StructureList::iterator StructureIterator;
+	typedef StructureList::const_iterator StructureConstIterator;
 	typedef CutList::iterator CutIterator;
+	typedef CutList::const_iterator CutConstIterator;
 
 	Cut();
 	~Cut();
@@ -87,7 +89,7 @@ public:
 	void deleteCut(CutStructure* toDelete);
 	void deleteStructure(CStructure* toDelete);
 
-	void serializeTo(CObjectSerializer& os);
+	void serializeTo(CObjectSerializer& os) const;
 	void serializeFrom(CObjectSerializer& os);
 
 	int getStructureCount() const { return (int)structures.size(); }
@@ -96,4 +98,9 @@ public:
 	StructureIterator endStructures() { return structures.end(); }
 	CutIterator beginCutStructures() { return cut_structures.begin(); }
 	CutIterator endCutStructures() { return cut_structures.end(); }
+	StructureConstIterator beginStructures() const { return structures.cbegin(); }
+	StructureConstIterator endStructures() const { return structures.cend(); }
+	CutConstIterator beginCutStructures() const { return cut_structures.cbegin(); }
+	CutConstIterator endCutStructures() const { return cut_structures.cend(); }
+
 };

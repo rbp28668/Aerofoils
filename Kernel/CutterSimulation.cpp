@@ -23,7 +23,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 
-// Class to simulate the cutter.
+// Class to simulate the cutter.  Manages virtual steppers, one per axis and does appropriate
+// coordinate translations to drive the steppers.  By tracking virtual steppers it can then feed the 
+// output into the point plotter after every step.
 CutterSimulation::CutterSimulation(PointPlotter* plotter)
 	:pPlotter(plotter),
 	wl(0), // set default geometry so block full width
@@ -31,8 +33,8 @@ CutterSimulation::CutterSimulation(PointPlotter* plotter)
 	wl1(1),
 	wr1(0),
 	wd(1),
-	xStepsPerMM(10),  // assume roughly 250 DPI
-	yStepsPerMM(10)
+	xStepsPerMM(4),  // assume roughly 100 DPI screen
+	yStepsPerMM(4)
 {
 	assert(this);
 	assert(plotter);
@@ -114,6 +116,15 @@ Position<double> CutterSimulation::getPosition()
 	return axes;
 }
 
+void CutterSimulation::reset()
+{
+	axesPosition.set(0, 0, 0, 0);
+	xSteps.stop();
+	ySteps.stop();
+	uSteps.stop();
+	vSteps.stop();
+}
+
 void CutterSimulation::moveSteppers(long long steps, Position<long long>& stepDeltas)
 {
 	int dirX = (stepDeltas.x >= 0) ? 1 : -1;
@@ -137,16 +148,9 @@ void CutterSimulation::moveSteppers(long long steps, Position<long long>& stepDe
 		axesPosition.u += uSteps.step() ? dirU : 0;
 		axesPosition.v += vSteps.step() ? dirV : 0;
 
-		if (plot()) {
+		if (pPlotter->plot(axesPosition)) {
 			break;
 		}
 	}
 }
 
-bool CutterSimulation::plot()
-{
-	assert(this);
-	assert(pPlotter);
-	// plot axesPosition.
-	return pPlotter->plot(axesPosition);
-}

@@ -134,7 +134,17 @@ void CutterDoc::deleteCut(CutStructure * pCut)
 
 void CutterDoc::runCut(COutputDevice& pdev)
 {
-	cut.cut(pdev);
+	try {
+		cut.cut(pdev);
+	}
+	catch (COutputDevice::StoppedException & /*stopped*/) {
+		// Nop
+	}
+	catch (COutputDevice::LimitsException & limits) {
+		std::string msg("Output device out of limits: ");
+		msg.append(limits.what());
+		AfxMessageBox(msg.c_str(), MB_OK | MB_ICONWARNING);
+	}
 }
 
 

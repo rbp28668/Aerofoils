@@ -39,9 +39,6 @@
     <ClCompile Include="CoordMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CutterSimulationOutputDevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EllipseFlagsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -172,9 +169,6 @@
     <ClInclude Include="CoordMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CutterSimulationOutputDevice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EllipseFlagsDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -292,6 +286,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\toolbar1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

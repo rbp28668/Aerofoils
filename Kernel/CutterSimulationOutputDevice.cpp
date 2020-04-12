@@ -93,3 +93,9 @@ PointT CutterSimulationOutputDevice::position(int iStream)
 		return PointT(position.u, position.v);
 	}
 }
+
+void CutterSimulationOutputDevice::reset()
+{
+	x = y = u = v = 0;
+	hasLeft = hasRight = false;
+}
