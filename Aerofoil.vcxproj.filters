@@ -138,6 +138,9 @@
     <ClCompile Include="CutoutDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CutterGeometryDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Aerofoil.rc">
@@ -272,6 +275,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutoutDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CutterGeometryDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,10 +13,10 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// English (United Kingdom) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 #pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -162,98 +162,6 @@ BEGIN
     END
 END
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_TOOL_OFFSET DIALOGEX 0, 0, 307, 100
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Set Tool Offset"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,198,79,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,250,79,50,14
-    EDITTEXT        IDC_EDIT_TOOL_OFFSET,67,46,40,14,ES_AUTOHSCROLL
-    LTEXT           "Tool Offset",IDC_STATIC,18,49,37,8
-    LTEXT           "mm",IDC_STATIC,115,49,12,8
-    LTEXT           "Tool offset should be set to half the width of the kerf produced by the hot wire",IDC_STATIC,19,24,263,15
-END
-
-IDD_FEED_RATE DIALOGEX 0, 0, 237, 92
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Set Feed Rate"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,125,71,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,180,71,50,14
-    LTEXT           "Feed rate",IDC_STATIC,23,26,32,8
-    LTEXT           "mm per second",IDC_STATIC,111,26,49,8
-    EDITTEXT        IDC_EDIT_FEED_RATE,63,23,40,14,ES_AUTOHSCROLL
-    CONTROL         "Include Feed Rate in Output",IDC_CHK_INCLUDE_FEED,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,65,45,107,10
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
-BEGIN
-    IDD_TOOL_OFFSET, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 300
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 93
-    END
-
-    IDD_FEED_RATE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 230
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 85
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// AFX_DIALOG_LAYOUT
-//
-
-IDD_TOOL_OFFSET AFX_DIALOG_LAYOUT
-BEGIN
-    0
-END
-
-IDD_FEED_RATE AFX_DIALOG_LAYOUT
-BEGIN
-    0
-END
-
-#endif    // English (United States) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (United Kingdom) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
-#pragma code_page(1252)
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
-
 IDR_CUTTER_POPUPS MENU
 BEGIN
     POPUP "Structure"
@@ -371,11 +279,12 @@ BEGIN
         MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM SEPARATOR
-        MENUITEM "&Preview Cut Path",           ID_VIEW_PREVIEW_CUT_PATH
         MENUITEM "Draw Moves",                  ID_VIEW_DRAWMOVES
     END
     POPUP "Cutter"
     BEGIN
+        MENUITEM "&Preview Cut Path",           ID_VIEW_PREVIEW_CUT_PATH
+        MENUITEM "Cutter Geometry",             ID_CUTTER_CUTTERGEOMETRY
         MENUITEM "Tool Offset",                 ID_CUTTER_TOOLOFFSET
         MENUITEM "Feed Rate",                   ID_CUTTER_FEEDRATE
     END
@@ -415,6 +324,33 @@ END
 //
 // Dialog
 //
+
+IDD_TOOL_OFFSET DIALOGEX 0, 0, 307, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set Tool Offset"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,198,79,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,250,79,50,14
+    EDITTEXT        IDC_EDIT_TOOL_OFFSET,67,46,40,14,ES_AUTOHSCROLL
+    LTEXT           "Tool Offset",IDC_STATIC,18,49,37,8
+    LTEXT           "mm",IDC_STATIC,115,49,12,8
+    LTEXT           "Tool offset should be set to half the width of the kerf produced by the hot wire",IDC_STATIC,19,24,263,15
+END
+
+IDD_FEED_RATE DIALOGEX 0, 0, 237, 92
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set Feed Rate"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,125,71,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,71,50,14
+    LTEXT           "Feed rate",IDC_STATIC,23,26,32,8
+    LTEXT           "mm per second",IDC_STATIC,111,26,49,8
+    EDITTEXT        IDC_EDIT_FEED_RATE,63,23,40,14,ES_AUTOHSCROLL
+    CONTROL         "Include Feed Rate in Output",IDC_CHK_INCLUDE_FEED,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,65,45,107,10
+END
 
 IDD_ABOUTBOX DIALOG 0, 0, 255, 103
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -797,6 +733,27 @@ BEGIN
     LTEXT           "Height",IDC_STATIC,197,142,22,8
 END
 
+IDD_CUTTER_GEOMETRY DIALOGEX 0, 0, 371, 121
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cutter Geometry"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDT_XTRAVEL,77,20,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_YTRAVEL,188,20,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_WIDTH,304,20,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_BLOCKLHS,77,70,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDT_BLOCKWIDTH,188,70,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,256,100,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,314,100,50,14
+    GROUPBOX        "Cutter Geometry",IDC_STATIC,7,7,357,39
+    LTEXT           "Horizontal travel",IDC_STATIC,18,23,54,8
+    LTEXT           "Vertical travel",IDC_STATIC,138,23,45,8
+    LTEXT           "Width",IDC_STATIC,277,23,20,8
+    GROUPBOX        "Block Geometry",IDC_STATIC,7,51,357,41
+    LTEXT           "Left hand side",IDC_STATIC,23,72,46,8
+    LTEXT           "Width",IDC_STATIC,159,71,20,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -806,6 +763,22 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
+    IDD_TOOL_OFFSET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 300
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 93
+    END
+
+    IDD_FEED_RATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 230
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 85
+    END
+
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -967,6 +940,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 169
     END
+
+    IDD_CUTTER_GEOMETRY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 364
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 114
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -975,6 +956,16 @@ END
 //
 // AFX_DIALOG_LAYOUT
 //
+
+IDD_TOOL_OFFSET AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_FEED_RATE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 IDD_CUT_TRANSFORM AFX_DIALOG_LAYOUT
 BEGIN
@@ -1002,6 +993,11 @@ BEGIN
 END
 
 IDD_WING_FLAGS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_CUTTER_GEOMETRY AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

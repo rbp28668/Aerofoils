@@ -36,6 +36,7 @@ CutterPreviewWindow::CutterPreviewWindow(CWnd* parentWindow, const Cut* cut, con
 	, device(0)
 	, isCutting(false)
 	, isPaused(false)
+	, hasFlash(false)
 
 {
 
@@ -187,6 +188,64 @@ void CutterPreviewWindow::createBitmap(CDC* pdc)
 	bitmapDirty = false;
 }
 
+void CutterPreviewWindow::drawFlash(CDC* pdc)
+{
+	int oldMode = pdc->GetROP2();
+	pdc->SetROP2(R2_XORPEN);
+
+	CPen penl(PS_DOT, 1, leftFlashColour);
+	CPen penr(PS_DOT, 1, rightFlashColour);
+
+	CPen* penOld = pdc->SelectObject(&penl);
+	pdc->MoveTo(previousFlash.x - flashSize, previousFlash.y - flashSize);
+	pdc->LineTo(previousFlash.x + flashSize, previousFlash.y + flashSize);
+	pdc->MoveTo(previousFlash.x - flashSize, previousFlash.y + flashSize);
+	pdc->LineTo(previousFlash.x + flashSize, previousFlash.y - flashSize);
+	pdc->LineTo(previousFlash.x + flashSize, previousFlash.y + flashSize);
+	pdc->LineTo(previousFlash.x - flashSize, previousFlash.y + flashSize);
+	pdc->LineTo(previousFlash.x - flashSize, previousFlash.y - flashSize);
+	pdc->LineTo(previousFlash.x + flashSize, previousFlash.y - flashSize);
+
+	pdc->SelectObject(&penr);
+	pdc->MoveTo(previousFlash.u - flashSize, previousFlash.v - flashSize);
+	pdc->LineTo(previousFlash.u + flashSize, previousFlash.v + flashSize);
+	pdc->MoveTo(previousFlash.u - flashSize, previousFlash.v + flashSize);
+	pdc->LineTo(previousFlash.u + flashSize, previousFlash.v - flashSize);
+	pdc->LineTo(previousFlash.u + flashSize, previousFlash.v + flashSize);
+	pdc->LineTo(previousFlash.u - flashSize, previousFlash.v + flashSize);
+	pdc->LineTo(previousFlash.u - flashSize, previousFlash.v - flashSize);
+	pdc->LineTo(previousFlash.u + flashSize, previousFlash.v - flashSize);
+	pdc->SelectObject(penOld);
+	pdc->SetROP2(oldMode);
+}
+
+void CutterPreviewWindow::unflash(CDC* pdc) {
+	if (hasFlash) {
+		drawFlash(pdc);
+		hasFlash = false;
+	}
+}
+
+// Provides a bit of a flicker at the drawing point so that it's possible to see where the wire is even if
+// going over old cuts.
+void CutterPreviewWindow::flash(CDC* pdc, const Position<long long>& axes, DWORD leftColour, DWORD rightColour) {
+	assert(!hasFlash);
+	
+	// Calculate new point
+	previousFlash.x = (int)(axes.x - xCurrentScroll + 1);
+	previousFlash.y = (int)(axes.y - yCurrentScroll + 1);
+	previousFlash.u = (int)(axes.u - xCurrentScroll + 1);
+	previousFlash.v = (int)(axes.v - yCurrentScroll + 1);
+
+	// Set new colours
+	leftFlashColour = leftColour;
+	rightFlashColour = rightColour;
+
+	drawFlash(pdc);
+
+	hasFlash = true;
+}
+
 bool CutterPreviewWindow::plot(Position<long long> axes)
 {
 	// If being asked to plot when the window is being destroyed then treat the same
@@ -267,6 +326,8 @@ bool CutterPreviewWindow::plot(Position<long long> axes)
 	if (axes.u > nWidth) axes.u = nWidth;
 	if (axes.v > nHeight) axes.v = nHeight;
 
+	unflash(pdc);
+
 	// Write to the screen
 	// Note +1 to allow 1 pixel border to mark attempts to draw/move out of area.
 	if (axesSuperimposed) {
@@ -276,6 +337,9 @@ bool CutterPreviewWindow::plot(Position<long long> axes)
 		pdc->SetPixel((int)(axes.x - xCurrentScroll + 1), (int)(axes.y - yCurrentScroll + 1), leftColour);
 		pdc->SetPixel((int)(axes.u - xCurrentScroll + 1), (int)(axes.v -yCurrentScroll + 1), rightColour);
 	}
+	
+	flash(pdc, axes, leftColour, rightColour);
+
 	// Write into the bitmap
 	CDC memDC;
 	if (memDC.CreateCompatibleDC(pdc) != 0) { //create a memory DC compatible with pDC
@@ -387,6 +451,12 @@ void CutterPreviewWindow::OnPaint()
 {
 	if (bitmap) {
 
+		if (hasFlash) {
+			CDC* pdc = GetDC();
+			unflash(pdc);
+			ReleaseDC(pdc);
+		}
+
 		// Paint DC to copy to
 		CPaintDC dc(this); // device context for painting
 		BITMAP bmpStruct; //Bitmap information structure
@@ -491,9 +561,11 @@ void CutterPreviewWindow::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScroll
 	// If the current position does not change, do not scroll.
 	if (xNewPos != xCurrentScroll) {
 
-		// Set the scroll flag to TRUE. 
-		//fScroll = TRUE;
-
+		if (hasFlash) {
+			CDC* pdc = GetDC();
+			unflash(pdc);
+			ReleaseDC(pdc);
+		}
 		// Determine the amount scrolled (in pixels). 
 		xDelta = xNewPos - xCurrentScroll;
 
@@ -561,8 +633,11 @@ void CutterPreviewWindow::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScroll
 	// If the current position does not change, do not scroll.
 	if (yNewPos != yCurrentScroll) {
 
-		// Set the scroll flag to TRUE. 
-		//fScroll = TRUE;
+		if (hasFlash) {
+			CDC* pdc = GetDC();
+			unflash(pdc);
+			ReleaseDC(pdc);
+		}
 
 		// Determine the amount scrolled (in pixels). 
 		yDelta = yNewPos - yCurrentScroll;

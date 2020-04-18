@@ -37,6 +37,7 @@
 #define IDD_FEED_RATE                   160
 #define IDD_EDIT_CUTOUT                 162
 #define IDR_CONTROLCUTTER               166
+#define IDD_CUTTER_GEOMETRY             170
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -144,6 +145,7 @@
 #define IDC_CHK_CUT_CUTOUTS             1092
 #define IDC_EDIT1                       1093
 #define IDC_EDIT_FEED_RATE              1093
+#define IDC_EDT_XTRAVEL                 1093
 #define IDC_CHECK1                      1094
 #define IDC_CHK_INCLUDE_FEED            1094
 #define IDC_CHK_TOP_SURFACE             1094
@@ -153,6 +155,9 @@
 #define IDC_BTN_ADD_CUTOUT              1100
 #define IDC_BTN_EDIT_CUTOUT             1101
 #define IDC_BTN_DELETE_CUTOUT           1102
+#define IDC_EDT_YTRAVEL                 1103
+#define IDC_EDT_BLOCKLHS                1105
+#define IDC_EDT_BLOCKWIDTH              1106
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -277,15 +282,16 @@
 #define ID_SPEED_X10                    32894
 #define ID_SPEED_FULL                   32895
 #define ID_BUTTON32896                  32896
+#define ID_CUTTER_CUTTERGEOMETRY        32897
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        170
-#define _APS_NEXT_COMMAND_VALUE         32897
-#define _APS_NEXT_CONTROL_VALUE         1103
+#define _APS_NEXT_RESOURCE_VALUE        172
+#define _APS_NEXT_COMMAND_VALUE         32898
+#define _APS_NEXT_CONTROL_VALUE         1107
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

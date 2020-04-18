@@ -39,6 +39,12 @@ protected:
 	boolean bitmapDirty; // is set true if the bitmap has been written into by a plot.
 	LARGE_INTEGER counterFrequency;  // use for timing to control speed of cut.
 
+	// Store information to make drawing point flicker.
+	boolean hasFlash;
+	Position<int> previousFlash;
+	DWORD leftFlashColour, rightFlashColour;
+	const int flashSize = 5; // pixels
+
 	double xStepsPerMM;
 	double yStepsPerMM;
 	double xTravel;
@@ -60,6 +66,9 @@ protected:
 	void createBitmap(CDC* pdc);
 
 	DECLARE_MESSAGE_MAP()
+	void drawFlash(CDC* pdc);
+	void unflash(CDC* pdc);
+	void flash(CDC* pdc, const Position<long long>& axes, DWORD leftColour, DWORD rightColour);
 	// override PointPlotter::plot
 	virtual bool plot(Position<long long> axes);
 	virtual void setResolution(double xStepsPerMM, double yStepsPerMM);

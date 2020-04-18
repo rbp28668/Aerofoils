@@ -261,6 +261,7 @@
     <ClCompile Include="CutoutDialog.cpp" />
     <ClCompile Include="CutterDoc.cpp" />
     <ClCompile Include="CutterFrame.cpp" />
+    <ClCompile Include="CutterGeometryDialog.cpp" />
     <ClCompile Include="CutterPreviewWindow.cpp" />
     <ClCompile Include="CutterTreeView.cpp" />
     <ClCompile Include="CutterView.cpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="CutoutDialog.h" />
     <ClInclude Include="CutterDoc.h" />
     <ClInclude Include="CutterFrame.h" />
+    <ClInclude Include="CutterGeometryDialog.h" />
     <ClInclude Include="CutterPreviewWindow.h" />
     <ClInclude Include="CutterTreeView.h" />
     <ClInclude Include="CutterView.h" />
