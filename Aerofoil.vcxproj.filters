@@ -39,9 +39,6 @@
     <ClCompile Include="CoordMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CutterSimulationOutputDevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EllipseFlagsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,6 +138,9 @@
     <ClCompile Include="CutoutDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CutterGeometryDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Aerofoil.rc">
@@ -170,9 +170,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CoordMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CutterSimulationOutputDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EllipseFlagsDlg.h">
@@ -280,6 +277,9 @@
     <ClInclude Include="CutoutDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CutterGeometryDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Aerofoil.ico">
@@ -292,6 +292,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\toolbar1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -103,4 +103,5 @@ public:
 
 	afx_msg void OnCutterTooloffset();
 	afx_msg void OnCutterFeedrate();
+	afx_msg void OnCutterCuttergeometry();
 };

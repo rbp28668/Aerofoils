@@ -4,6 +4,7 @@
 
 class CutterSimulation;
 
+// Output device that knows to send cutting information to the CutterSimulation when it has a full set of coordinates - left and right.
 class CutterSimulationOutputDevice :
 	public COutputDevice
 {
@@ -26,6 +27,7 @@ public:
 
 	// Get current position;
 	virtual PointT position(int iStream);
+	void reset();
 
 private:
 

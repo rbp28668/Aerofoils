@@ -249,14 +249,14 @@ void Cut::deleteStructure(CStructure * toDelete)
 	delete toDelete;
 }
 
-void Cut::serializeTo(CObjectSerializer & os)
+void Cut::serializeTo(CObjectSerializer & os) const
 {
 	os.startSection("cut", this);
 	os.write("toolOffset", toolOffset);
 	os.write("feedRate", feedRate);
 	os.write("useFeedRate", useFeedRate);
 	os.startCollection("structures", (int)structures.size());
-	for (StructureIterator si = structures.begin();
+	for (StructureConstIterator si = structures.begin();
 		si != structures.end();
 		++si)
 	{
@@ -265,7 +265,7 @@ void Cut::serializeTo(CObjectSerializer & os)
 	os.endCollection();
 
 	os.startCollection("cutStructures", (int)cut_structures.size());
-	for (CutIterator ci = cut_structures.begin();
+	for (CutConstIterator ci = cut_structures.begin();
 		ci != cut_structures.end();
 		++ci)
 	{

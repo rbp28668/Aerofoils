@@ -29,6 +29,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CNCConnectionDlg.h"
 #include "ToolOffsetDialog.h"
 #include "FeedRateDialog.h"
+#include "CutterGeometryDialog.h"
 #include "Kernel\Wing.h"
 #include "Kernel\EllipsePair.h"
 #include "Kernel\PointStructure.h"
@@ -134,7 +135,17 @@ void CutterDoc::deleteCut(CutStructure * pCut)
 
 void CutterDoc::runCut(COutputDevice& pdev)
 {
-	cut.cut(pdev);
+	try {
+		cut.cut(pdev);
+	}
+	catch (COutputDevice::StoppedException & /*stopped*/) {
+		// Nop
+	}
+	catch (COutputDevice::LimitsException & limits) {
+		std::string msg("Output device out of limits: ");
+		msg.append(limits.what());
+		AfxMessageBox(msg.c_str(), MB_OK | MB_ICONWARNING);
+	}
 }
 
 
@@ -151,6 +162,7 @@ BEGIN_MESSAGE_MAP(CutterDoc, CDocument)
 	ON_COMMAND(ID_FILE_GCODE, &CutterDoc::OnFileGcode)
 	ON_COMMAND(ID_CUTTER_TOOLOFFSET, &CutterDoc::OnCutterTooloffset)
 	ON_COMMAND(ID_CUTTER_FEEDRATE, &CutterDoc::OnCutterFeedrate)
+	ON_COMMAND(ID_CUTTER_CUTTERGEOMETRY, &CutterDoc::OnCutterCuttergeometry)
 END_MESSAGE_MAP()
 
 BOOL CutterDoc::OnNewDocument()
@@ -379,4 +391,20 @@ void CutterDoc::OnCutterFeedrate()
 		cut.setFeedRate(dlg.feedRate);
 		cut.setUseFeedRate(dlg.useFeedRate == TRUE);
 	}
+}
+
+
+void CutterDoc::OnCutterCuttergeometry()
+{
+	double oldx = geometry.getXTravel();
+	double oldy = geometry.getYTravel();
+
+	CutterGeometryDialog dlg(&geometry);
+	if (dlg.DoModal() == IDOK) {
+		// X and Y travel drive the document size so see if these have changed and if so update.
+		if ((oldx != geometry.getXTravel()) || (oldy != geometry.getYTravel())) {
+			geometryUpdated();
+		}
+	}
+
 }

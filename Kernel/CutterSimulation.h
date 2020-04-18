@@ -41,6 +41,7 @@ public:
 
 	void stepTo(double x, double y, double u, double v);
 	Position<double> getPosition();
+	void reset();
 
 private:
 	
@@ -51,7 +52,11 @@ private:
 	Position<long long> axesPosition;
 	
 	// Derived values that describe block/cutter geometry
-	double wd, wl, wr, wl1, wr1;
+	double wd, // width of block (wr - wl)
+		wl,  // left side of block measured from LHS of cutter
+		wr,  // right side of block measrured from LHS of cutter
+		wl1,  // left side of block measured from RHS of cutter
+		wr1;  // right side of block measured from RHS of cutter
 
 	Steps xSteps;
 	Steps ySteps;
@@ -61,7 +66,6 @@ private:
 	PointPlotter* pPlotter;
 
 	void moveSteppers(long long steps, Position<long long>& stepDeltas);
-	bool plot(); // current axes positions. Returns true to terminate
 
 };
 
