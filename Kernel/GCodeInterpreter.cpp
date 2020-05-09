@@ -23,9 +23,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 GCodeInterpreter::State::State() :
-	units(MM),
-	moveSpeed(FASTEST),
-	moveType(ABSOLUTE_MOVE),
+	units(Units::MM),
+	moveSpeed(MoveSpeed::FASTEST),
+	moveType(MoveType::ABSOLUTE_MOVE),
+	feedRateType(FeedRateType::UNITS_PER_SEC),
 	mirrored(false),
 	dwellTimeMS(0)
 {
@@ -37,7 +38,9 @@ GCodeInterpreter::GCodeInterpreter() :
 	pContext(0),
 	x(0),y(0),u(0),v(0),
 	f(0),
-	mS(0)
+	mS(0),
+	command(0),
+	motionCommand(0)
 {
 	assert(this);
 	pCurrentState = new State();
@@ -122,6 +125,12 @@ int GCodeInterpreter::process(const std::string & line)
 				idx = processUAxis(line, idx, length);
 				break;
 			case 'V':
+				idx = processVAxis(line, idx, length);
+				break;
+			case 'A':  // Alias for U
+				idx = processUAxis(line, idx, length);
+				break;
+			case 'Z':  // Alias for V
 				idx = processVAxis(line, idx, length);
 				break;
 			case 'F':
@@ -213,6 +222,9 @@ size_t GCodeInterpreter::processCommand(const std::string & line, size_t idx, si
 		command = &GCodeInterpreter::dwell;
 		break;
 
+	case PLANE_XY:			//G17 use XY Plane
+		break;				// no effect for a wing cutter.
+
 	case USE_INCHES:		//G20 - program coordinates are in inches
 		if (pCurrentState->units == MM) {
 			x /= 25.4;
@@ -247,12 +259,21 @@ size_t GCodeInterpreter::processCommand(const std::string & line, size_t idx, si
 		pCurrentState->mirrored = false;
 		break;
 
+	case CUTTER_COMPENSATION_OFF: //G40 - SET CUTTER COMPENSATION - OFF
+		break;		// as we don't implement it anyway
+
+	case CLEAR_TOOL_LENGTH_OFFSET: //G49 - clear tool length offset
+		break;		// n/a for a wing cutter (c.f. a milling cutter)
+
 	case WORKSHIFT:			//G52 - set local workshift(offsets)
 		command = &GCodeInterpreter::workshift;
 		break;
 
 	case CANCEL_WORKSHIFT:	//G53 - cancel local workshift
 		pCurrentState->zeroShift();
+		break;
+
+	case SET_PATH_CONTROL_CONSTANT_VELOCITY: //G64 set path control mode to constant velocity
 		break;
 
 	case USE_ABSOLUTE:		//G90 - Absolute programming
@@ -262,7 +283,11 @@ size_t GCodeInterpreter::processCommand(const std::string & line, size_t idx, si
 	case USE_INCREMENTAL:	//G91 - Incremental programming
 		pCurrentState->moveType = RELATIVE_MOVE;
 		break;
-		
+	
+	case SET_FEED_RATE_UNITS_PER_MINUTE: //G94 - SET FEED RATE MODE - UNITS PER MINUTE
+		pCurrentState->feedRateType = UNITS_PER_MIN;
+		break;
+
 	default:
 		if (pContext) {
 			pContext->showError(line, idx, "Unknown G command");
@@ -390,8 +415,13 @@ size_t GCodeInterpreter::processFeedRate(const std::string & line, size_t idx, s
 	assert(length == line.length());
 	idx = getValue(f, line, idx, length);
 	double rate = f;
+	
 	if (pCurrentState->units == INCH) {
 		rate *= 25.4;
+	}
+
+	if (pCurrentState->feedRateType == UNITS_PER_MIN) {
+		rate /= 60;  // to convert to units per sec.
 	}
 
 	pCutter->setFeedRate(rate);

@@ -65,3 +65,4 @@ Plots/*
 # solution user options
 *.suo  
 *.tlog  # build log
+/.vs/Aerofoil/v16
