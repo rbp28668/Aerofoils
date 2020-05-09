@@ -36,6 +36,12 @@ private:
 		FEED_RATE
 	};
 
+	enum FeedRateType {
+		UNITS_PER_SEC,   // default inches per sec or mm per sec
+		UNITS_PER_MIN,   // values are inches per minute or mm per minute
+		TARGET_TIME		 // value is desired time to complete the move (not supported).
+	};
+
 	enum MoveType {
 		ABSOLUTE_MOVE,
 		RELATIVE_MOVE
@@ -46,6 +52,7 @@ private:
 		Units units;
 		MoveSpeed moveSpeed;
 		MoveType moveType;
+		FeedRateType feedRateType;
 		bool mirrored;
 		long dwellTimeMS;
 		Position<double> offsets;
@@ -76,15 +83,20 @@ private:
 		FAST_LINE = 0,			//G00 - straight line as fast as possible(interpolated)
 		STRAIGHT_LINE = 1,		//G01 - straight line at given or active feed rate.
 		DWELL = 4,				//G04 - dwell / pause for given time(P mS or S seconds)
+		PLANE_XY = 17,			//G17 - use XY plane
 		USE_INCHES = 20,		//G20 - program coordinates are in inches
 		USE_MM = 21,			//G21 - program coordinates are in mm
 		HOME = 28,				//G28 - return to home position
 		MIRROR_ON = 38,			//G38 - mirror imaging “on”
 		MIRROR_OFF = 39,		//G39 - mirror imaging “off”
+		CUTTER_COMPENSATION_OFF = 40, //G40 SET CUTTER COMPENSATION - OFF
+		CLEAR_TOOL_LENGTH_OFFSET = 49, //G49 clear existing tool length offset.
 		WORKSHIFT = 52,			//G52 - set local workshift(offsets)
 		CANCEL_WORKSHIFT = 53,	//G53 - cancel local workshift
+		SET_PATH_CONTROL_CONSTANT_VELOCITY = 64, // G64 SET PATH CONTROL MODE - CONSTANT VELOCITY
 		USE_ABSOLUTE = 90,		//G90 - Absolute programming
-		USE_INCREMENTAL = 91	//G91 - Incremental programming
+		USE_INCREMENTAL = 91,	//G91 - Incremental programming
+		SET_FEED_RATE_UNITS_PER_MINUTE = 94, //G94 - SET FEED RATE MODE - UNITS PER MINUTE
 	};
 
 	enum MiscCommand {
