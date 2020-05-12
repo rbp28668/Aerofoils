@@ -19,21 +19,22 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Kernel/Position.h"
 #include "../Kernel/Cutter.h"
+#include "../Kernel/CutterGeometry.h"
+
 class CutterHardware;
 
 class CNCFoamCutter : public Cutter {
 
 	// Description of the hardware, motors etc
-	double width; // of cutter
 	double xLead; // lead of x leadscrews in mm per rev
 	double yLead; // lead of y leadscrews in mm per rev
 	int xStepsPerRev; // basic steps per rev of x steppers
 	int yStepsPerRev; // basic steps per rev of y steppers
 	int xMicroStep;  // micro-stepping factor on x steppers (1,2,4,8 etc...)
 	int yMicroStep; // micro-stepping factor on y steppers
-	double blockLeft;  // distance from LHS of cutter to LHS of block
-	double blockRight;  // distance from LHS of cutter to RHS of block
 	double stepFrequency; // of steppers in Hz
+
+	CutterGeometry geometry;
 
 	Position<double> currentPosition;  // on side of block
 	Position<long long> axesPosition;     // of hardware axes in microsteps
@@ -42,24 +43,13 @@ class CNCFoamCutter : public Cutter {
 	double feedRate;		// desired feedrate in mm per sec.
 	bool feedRateError;  // set true if not able to meet set feedrate.
 
-	// Parameters for calculating motor position from a given position on the edges]
-	// of the foam block.  set up by calling updateBlockInfo()
-	double wl;   // left of block measured from LHS of cutter
-	double wr;	 // right of block measured from LHS of cutter
-	double wl1;  // left of block measured from RHS of cutter
-	double wr1;  // right of block measured from RHS of cutter
-	double wd;   // width of block (wr - l)
-
-	void blockToAxes(Position<double>& pos);
-	void updateBlockInfo(); // call when blockLeft, blockRight or width are changed;
-
 	void validate(int status);
 public:
 	CNCFoamCutter(CutterHardware* pHardware);
 	virtual ~CNCFoamCutter();
 
 	// Config
-	inline double getWidth() { return width; }
+	inline double getWidth() { return geometry.getWidth(); }
 	void setWidth(double width);
 	inline double getXLead() { return xLead; }
 	void setXLead(double lead);
@@ -73,9 +63,9 @@ public:
 	void setXMicroStepping(int steps);
 	inline int getYMicroStepping() { return yMicroStep; }
 	void setYMicroStepping(int steps);
-	inline double getBlockLeft() { return blockLeft; }
+	inline double getBlockLeft() { return geometry.getBlockLeft(); }
 	void setBlockLeft(double side);
-	inline double getBlockRight() { return blockRight; }
+	inline double getBlockRight() { return geometry.getBlockRight(); }
 	void setBlockRight(double side);
 	inline double getStepFrequency() { return stepFrequency; }
 	void setStepFrequency(double hz);

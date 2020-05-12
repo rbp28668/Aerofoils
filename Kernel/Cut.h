@@ -48,9 +48,7 @@ class Cut
 
 	// Cutter parameters
 	double toolOffset;
-	double feedRate;
-	bool useFeedRate;
-
+	
 public:
 
 	typedef StructureList::iterator StructureIterator;
@@ -63,10 +61,6 @@ public:
 
 	inline double getToolOffset() const { return toolOffset; }
 	inline void setToolOffset(double offset) { toolOffset = offset; }
-	inline double getFeedRate() const { return feedRate; }
-	inline void setFeedRate(double rate) { feedRate = rate; }
-	inline bool isUseFeedRate() const { return useFeedRate; }
-	inline void setUseFeedRate(bool use) { useFeedRate = use; }
 
 	void cut(COutputDevice& pdev);
 

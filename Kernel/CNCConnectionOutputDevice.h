@@ -35,6 +35,7 @@ class CCNCConnectionOutputDevice : public GCodeOutputDevice
 {
 public:
 	CCNCConnectionOutputDevice(const char* address, unsigned int port);
+	CCNCConnectionOutputDevice(GCodeOutputDevice::GCodeConfig* pConfig, CutterGeometry* pGeometry, const char* address, unsigned int port);
 	virtual ~CCNCConnectionOutputDevice();
 
 	void send(const std::string& str);

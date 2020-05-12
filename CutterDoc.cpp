@@ -185,6 +185,9 @@ BOOL CutterDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		serializer.startReadSection("cutter", this);
 		grid.serializeFrom(serializer);
 		geometry.serializeFrom(serializer);
+		if (serializer.ifExists("GCodeConfig")) {
+			gcodeConfig.serializeFrom(serializer);
+		}
 		cut.serializeFrom(serializer);
 		serializer.endReadSection();
 	}
@@ -215,6 +218,7 @@ BOOL CutterDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		serializer.startSection("cutter", this);
 		grid.serializeTo(serializer);
 		geometry.serializeTo(serializer);
+		gcodeConfig.serializeTo(serializer);
 		cut.serializeTo(serializer);
 		serializer.endSection();
 	}
@@ -327,7 +331,7 @@ void CutterDoc::OnFileCncoutput()
 	{
 		try
 		{
-			CCNCConnectionOutputDevice dev(cncHost.c_str(), cncPort);
+			CCNCConnectionOutputDevice dev(&gcodeConfig, &geometry, cncHost.c_str(), cncPort);
 			cut.cut(dev);
 		}
 		catch (std::exception& e)
@@ -365,7 +369,7 @@ void CutterDoc::OnFileGcode()
 
 	if (dlg.DoModal() == IDOK)
 	{
-		GCodeOutputFile dev(LPCTSTR(dlg.GetPathName()));
+		GCodeOutputFile dev(&gcodeConfig, &geometry, (dlg.GetPathName()));
 		cut.cut(dev);
 	}
 }
@@ -384,13 +388,14 @@ void CutterDoc::OnCutterTooloffset()
 
 void CutterDoc::OnCutterFeedrate()
 {
-	FeedRateDialog dlg;
-	dlg.feedRate = cut.getFeedRate();
-	dlg.useFeedRate = cut.isUseFeedRate() ? TRUE : FALSE;
-	if (dlg.DoModal() == IDOK) {
-		cut.setFeedRate(dlg.feedRate);
-		cut.setUseFeedRate(dlg.useFeedRate == TRUE);
-	}
+	FeedRateDialog dlg(&gcodeConfig);
+	dlg.DoModal();
+	//dlg.feedRate = cut.getFeedRate();
+	//dlg.useFeedRate = cut.isUseFeedRate() ? TRUE : FALSE;
+	//if (dlg.DoModal() == IDOK) {
+	//	cut.setFeedRate(dlg.feedRate);
+	//	cut.setUseFeedRate(dlg.useFeedRate == TRUE);
+	//}
 }
 
 

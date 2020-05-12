@@ -28,11 +28,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 // output into the point plotter after every step.
 CutterSimulation::CutterSimulation(PointPlotter* plotter)
 	:pPlotter(plotter),
-	wl(0), // set default geometry so block full width
-	wr(1),
-	wl1(1),
-	wr1(0),
-	wd(1),
 	xStepsPerMM(4),  // assume roughly 100 DPI screen
 	yStepsPerMM(4)
 {
@@ -46,37 +41,18 @@ CutterSimulation::~CutterSimulation()
 {
 }
 
-void CutterSimulation::blockToAxes(Position<double>& pos)
-{
-	double x = pos.x;
-	double y = pos.y;
-	double u = pos.u;
-	double v = pos.v;
-
-	pos.x = (x*wr - u*wl) / wd;
-	pos.u = (u*wl1 - x*wr1) / wd;
-	pos.y = (y*wr - v*wl) / wd;
-	pos.v = (v*wl1 - y*wr1) / wd;
-
-}
 
 void CutterSimulation::setGeometry(const CutterGeometry & geometry)
 {
 	pPlotter->setCutterBounds(geometry.getXTravel(), geometry.getYTravel());
-
-	wl = geometry.getBlockLeft();
-	wr = geometry.getBlockRight();
-
-	wl1 = geometry.getWidth() - wl;
-	wr1 = geometry.getWidth() - wr;
-	wd = wr - wl;
+	this->geometry = geometry;
 }
 
 void CutterSimulation::stepTo(double x, double y, double u, double v)
 {
 	// Work out the position that the actual axes have to move to for a given position on the block.
 	Position<double> axes(x,y,u,v);
-	blockToAxes(axes);
+	geometry.blockToAxes(axes);
 
 	// axes now contains the coordinates of where we want the motors to actually end up.
 	// in practice, they'll get close as there's not infinite resolution.

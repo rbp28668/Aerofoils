@@ -20,8 +20,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "Kernel.h"
 #include "Position.h"
 #include "Steps.h"
+#include "CutterGeometry.h"
 
-class CutterGeometry;
 
 class PointPlotter {
 public:
@@ -36,7 +36,6 @@ public:
 	CutterSimulation(PointPlotter* plotter);
 	~CutterSimulation();
 
-	void blockToAxes(Position<double>& pos);
 	void setGeometry(const CutterGeometry& geometry);
 
 	void stepTo(double x, double y, double u, double v);
@@ -51,12 +50,7 @@ private:
 	// Current position of axes
 	Position<long long> axesPosition;
 	
-	// Derived values that describe block/cutter geometry
-	double wd, // width of block (wr - wl)
-		wl,  // left side of block measured from LHS of cutter
-		wr,  // right side of block measrured from LHS of cutter
-		wl1,  // left side of block measured from RHS of cutter
-		wr1;  // right side of block measured from RHS of cutter
+	CutterGeometry geometry;
 
 	Steps xSteps;
 	Steps ySteps;

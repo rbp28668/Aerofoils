@@ -151,13 +151,32 @@
 #define IDC_CHK_TOP_SURFACE             1094
 #define IDC_CHK_PLOT_CUTOUTS            1094
 #define IDC_CHK_CENTRE                  1095
+#define IDC_CHK_USE_G1_FOR_MOVES        1095
+#define IDC_CHK_SEND_WIRE_CODES         1096
+#define IDC_CHK_SEND_ENABLE_DISABLE     1097
+#define IDC_CHK_SEND_MIRROR             1098
 #define IDC_LST_CUTOUTS                 1099
+#define IDC_CHK_UNITS_PER_MIN           1099
 #define IDC_BTN_ADD_CUTOUT              1100
+#define IDC_CHK_SEND_WORKSHIFTS         1100
 #define IDC_BTN_EDIT_CUTOUT             1101
 #define IDC_BTN_DELETE_CUTOUT           1102
 #define IDC_EDT_YTRAVEL                 1103
 #define IDC_EDT_BLOCKLHS                1105
 #define IDC_EDT_BLOCKWIDTH              1106
+#define IDC_EDT_MOVE_FEED_RATE          1107
+#define IDC_EDT_LEFT_HORIZ              1108
+#define IDC_EDT_LEFT_VERT               1109
+#define IDC_EDT_RIGHT_HORIZ             1110
+#define IDC_EDT_RIGHT_VERT              1111
+#define IDC_EDT_WIRE_ON                 1112
+#define IDC_EDT_WIRE_OFF                1113
+#define IDC_EDT_ENABLE                  1114
+#define IDC_EDT_DISABLE                 1115
+#define IDC_BTN_DEFAULTS                1116
+#define IDC_BTN_MACH3                   1117
+#define IDC_CHECK2                      1118
+#define IDC_CHK_USE_GEOMETRY            1118
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -291,7 +310,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
 #define _APS_NEXT_COMMAND_VALUE         32898
-#define _APS_NEXT_CONTROL_VALUE         1107
+#define _APS_NEXT_CONTROL_VALUE         1119
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
