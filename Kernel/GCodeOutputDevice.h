@@ -19,6 +19,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <string>
 #include "OutputDevice.h"
+#include "Position.h"
+
+class CObjectSerializer;
+class CutterGeometry;
 
 // GCodeOutputDevice sends GCode to the output mechanism implemented
 // by send in a derived class.
@@ -27,7 +31,34 @@ class GCodeOutputDevice :
 	public COutputDevice
 {
 public:
+	struct GCodeConfig {
+		char axesNames[4];		// Default XYUV but may by XYAZ
+		bool useG1forMoves;		// If not linear G0 use G1 with fast feed rate.
+		double fastFeedRate;	// fast feed rate to use if useG1forMoves set
+		bool sendFeedRate;		// true if we want to
+		double cutFeedRate;		// feed rate to use for normal cutting
+		bool preCorrectGeometry; // use cutter geometry to pre-calculate actual paths of steppers
+
+		bool sendWireControls;	// M03, M05
+		bool sendEnableControls; // M17, M18
+		bool sendMirror;		// Mach3 doesn't know about G38/G39
+		bool sendWorkshifts;	// Mach3 treats G53/G54 differently.
+		bool useUnitsPerMin;	// rather than per sec.
+		std::string wireOn;
+		std::string wireOff;
+		std::string enableMotors;
+		std::string disableMotors;
+
+		GCodeConfig();
+		void setAxesNames(const char* names);
+		void setDefaults();  // set defaults for use with own cutter
+		void setMach3();     // set values to enable Mach3 compatible output.
+		void serializeTo(CObjectSerializer& os) const;
+		void serializeFrom(CObjectSerializer& os);
+	};
+
 	GCodeOutputDevice();
+	GCodeOutputDevice(GCodeOutputDevice::GCodeConfig* config, CutterGeometry* geometry);
 	virtual ~GCodeOutputDevice();
 
 	virtual void MoveTo(int iStream, const PointT& pt);
@@ -43,9 +74,10 @@ public:
 	virtual void startPlot();
 	virtual void endPlot();
 	virtual void passthrough(const char* data);
-	virtual void feedRate(float mmPerSec);
+	virtual void feedRate(double mmPerSec);
 
 protected:
+	void sendFeedRate(double mmPerSec);
 	void sendMove(const char* pszCommand);
 	virtual void send(const std::string& str) = 0;
 
@@ -58,6 +90,13 @@ private:
 
 	bool hasLeft;
 	bool hasRight;
+
+	bool fastFeedSet;
+	double currentFeedRate;
+
+	GCodeConfig defaultConfig;
+	GCodeConfig* config;
+	CutterGeometry* geometry;
 
 };
 

@@ -20,30 +20,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutterHardware.h"
 #include "CNCFoamCutter.h"
 
-void CNCFoamCutter::blockToAxes(Position<double>& pos)
-{
-	double x = pos.x;
-	double y = pos.y;
-	double u = pos.u;
-	double v = pos.v;
-
-	pos.x = (x*wr - u*wl) / wd;
-	pos.u = (u*wl1 - x*wr1) / wd;
-	pos.y = (y*wr - v*wl) / wd;
-	pos.v = (v*wl1 - y*wr1) / wd;
-
-}
-
-void CNCFoamCutter::updateBlockInfo()
-{
-	wl = blockLeft;
-	wr = blockRight;
-
-	wl1 = width - wl;
-	wr1 = width - wr;
-	wd = wr - wl;
-}
-
 void CNCFoamCutter::validate(int status)
 {
 	if (!CutterHardware::isValid(status)) {
@@ -58,23 +34,18 @@ void CNCFoamCutter::validate(int status)
 
 CNCFoamCutter::CNCFoamCutter(CutterHardware* ph)
 	: pHardware(ph),
-	width(1000.0),
 	xLead(2.0),
 	yLead(2.0),
 	xStepsPerRev(200),
 	yStepsPerRev(200),
 	xMicroStep(4),
 	yMicroStep(4),
-	blockLeft(0),
-	blockRight(1000.0),
 	stepFrequency(2500),
 	feedRate(2.0), // arbitrary 2mm per sec
 	feedRateError(false)
 {
 	assert(this);
 	assert(ph);
-
-	updateBlockInfo();
 }
 
 CNCFoamCutter::~CNCFoamCutter()
@@ -88,8 +59,7 @@ void CNCFoamCutter::setWidth(double width)
 	assert(this);
 	assert(!isnan(width));
 	assert(width > 0.0);
-	this->width = width;
-	updateBlockInfo();
+	geometry.setWidth(width);
 }
 
 void CNCFoamCutter::setXLead(double lead)
@@ -140,18 +110,18 @@ void CNCFoamCutter::setBlockLeft(double side)
 {
 	assert(this);
 	assert(!isnan(side));
-	assert(side >= 0.0 && side <= width);
-	assert(side < blockRight);
-	this->blockLeft = side;
+	assert(side >= 0.0 && side <= geometry.getWidth());
+	assert(side < geometry.getBlockRight());
+	geometry.setBlockLeft(side);
 }
 
 void CNCFoamCutter::setBlockRight(double side)
 {
 	assert(this);
 	assert(!isnan(side));
-	assert(side >= 0.0 && side <= width);
-	assert(side > blockLeft);
-	this->blockRight = side;
+	assert(side >= 0.0 && side <= geometry.getWidth());
+	assert(side > geometry.getBlockLeft());
+	geometry.setBlockRight(side);
 }
 
 void CNCFoamCutter::setStepFrequency(double hz)
@@ -186,7 +156,7 @@ void CNCFoamCutter::fastMove(const Position<double> & deltas)
 {
 	currentPosition.add(deltas);  // new current position;
 	Position<double> axes(currentPosition);
-	blockToAxes(axes);
+	geometry.blockToAxes(axes);
 
 	// axes now contains the coordinates of where we want the motors to actually end up.
 	// in practice, they'll get close as there's not infinite resolution.
@@ -220,7 +190,7 @@ void CNCFoamCutter::cutMove(const Position<double> & deltas)
 {
 	currentPosition.add(deltas);  // new current position;
 	Position<double> axes(currentPosition);
-	blockToAxes(axes);
+	geometry.blockToAxes(axes);
 
 	// axes now contains the coordinates of where we want the motors to actually end up.
 	// in practice, they'll get close as there's not infinite resolution.

@@ -28,6 +28,8 @@ class GCodeOutputFile :
 
 public:
 	GCodeOutputFile(const char* pszFile);
+	GCodeOutputFile(GCodeOutputDevice::GCodeConfig* pConfig, CutterGeometry* geometry, const char* pszFile);
+
 	virtual ~GCodeOutputFile();
 
 	virtual void send(const std::string& str);

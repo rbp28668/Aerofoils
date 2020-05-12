@@ -1,3 +1,4 @@
+#include "GCodeOutputFile.h"
 /* Aerofoil
 Aerofoil plotting and CNC cutter driver
 Copyright(C) 1995-2019 R Bruce Porteous
@@ -20,6 +21,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 GCodeOutputFile::GCodeOutputFile(const char * pszFile)
+{
+	os.open(pszFile);
+}
+
+GCodeOutputFile::GCodeOutputFile(GCodeOutputDevice::GCodeConfig* pConfig, CutterGeometry* geometry, const char* pszFile)
+  : GCodeOutputDevice(pConfig, geometry)
 {
 	os.open(pszFile);
 }

@@ -34,8 +34,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 Cut::Cut()
 	: toolOffset(0.5)
-	, feedRate(1.0)
-	, useFeedRate(false)
 {
 }
 
@@ -65,10 +63,6 @@ void Cut::cut(COutputDevice & pdev)
 {
 	try {
 		pdev.startPlot();
-
-		if (useFeedRate) {
-			pdev.feedRate((float)feedRate);
-		}
 
 		for (CutIterator iter = cut_structures.begin();
 			iter != cut_structures.end();
@@ -253,8 +247,7 @@ void Cut::serializeTo(CObjectSerializer & os) const
 {
 	os.startSection("cut", this);
 	os.write("toolOffset", toolOffset);
-	os.write("feedRate", feedRate);
-	os.write("useFeedRate", useFeedRate);
+	// Removed feed rate as now stored in GCodeConfig
 	os.startCollection("structures", (int)structures.size());
 	for (StructureConstIterator si = structures.begin();
 		si != structures.end();
@@ -280,6 +273,10 @@ void Cut::serializeTo(CObjectSerializer & os) const
 void Cut::serializeFrom(CObjectSerializer & os)
 {
 	assert(this);
+
+	// These are no longer stored in the cut
+	float feedRate;
+	bool useFeedRate;
 
 	os.startReadSection("cut", this);
 	os.read("toolOffset", toolOffset);

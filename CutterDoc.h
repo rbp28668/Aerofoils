@@ -19,8 +19,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <string>
 #include "BackgroundGrid.hpp"
-#include "Kernel\CutterGeometry.h"
-#include "kernel\cut.h"
+#include "Kernel/CutterGeometry.h"
+#include "Kernel/GCodeOutputDevice.h"
+#include "kernel/cut.h"
 
 // CutterDoc document
 // Main MFC document class to hold structure / cuts for driving CNC cutter as 
@@ -33,6 +34,7 @@ class CutterDoc : public CDocument
 	Cut cut;
 	CBackgroundGrid grid;
 	CutterGeometry geometry;
+	GCodeOutputDevice::GCodeConfig gcodeConfig;
 
 	std::string cncHost;
 	unsigned int cncPort;

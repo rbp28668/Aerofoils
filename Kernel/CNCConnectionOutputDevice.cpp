@@ -1,3 +1,4 @@
+#include "CNCConnectionOutputDevice.h"
 /* Aerofoil
 Aerofoil plotting and CNC cutter driver
 Copyright(C) 1995-2019 R Bruce Porteous
@@ -46,7 +47,13 @@ CCNCConnectionOutputDevice::CCNCConnectionOutputDevice(const char* address, unsi
 {
 	_isCNC = true;
 	link = new CNCSocket(address, port);
+}
 
+CCNCConnectionOutputDevice::CCNCConnectionOutputDevice(GCodeOutputDevice::GCodeConfig* pConfig, CutterGeometry* pGeometry, const char* address, unsigned int port)
+	: GCodeOutputDevice(pConfig, pGeometry)
+{
+	_isCNC = true;
+	link = new CNCSocket(address, port);
 }
 
 CCNCConnectionOutputDevice::~CCNCConnectionOutputDevice()
