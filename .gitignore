@@ -1,7 +1,6 @@
 # Gitignore file for generated object files etc.
 
 # Output files fromm build.
-*.exe
 *.obj
 *.res
 *.idb
@@ -11,7 +10,8 @@ Plots/*
 
 # Output folders
 **/ipch/*
-**/x64/*
+AEROFOIL/x64/*
+AEROFOIL/x86/*
 **/Debug/*
 **/Release/*
 
