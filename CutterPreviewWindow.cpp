@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include <assert.h>
 #include <string>
 #include <sstream>
 #include "Aerofoil.h"

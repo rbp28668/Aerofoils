@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include <assert.h>
 #include "Aerofoil.h"
 #include "CutterGeometryDialog.h"
 #include "afxdialogex.h"
