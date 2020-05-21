@@ -1,0 +1,50 @@
+BUGS
+
+Edit Wing dialog - Root and Tip edit buttons have inconsistent positions.
+
+Plot - moves are being drawn as lines
+
+Fix or remove new core in plot
+
+Edit Wing Flags dialog - plot section button misaligned.
+
+Not obvious that the select item is highlighted
+
+Doesn't make sense to have tranform for a G-Code snippet
+
+Sending commands when disconnected hangs Cutter.
+
+Possible to get into an odd mode where the serial data read from the cutter is being buffered after a comms failure.  i.e. send a command but receive the status from the previous command.
+
+
+Improvements
+
+Separate cut of top and bottom from either direction
+
+Create Plot from Cut and vice versa.
+
+Graphical output when Edit Wing dialog is open (add to dialog)  Also, remove root and tip dialogs and add their contents into Edit Wing.
+
+Plan view of cutter when width and block position defined
+
+Rotate tapered wing to make TE parallel to edge of block
+
+Have all the G-Code related stuff in Cutter menu rather than some in File menu.
+
+Adaptive step size in cutter for G-code output- start large and reduce step in U until error in x/y < 0.5*resolution.
+
+Add DXF import into plot
+
+Extend scope of DXF import
+
+Splash screen on Cutter
+
+Scripting
+
+Validate G-Code snippets on entry.
+
+Automatic lightening holes
+
+Proper G-Code editor
+
+
