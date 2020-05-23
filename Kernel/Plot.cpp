@@ -85,7 +85,7 @@ CPlot::~CPlot()
 
 }
 
-void CPlot::plot(COutputDevice& pdev)
+void CPlot::plot(COutputDevice& pdev, CPlotStructure* selected)
 {
 	pdev.startPlot();
 	for(PLOT_STRUCTURES::iterator iter = plot_structures.begin();
@@ -93,9 +93,9 @@ void CPlot::plot(COutputDevice& pdev)
 	++iter)
 	{
 		CPlotStructure* pps = *iter;
-		pdev.startObject(pps->getDescriptiveText().c_str());
+		pdev.startObject(pps->getDescriptiveText().c_str(), pps == selected);
 		pps->plot(&pdev);
-		pdev.endObject(pps->getDescriptiveText().c_str());
+		pdev.endObject(pps->getDescriptiveText().c_str(), pps == selected);
 	}
 	pdev.Flush();
 	pdev.endPlot();

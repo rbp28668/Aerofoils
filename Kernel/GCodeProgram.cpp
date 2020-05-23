@@ -31,6 +31,7 @@ GCodeProgram::GCodeProgram(GCodeInterpreter* pi) :
 	bPausable(false),
 	upstreamContext(0)
 {
+	currentLine = lines.end();
 }
 
 

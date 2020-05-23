@@ -73,8 +73,6 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_COMMAND(ID_WING_FLAGS, OnWingFlags)
 	ON_UPDATE_COMMAND_UI(ID_WING_FLAGS, OnUpdateWingFlags)
 	ON_COMMAND(ID_WING_NEW, OnWingNew)
-	ON_COMMAND(ID_WING_NEW_CORE, OnWingNewCore)
-	ON_UPDATE_COMMAND_UI(ID_WING_NEW_CORE, OnUpdateWingNewCore)
 	ON_COMMAND(ID_WING_NEW_SECTION, OnWingNewSection)
 	ON_UPDATE_COMMAND_UI(ID_WING_NEW_SECTION, OnUpdateWingNewSection)
 	ON_COMMAND(ID_WING_EDIT, OnWingEdit)
@@ -458,13 +456,6 @@ void CAerofoilDoc::OnWingNewSection()
 	}
 }
 
-void CAerofoilDoc::OnWingNewCore() 
-{
-	assert(this);
-	assert(currentWing != 0);	
-    // Now a NOP - TODO delete in due course.
-}
-
 ///////////////////////////////////////////////////////////////////////
 
 void CAerofoilDoc::OnWingFlags() 
@@ -481,14 +472,6 @@ void CAerofoilDoc::OnUpdateWingFlags(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(currentWing != 0);	
 }
-
-
-
-void CAerofoilDoc::OnUpdateWingNewCore(CCmdUI* pCmdUI) 
-{
-	pCmdUI->Enable(currentWing != 0);	
-}
-
 
 void CAerofoilDoc::OnUpdateWingNewSection(CCmdUI* pCmdUI) 
 {

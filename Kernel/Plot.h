@@ -53,7 +53,7 @@ public:
 	CPlot();
 	virtual ~CPlot();
 
-	void plot(COutputDevice& pdev);
+	void plot(COutputDevice& pdev, CPlotStructure* selected=0);
 
 	// Add structure
 	CWing* addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness);

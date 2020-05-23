@@ -37,7 +37,6 @@ public:
 	CWindowsOutputDevice(NumericT sizex, NumericT sizey, CDC* pdc, float zoom);
 	virtual ~CWindowsOutputDevice();
 
-	void setSelection(CPlotStructure* sel);
 	void setDrawMoves(bool drawMoves) { this->drawMoves = drawMoves; }
 
 	// COutputDevice
@@ -49,8 +48,8 @@ public:
 	virtual PointT position(int iStream);
 
 
-	virtual void startObject(CPlotStructure*);
-	virtual void endObject(CPlotStructure*);
+	virtual void startObject(const char* description, bool selected);
+	virtual void endObject(const char* description, bool selected);
 
 private:
 	CDC* plotDC;
@@ -59,9 +58,10 @@ private:
 	PointT last[2];	// last position for each stream
 	int lastStream;	// last stream that altered its position
 
-	CPlotStructure* selected;
 	CPen* penGrey;
 	CPen* penBlack;
+	CPen* penOriginal;
+
 	bool drawMoves;
 
 };

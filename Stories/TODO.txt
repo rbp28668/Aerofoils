@@ -1,18 +1,18 @@
 BUGS
 
-Edit Wing dialog - Root and Tip edit buttons have inconsistent positions.
+Edit Wing dialog - Root and Tip edit buttons have inconsistent positions. FIXED
 
-Plot - moves are being drawn as lines
+Plot - moves are being drawn as lines  FIXED.
 
-Fix or remove new core in plot
+Fix or remove new core in plot FIXED (removed, now redundant)
 
-Edit Wing Flags dialog - plot section button misaligned.
+Edit Wing Flags dialog - plot section button misaligned. FIXED
 
-Not obvious that the select item is highlighted
+Not obvious that the select item is highlighted FIXED
 
-Doesn't make sense to have tranform for a G-Code snippet
+Doesn't make sense to have transform for a G-Code snippet FIXED
 
-Sending commands when disconnected hangs Cutter.
+Sending commands when disconnected hangs Cutter. FIXED, now produces an error message.
 
 Possible to get into an odd mode where the serial data read from the cutter is being buffered after a comms failure.  i.e. send a command but receive the status from the previous command.
 
