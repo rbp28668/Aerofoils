@@ -137,14 +137,8 @@ void CAerofoilView::OnDraw(CDC* pDC)
 	// Draw main plot.
 	CWindowsOutputDevice output(pDoc->sizeX(), pDoc->sizeY(), pDC, zoom);
 	output.setDrawMoves(false);
-	if(!isPrinting)
-	{
-		CPlotStructure* selected = pDoc->getSelection();
-		if(selected)
-			output.setSelection(selected);
-	}
-
-	pDoc->getPlot().plot(output);
+	CPlotStructure* selected = ( isPrinting) ? 0 : pDoc->getSelection();
+	pDoc->getPlot().plot(output, selected);
 
 }
 

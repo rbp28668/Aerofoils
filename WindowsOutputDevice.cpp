@@ -36,29 +36,20 @@ static char THIS_FILE[]=__FILE__;
 CWindowsOutputDevice::CWindowsOutputDevice(NumericT sx, NumericT sy, CDC* pdc, float zoom)
 : map(sx, sy, pdc, zoom)
 , plotDC(pdc)
-, selected(0)
 , penBlack(0)
 , penGrey(0)
 {
 	penGrey = new CPen(PS_SOLID, 0, RGB(128, 128, 128));
 	penBlack = new CPen(PS_SOLID, 0, RGB(0,0,0));
+	penOriginal = pdc->SelectObject(penBlack);
 }
 
 CWindowsOutputDevice::~CWindowsOutputDevice()
 {
+	plotDC->SelectObject(penOriginal);
 	delete penBlack;
 	delete penGrey;
 }
-
-void CWindowsOutputDevice::setSelection(CPlotStructure* sel)
-{
-	selected = sel;
-	if(sel)
-	{
-		//penBlack = plotDC->SelectObject(penGrey);
-	}
-}
-
 
 void CWindowsOutputDevice::MoveTo(int iStream, const PointT& pt)
 {
@@ -134,17 +125,17 @@ PointT CWindowsOutputDevice::position(int iStream)
 }
 
 
-void CWindowsOutputDevice::startObject(CPlotStructure* ps)
+void CWindowsOutputDevice::startObject(const char* description, bool selected)
 {
-	if(ps == selected)
+	if(selected)
 	{
-		penBlack = plotDC->SelectObject(penGrey);
+		plotDC->SelectObject(penGrey);
 	}
 }
 
-void CWindowsOutputDevice::endObject(CPlotStructure* ps)
+void CWindowsOutputDevice::endObject(const char* description, bool selected)
 {
-	if(ps == selected)
+	if(selected)
 	{
 		plotDC->SelectObject(penBlack);
 	}

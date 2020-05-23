@@ -1,12 +1,12 @@
 BUGS
 
-Edit Wing dialog - Root and Tip edit buttons have inconsistent positions.
+Edit Wing dialog - Root and Tip edit buttons have inconsistent positions. FIXED
 
-Plot - moves are being drawn as lines
+Plot - moves are being drawn as lines  FIXED.
 
-Fix or remove new core in plot
+Fix or remove new core in plot FIXED
 
-Edit Wing Flags dialog - plot section button misaligned.
+Edit Wing Flags dialog - plot section button misaligned. FIXED
 
 Not obvious that the select item is highlighted
 

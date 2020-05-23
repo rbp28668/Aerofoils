@@ -60,8 +60,8 @@ public:
 	virtual void Flush() = 0;
 
 	// These are optional but can provide hints to the output device.
-	virtual void startObject(const char* description) {}
-	virtual void endObject(const char* description) {}
+	virtual void startObject(const char* description, bool selected = false) {}
+	virtual void endObject(const char* description, bool selected = false) {}
 	virtual void startPlot() {}
 	virtual void endPlot() {}
 	virtual void passthrough(const char* data) {}
