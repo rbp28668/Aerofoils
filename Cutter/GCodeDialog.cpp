@@ -394,10 +394,13 @@ void CGCodeDialog::OnBnClickedBtnRun()
 			LONG lIdle = 0;
 			while (AfxGetApp()->OnIdle(lIdle++))
 				;
-		
-			// Step program - stop if paused or complete
-			pProgram->step();
+
+			if (pProgram->isRunning()) {
+				pProgram->step();
+			}
+
 			bDoingBackgroundProcessing = !(pProgram->isComplete() || pProgram->isPaused());
+
 		}
 	}
 	catch (std::exception& e) {
@@ -450,6 +453,11 @@ void CGCodeDialog::OnBnClickedBtnClear()
 
 void CGCodeDialog::OnBnClickedBtnLoad()
 {
+	if (pProgram->isRunning()) {
+		AfxMessageBox("Existing program is running", MB_OK | MB_ICONHAND);
+		return;
+	}
+
 	CFileDialog dlg(true
 		, ".gcode"
 		, 0
