@@ -87,7 +87,6 @@ BEGIN
     BEGIN
         MENUITEM "&New",                        ID_WING_NEW
         MENUITEM "New &Section",                ID_WING_NEW_SECTION
-        MENUITEM "New &Core",                   ID_WING_NEW_CORE
         MENUITEM "E&dit",                       ID_WING_EDIT
         MENUITEM "&Flags",                      ID_WING_FLAGS
     END

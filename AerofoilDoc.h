@@ -114,8 +114,6 @@ protected:
 	afx_msg void OnWingFlags();
 	afx_msg void OnUpdateWingFlags(CCmdUI* pCmdUI);
 	afx_msg void OnWingNew();
-	afx_msg void OnWingNewCore();
-	afx_msg void OnUpdateWingNewCore(CCmdUI* pCmdUI);
 	afx_msg void OnWingNewSection();
 	afx_msg void OnUpdateWingNewSection(CCmdUI* pCmdUI);
 	afx_msg void OnWingEdit();
