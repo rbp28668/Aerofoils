@@ -124,9 +124,12 @@ END_MESSAGE_MAP()
 void CHardwareDialog::OnBnClickedBtnHome()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try{
 			int stat = pCutter->home();
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -135,9 +138,12 @@ void CHardwareDialog::OnBnClickedBtnHome()
 void CHardwareDialog::OnBnClickedBtnAbort()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->abort();
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -146,9 +152,12 @@ void CHardwareDialog::OnBnClickedBtnAbort()
 void CHardwareDialog::OnBnClickedBtnStatus()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->ping();
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -158,9 +167,12 @@ void CHardwareDialog::OnBnClickedBtnLine()
 {
 	if (pCutter != 0) {
 		if (UpdateData() == TRUE) {
-			if (pCutter->isConnected()) {
+			try {
 				int stat = pCutter->line(totalSteps, lxSteps, lySteps, rxSteps, rySteps);
 				showStatus(stat);
+			}
+			catch (HardwareException& e) {
+				AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 			}
 		}
 	}
@@ -188,9 +200,12 @@ void CHardwareDialog::OnBnClickedBtnStep()
 		pulse <<= 1;
 		if (ryStepPulse.GetCheck() == BST_CHECKED) pulse |= 1;
 
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->step(direction, pulse);
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -199,9 +214,12 @@ void CHardwareDialog::OnBnClickedBtnStep()
 void CHardwareDialog::OnBnClickedBtnWireon()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->wireOn();
 			showStatus(stat);
+		}
+		catch (const HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -210,9 +228,12 @@ void CHardwareDialog::OnBnClickedBtnWireon()
 void CHardwareDialog::OnBnClickedBtnWireoff()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->wireOff();
 			showStatus(stat);
+		}
+		catch (const HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -221,9 +242,12 @@ void CHardwareDialog::OnBnClickedBtnWireoff()
 void CHardwareDialog::OnBnClickedBtnEnable()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->enable();
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -232,9 +256,12 @@ void CHardwareDialog::OnBnClickedBtnEnable()
 void CHardwareDialog::OnBnClickedBtnDisable()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->disable();
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -242,9 +269,12 @@ void CHardwareDialog::OnBnClickedBtnDisable()
 void CHardwareDialog::OnBnClickedBtnAbortNow()
 {
 	if (pCutter != 0) {
-		if (pCutter->isConnected()) {
+		try {
 			int stat = pCutter->abortNow();
 			showStatus(stat);
+		}
+		catch (HardwareException& e) {
+			AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
 		}
 	}
 }

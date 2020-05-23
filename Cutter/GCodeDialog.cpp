@@ -349,11 +349,16 @@ END_MESSAGE_MAP()
 
 void CGCodeDialog::OnBnClickedButtonSend()
 {
-	CString text;
-	commandLine.GetWindowTextA(text);
-	std::string line(text.GetString());
-	pInterpreter->process(line);
-	showData();
+	try {
+		CString text;
+		commandLine.GetWindowTextA(text);
+		std::string line(text.GetString());
+		pInterpreter->process(line);
+		showData();
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 }
 
 
@@ -370,27 +375,35 @@ void CGCodeDialog::OnBnClickedBtnRun()
 		pProgram->start();
 		updateButtons();
 	}
+
+
 	pProgram->unpause();
 
-	BOOL bDoingBackgroundProcessing = TRUE;
-	while (bDoingBackgroundProcessing)	{
-		MSG msg;
-		while (::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
-			if (!AfxGetApp()->PumpMessage()){
-				bDoingBackgroundProcessing = FALSE;
-				::PostQuitMessage(0);
-				break;
+	try {
+		BOOL bDoingBackgroundProcessing = TRUE;
+		while (bDoingBackgroundProcessing)	{
+			MSG msg;
+			while (::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
+				if (!AfxGetApp()->PumpMessage()){
+					bDoingBackgroundProcessing = FALSE;
+					::PostQuitMessage(0);
+					break;
+				}
 			}
-		}
-		// let MFC do its idle processing
-		LONG lIdle = 0;
-		while (AfxGetApp()->OnIdle(lIdle++))
-			;
+			// let MFC do its idle processing
+			LONG lIdle = 0;
+			while (AfxGetApp()->OnIdle(lIdle++))
+				;
 		
-		// Step program - stop if paused or complete
-		pProgram->step();
-		bDoingBackgroundProcessing = !(pProgram->isComplete() || pProgram->isPaused());
+			// Step program - stop if paused or complete
+			pProgram->step();
+			bDoingBackgroundProcessing = !(pProgram->isComplete() || pProgram->isPaused());
+		}
 	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
+
 	updateButtons();
 }
 
@@ -406,9 +419,15 @@ void CGCodeDialog::OnBnClickedBtnStart()
 
 void CGCodeDialog::OnBnClickedBtnStep()
 {
-	if (!pProgram->isComplete()) {
-		pProgram->step();
+	try{
+		if (!pProgram->isComplete()) {
+			pProgram->step();
+		}
 	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
+
 	updateButtons();
 }
 
@@ -489,98 +508,168 @@ BOOL CGCodeDialog::OnInitDialog()
 
 void CGCodeDialog::OnBnClickedBtnHome()
 {
-	pInterpreter->process("G28");
+	try {
+		pInterpreter->process("G28");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnWireOn()
 {
-	pInterpreter->process("M03");
+	try {
+		pInterpreter->process("M03");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnWireOff()
 {
-	pInterpreter->process("M05");
+	try{
+		pInterpreter->process("M05");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnMotorsOn()
 {
-	pInterpreter->process("M17");
+	try {
+		pInterpreter->process("M17");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnMotorsOff()
 {
-	pInterpreter->process("M18");
+	try {
+		pInterpreter->process("M18");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnAbsolute()
 {
-	pInterpreter->process("G90");
+	try {
+		pInterpreter->process("G90");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnRelative()
 {
-	pInterpreter->process("G91");
+	try {
+		pInterpreter->process("G91");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnMirror()
 {
-	pInterpreter->process("G38");
+	try {
+		pInterpreter->process("G38");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnNormal()
 {
-	pInterpreter->process("G39");
+	try { 
+		pInterpreter->process("G39");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnStop()
 {
-	pProgram->reset(); // stop execution of program so don't send more commands
-	pCutter->stop();
-	pCutter->wireOff();
-	pCutter->disableMotors();
+	try {
+		pProgram->reset(); // stop execution of program so don't send more commands
+		pCutter->stop();
+		pCutter->wireOff();
+		pCutter->disableMotors();
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
 
 void CGCodeDialog::OnBnClickedBtnMove()
 {
-	sendAxisCommand("G00");
+	try {
+		sendAxisCommand("G00");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 }
 
 
 void CGCodeDialog::OnBnClickedBtnCut()
 {
-	sendAxisCommand("G01");
+	try { 
+		sendAxisCommand("G01");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 }
 
 
 void CGCodeDialog::OnBnClickedBtnOffset()
 {
-	sendAxisCommand("G52");
+	try {
+		sendAxisCommand("G52");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 }
 
 
 void CGCodeDialog::OnBnClickedBtnClearOffset()
 {
-	pInterpreter->process("G53");
+	try { 
+		pInterpreter->process("G53");
+	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
 	showData();
 }
 
@@ -594,11 +683,17 @@ void CGCodeDialog::runProgramButton(int buttonIndex)
 
 	// Rather than using a proper GCodeProgram we just push the lines to the interpreter
 	// one at a time.
-	std::istringstream is(code);
-	std::string line;
-	while (std::getline(is, line)) {
-		pInterpreter->process(line);
+	try {
+		std::istringstream is(code);
+		std::string line;
+		while (std::getline(is, line)) {
+			pInterpreter->process(line);
+		}
 	}
+	catch (std::exception& e) {
+		AfxMessageBox(e.what(), MB_OK | MB_ICONERROR);
+	}
+
 }
 
 void CGCodeDialog::OnBnClickedBtnProg1()

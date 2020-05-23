@@ -12,7 +12,7 @@ Not obvious that the select item is highlighted FIXED
 
 Doesn't make sense to have transform for a G-Code snippet FIXED
 
-Sending commands when disconnected hangs Cutter.
+Sending commands when disconnected hangs Cutter. FIXED, now produces an error message.
 
 Possible to get into an odd mode where the serial data read from the cutter is being buffered after a comms failure.  i.e. send a command but receive the status from the previous command.
 

@@ -36,7 +36,6 @@ int CutterHardware::processResponse()
 	std::string response;
 	serialLink.getReadData(response);
 	
-
 	// This is the code on the device that sends the response
 	//outputBuffer[0] = ok ? 'Y' : 'N';
 	//outputBuffer[1] = commandQueue.isFull() ? 'F' : '-';
@@ -86,17 +85,22 @@ int CutterHardware::processResponse()
 int CutterHardware::send(const std::string& msg)
 {
 	assert(this);
+
 #ifdef OUTPUT_TO_FILE
 	ofs << msg << std::endl;
 #else
+	if (!isConnected()) {
+		return 0; // without valid bit set
+	}
+
 	serialLink.send(msg);
 	::Sleep(10); // not needed;
 #endif
 
 
-	std::ostringstream os;
+	/*std::ostringstream os;
 	os << "Command: " << msg << std::endl;
-	::OutputDebugString(os.str().c_str());
+	::OutputDebugString(os.str().c_str());*/
 
 	return processResponse();
 }
@@ -160,8 +164,7 @@ boolean CutterHardware::isConnected()
 int CutterHardware::ping()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("P");
 	return send(msg); // valid at any time
 }
@@ -169,8 +172,7 @@ int CutterHardware::ping()
 int CutterHardware::disable()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("D");
 	return queueCommand(msg);
 }
@@ -178,8 +180,7 @@ int CutterHardware::disable()
 int CutterHardware::enable()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("E");
 	return queueCommand(msg);
 }
@@ -187,8 +188,7 @@ int CutterHardware::enable()
 int CutterHardware::abort()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("Z");
 	return queueCommand(msg);
 }
@@ -196,8 +196,7 @@ int CutterHardware::abort()
 int CutterHardware::abortNow()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("A");
 	return send(msg); // valid at any time
 }
@@ -205,8 +204,7 @@ int CutterHardware::abortNow()
 int CutterHardware::home()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("H");
 	return queueCommand(msg);
 }
@@ -214,12 +212,13 @@ int CutterHardware::home()
 int CutterHardware::line(AxisT steps, AxisT lx, AxisT ly, AxisT rx, AxisT ry)
 {
 	assert(this);
-	assert(serialLink.isConnected());
 
 	assert(abs(lx) <= steps);
 	assert(abs(ly) <= steps);
 	assert(abs(rx) <= steps);
 	assert(abs(ry) <= steps);
+
+	if (!serialLink.isConnected()) throw NotConnectedException();
 
 	std::stringstream out;
 	out << "L";
@@ -235,9 +234,10 @@ int CutterHardware::line(AxisT steps, AxisT lx, AxisT ly, AxisT rx, AxisT ry)
 int CutterHardware::step(int direction, int pulse)
 {
 	assert(this);
-	assert(serialLink.isConnected());
 	assert(0 <= direction && direction <= 0x0F);
 	assert(0 <= pulse && pulse <= 0x0F);
+
+	if (!serialLink.isConnected()) throw NotConnectedException();
 
 	int data = ((direction & 0x0F) << 4) | (pulse & 0x0F);
 
@@ -251,8 +251,7 @@ int CutterHardware::step(int direction, int pulse)
 int CutterHardware::wireOn()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("W");
 	return queueCommand(msg);
 }
@@ -260,8 +259,7 @@ int CutterHardware::wireOn()
 int CutterHardware::wireOff()
 {
 	assert(this);
-	assert(serialLink.isConnected());
-
+	if (!serialLink.isConnected()) throw NotConnectedException();
 	std::string msg("X");
 	return queueCommand(msg);
 }

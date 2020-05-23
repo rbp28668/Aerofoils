@@ -19,6 +19,20 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "SerialLink.h"
 #include <string>
 #include <fstream>
+#include <exception>
+
+
+class HardwareException : public std::exception
+{
+public:
+	virtual const char* what() const throw() { return "Hardware exception";	}
+};
+
+class NotConnectedException : public HardwareException
+{
+public:
+	virtual const char* what() const throw() { return "Cutter is not connected"; }
+};
 
 // #define OUTPUT_TO_FILE 1
 class CutterHardware {
