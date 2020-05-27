@@ -21,6 +21,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <map>
 #include <string>
+#include "Kernel/Cutpath.h"
 
 class CutterDoc;
 class CStructure;
@@ -150,6 +151,13 @@ public:
 	afx_msg void OnWingPlotflags();
 	afx_msg void OnPointcutMakecut();
 	afx_msg void OnPointcutMakemove();
+	afx_msg void OnWingCutTypeNormal();
+	afx_msg void OnWingCutTypeReverse();
+	afx_msg void OnWingCutTypeTopLeToTe();
+	afx_msg void OnWingCutTypeTopTeToLe();
+	afx_msg void OnWingCutTypeBottomLeToTe();
+	afx_msg void OnWingCutTypeBottomTeToLe();
+	void setWingCutMode(CPathCutter::Mode mode);
 };
 
 

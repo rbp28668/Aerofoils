@@ -48,6 +48,7 @@ public:
 	// parametric curve
 	PointT Point(NumericT u) const;
 	PointT Point(NumericT u, PointT& tangent) const;
+	PointT PointAtSkin(NumericT u, NumericT skin) const;
 	NumericT FirstX(NumericT req_x, NumericT start, int dirn) const;
 
 	void modifyThickness(NumericT tm);

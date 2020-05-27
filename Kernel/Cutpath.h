@@ -35,6 +35,17 @@ class CSpar;
 
 class CPathCutter  : public CutStructure, private CPlotCommonImpl
 {
+public:
+	enum Mode {
+		NORMAL,
+		REVERSE,
+		TOP_FROM_TE,
+		TOP_FROM_LE,
+		BOTTOM_FROM_TE,
+		BOTTOM_FROM_LE
+	};
+
+private:
 	// Frame sets the cutting parameters during a cut.
 	class Frame
 	{
@@ -50,17 +61,24 @@ class CPathCutter  : public CutStructure, private CPlotCommonImpl
 		NumericT tipForward() const { return tuf; }
 		NumericT rootFinish() const { return ru1; }
 		NumericT tipFinish() const { return tu1; }
+		NumericT toTip(NumericT ru) const;
 	};
 
 	// A position during the cut where the cutter should stop cutting the profile and do something different.
 	class Intercept
 	{
+		bool skip;		// if true skip segments between this intercept and the next one with this flag set
+						// Works irrespective of cutting direction or partial cuts.
+
 		NumericT ru;             /* root U for this intercept */
 		NumericT tu;             /* tip .... */
 	public:
 		Intercept(NumericT root_u, NumericT tip_u);
 		NumericT rootPosition() const { return ru; }
 		NumericT tipPosition() const { return tu; }
+
+		bool skipSegment() const { return skip; }		// Go straight on to next intercept with this flag set
+		void setSkip(bool skip) { this->skip = skip; }
 
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame) = 0;
 	};
@@ -77,6 +95,8 @@ class CPathCutter  : public CutStructure, private CPlotCommonImpl
 		void add(Intercept* intercept);
 		std::list<Intercept*>::const_iterator begin();
 		std::list<Intercept*>::const_iterator end();
+		std::list<Intercept*>::const_reverse_iterator rbegin();
+		std::list<Intercept*>::const_reverse_iterator rend();
 	};
 
 
@@ -84,13 +104,20 @@ class CPathCutter  : public CutStructure, private CPlotCommonImpl
 	bool blToolOffsetSet;
 	CPlotFlags plot_flags;
 	const CWing* pWing;
+	Mode mode;
 
 	void find_forward_PointT(const CAerofoil& foil, NumericT* u);
-	void plot_segment(COutputDevice* pdev, const CWing& wing, Intercept* start, Intercept* finish, NumericT delta);
-	void set_le_intercept(Intercepts& intercepts, Frame* frame);
-	void set_te_intercept(Intercepts& intercepts, Frame* frame);
-	void set_spars_intercept(Intercepts& intercepts, Frame* frame);
-	void set_cutouts_intercept(Intercepts& intercepts, Frame* frame);
+	void plot_segment(COutputDevice* pdev, Intercept* start, Intercept* finish, NumericT delta);
+	void plot_segment_reverse(COutputDevice* pdev,  Intercept* start, Intercept* finish, NumericT delta);
+	void toPoint(NumericT ru, COutputDevice* pdev,  Intercept* start, Intercept* finish, NumericT r_skin, NumericT t_skin);
+	void calc_skin(NumericT& r_skin, NumericT& t_skin) const;
+	void set_le_intercept(Intercepts& intercepts, const Frame* frame);
+	void set_te_intercept(Intercepts& intercepts, const Frame* frame);
+	void set_spars_intercept(Intercepts& intercepts, const Frame* frame);
+	void set_cutouts_intercept(Intercepts& intercepts, const Frame* frame);
+
+	void createFrame(Frame& frame);
+	void createIntercepts(Intercepts& intercepts, const Frame& frame);
 
 public:
 
@@ -101,6 +128,9 @@ public:
 
 	NumericT set_tool_offset(NumericT fNewOffset);
 	NumericT get_tool_offset(void);
+
+	Mode get_mode() const { return mode; }
+	void set_mode(Mode mode) { this->mode = mode; }
 
 	const CWing* wing() const { return pWing; }
 
@@ -124,8 +154,9 @@ private:
 
 	// Cut the leading edge at this position
 	class LeadingEdgeIntercept : public Intercept {
+		bool topSurface;
 	public:
-		LeadingEdgeIntercept(NumericT ru, NumericT tu);
+		LeadingEdgeIntercept(NumericT ru, NumericT tu, bool topSurface);
 		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
 	};
 

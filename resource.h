@@ -302,6 +302,13 @@
 #define ID_SPEED_FULL                   32895
 #define ID_BUTTON32896                  32896
 #define ID_CUTTER_CUTTERGEOMETRY        32897
+#define ID_WINGCUT_TYPE                 32898
+#define ID_TYPE_NORMAL                  32899
+#define ID_TYPE_REVERSE                 32900
+#define ID_TYPE_TOPLEADINGTOTRAILINGEDGE 32901
+#define ID_TYPE_TOPTRAILINGTOLEADINGEDGE 32902
+#define ID_TYPE_BOTTOMLEADINGTOTRAILINGEDGE 32903
+#define ID_TYPE_BOTTOMTRAILINGTOLEADINGEDGE 32904
 
 // Next default values for new objects
 // 
@@ -309,7 +316,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
-#define _APS_NEXT_COMMAND_VALUE         32898
+#define _APS_NEXT_COMMAND_VALUE         32905
 #define _APS_NEXT_CONTROL_VALUE         1119
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
