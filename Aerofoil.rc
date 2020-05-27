@@ -209,6 +209,15 @@ BEGIN
     POPUP "Wing Cut"
     BEGIN
         MENUITEM "Transform",                   ID_CUT_TRANSFORM
+        POPUP "Type"
+        BEGIN
+            MENUITEM "Normal",                      ID_TYPE_NORMAL
+            MENUITEM "Reverse",                     ID_TYPE_REVERSE
+            MENUITEM "Top leading to trailing edge", ID_TYPE_TOPLEADINGTOTRAILINGEDGE
+            MENUITEM "Top trailing to leading edge", ID_TYPE_TOPTRAILINGTOLEADINGEDGE
+            MENUITEM "Bottom leading to trailing edge", ID_TYPE_BOTTOMLEADINGTOTRAILINGEDGE
+            MENUITEM "Bottom trailing to leading edge", ID_TYPE_BOTTOMTRAILINGTOLEADINGEDGE
+        END
         MENUITEM "Move Up",                     ID_CUT_MOVEUP
         MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
         MENUITEM "Delete",                      ID_WINGCUT_D

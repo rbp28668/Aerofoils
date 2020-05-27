@@ -165,8 +165,6 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-public:
 };
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
@@ -258,8 +256,3 @@ BOOL CAerofoilApp::PreTranslateMessage(MSG* pMsg)
 
 	return CWinApp::PreTranslateMessage(pMsg);
 }
-
-
-
-
-

@@ -304,6 +304,12 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_POINT_NEWMOVE, &CutterTreeView::OnPointNewmove)
 	ON_COMMAND(ID_POINTCUT_MAKECUT, &CutterTreeView::OnPointcutMakecut)
 	ON_COMMAND(ID_POINTCUT_MAKEMOVE, &CutterTreeView::OnPointcutMakemove)
+	ON_COMMAND(ID_TYPE_NORMAL, &CutterTreeView::OnWingCutTypeNormal)
+	ON_COMMAND(ID_TYPE_REVERSE, &CutterTreeView::OnWingCutTypeReverse)
+	ON_COMMAND(ID_TYPE_TOPLEADINGTOTRAILINGEDGE, &CutterTreeView::OnWingCutTypeTopLeToTe)
+	ON_COMMAND(ID_TYPE_TOPTRAILINGTOLEADINGEDGE, &CutterTreeView::OnWingCutTypeTopTeToLe)
+	ON_COMMAND(ID_TYPE_BOTTOMLEADINGTOTRAILINGEDGE, &CutterTreeView::OnWingCutTypeBottomLeToTe)
+	ON_COMMAND(ID_TYPE_BOTTOMTRAILINGTOLEADINGEDGE, &CutterTreeView::OnWingCutTypeBottomTeToLe)
 END_MESSAGE_MAP()
 
 
@@ -764,3 +770,51 @@ void CutterTreeView::OnCutMovedown()
 
 
 
+
+
+void CutterTreeView::OnWingCutTypeNormal()
+{
+	setWingCutMode(CPathCutter::Mode::NORMAL);
+}
+
+
+void CutterTreeView::OnWingCutTypeReverse()
+{
+	setWingCutMode(CPathCutter::Mode::REVERSE);
+}
+
+
+void CutterTreeView::OnWingCutTypeTopLeToTe()
+{
+	setWingCutMode(CPathCutter::Mode::TOP_FROM_LE);
+}
+
+
+void CutterTreeView::OnWingCutTypeTopTeToLe()
+{
+	setWingCutMode(CPathCutter::Mode::TOP_FROM_TE);
+}
+
+
+void CutterTreeView::OnWingCutTypeBottomLeToTe()
+{
+	setWingCutMode(CPathCutter::Mode::BOTTOM_FROM_LE);
+}
+
+
+void CutterTreeView::OnWingCutTypeBottomTeToLe()
+{
+	setWingCutMode(CPathCutter::Mode::BOTTOM_FROM_TE);
+}
+
+void CutterTreeView::setWingCutMode(CPathCutter::Mode mode) {
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		CPathCutter* pcut = static_cast<CPathCutter*>(node->pItem);
+		pcut->set_mode(mode);
+		GetTreeCtrl().SetItemText(item, pcut->getDescriptiveText().c_str());
+		GetDocument()->RedrawNow();
+	}
+}

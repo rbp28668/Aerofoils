@@ -209,17 +209,33 @@ void CAerofoil::read(const char *path)
 
 
 
+// Gets a point on the aerofoil for the given parameter u (0 <= u <= 1)
 PointT CAerofoil::Point(NumericT u) const
 {
 	assert(this);
 	return spline->Point(u);
 }
 
+// Gets a point on the aerofoil for the given parameter u (0 <= u <= 1) and
+// also returns the tangent in the direction of increasing u at that point.
 PointT CAerofoil::Point(NumericT u, PointT& tangent) const
 {
 	assert(this);
 	return spline->Point(u,tangent);
 }
+
+// Convenience method as frequently we want to allow for skin thickness
+// so that we want to move in in the normal direction a given amount.
+PointT CAerofoil::PointAtSkin(NumericT u, NumericT skin) const
+{
+	assert(this);
+	PointT tangent;
+	PointT p = spline->Point(u, tangent);
+	p.fx -= skin * tangent.fy;
+	p.fy += skin * tangent.fx;
+	return p;
+}
+
 
 NumericT CAerofoil::FirstX(NumericT req_x, NumericT start, int dirn) const
 {
