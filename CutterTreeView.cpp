@@ -375,9 +375,14 @@ void CutterTreeView::OnStructureNewwing()
 		"Aerofoil Files (.DAT)|*.DAT||"
 	);
 
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select Root Section";
+
 	if (dlg.DoModal() == IDOK)
 	{
 		CString rootName = dlg.GetPathName();
+		ofn.lpstrTitle = "Select Tip Section";
+
 		if (dlg.DoModal() == IDOK)
 		{
 			CString tipName = dlg.GetPathName();
@@ -429,6 +434,9 @@ void CutterTreeView::OnStructureNewdxf()
 		OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
 		"DXF CAD File (.DXF)|*.DXF||"
 	);
+
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select DXF File";
 
 	if (dlg.DoModal() == IDOK)
 	{

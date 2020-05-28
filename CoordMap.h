@@ -34,7 +34,11 @@ class RectT;
 class CCoordMap  
 {
 public:
+	// Use this one when you want an accurately scaled output.
 	CCoordMap(NumericT sizex, NumericT sizey, CDC* pdc, NumericT zoom);
+
+	// Use this one when you want to map from a given set of logical bounds to a given physical windows display rect
+	CCoordMap(const RectT& logical, const RECT& physical);
 	virtual ~CCoordMap();
 
 	POINT toDevice(const PointT& pt);

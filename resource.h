@@ -63,7 +63,9 @@
 #define IDC_EDT_THICKNESS_MOD           1018
 #define IDC_CHK_PLOT_LE                 1018
 #define IDC_CHK_PLOT_TE                 1019
+#define IDC_LBL_TIP_SECTION_NAME        1019
 #define IDC_CHK_PLOT_MARKERS            1020
+#define IDC_LBL_ROOT_SECTION_NAME       1020
 #define IDC_CHK_PLOT_SECTION            1021
 #define IDC_CHK_PLOT_SKIN               1022
 #define IDC_CHK_PLOT_SPARS              1023
@@ -177,6 +179,18 @@
 #define IDC_BTN_MACH3                   1117
 #define IDC_CHECK2                      1118
 #define IDC_CHK_USE_GEOMETRY            1118
+#define IDC_CMD_TIP_SECTION_NAME        1119
+#define IDC_TIP_DISPLAY                 1120
+#define IDC_EDT_TIP_CHORD               1121
+#define IDC_EDT_TIP_SWEEP               1122
+#define IDC_EDT_TIP_WASHOUT             1123
+#define IDC_EDT_TIP_THICKNESS_MOD       1124
+#define IDC_EDT_ROOT_CHORD              1125
+#define IDC_EDT_ROOT_SWEEP              1126
+#define IDC_EDT_ROOT_WASHOUT            1127
+#define IDC_EDT_ROOT_THICKNESS_MOD      1128
+#define IDC_CMD_ROOT_SECTION_NAME       1129
+#define IDC_ROOT_DISPLAY                1130
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -317,7 +331,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
 #define _APS_NEXT_COMMAND_VALUE         32905
-#define _APS_NEXT_CONTROL_VALUE         1119
+#define _APS_NEXT_CONTROL_VALUE         1125
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

@@ -24,6 +24,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 // WingDlg.h : header file
 //
 
+#include "AerofoilPreviewControl.h"
 #include "kernel/Wing.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,13 +40,26 @@ public:
 	//{{AFX_DATA(CWingDlg)
 	enum { IDD = IDD_EDIT_WING };
 	CListBox	m_lstSpars;
-	CStatic	m_lblTipInfo;
-	CStatic	m_lblRootInfo;
 	float	m_LE;
 	float	m_span;
 	float	m_TE;
 	float	m_fSkin;
 	//}}AFX_DATA
+	CListBox m_lstCutouts;
+	AerofoilPreviewControl rootSection;
+	AerofoilPreviewControl tipSection;
+	double rootChord;
+	double rootSweep;
+	double rootWashout;
+	double rootThickness;
+	double tipChord;
+	double tipSweep;
+	double tipHeight;
+	double tipWashout;
+	double tipThickness;
+	double rootHeight;
+	CStatic lblRootInfo;
+	CStatic lblTipInfo;
 
 
 // Overrides
@@ -64,10 +78,8 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CWingDlg)
 	afx_msg void OnCmdAddSpar();
-	afx_msg void OnCmdRootEdit();
 	afx_msg void OnCmdSparDelete();
 	afx_msg void OnCmdSparEdit();
-	afx_msg void OnCmdTipEdit();
 	afx_msg void OnSelchangeLstSpars();
 	afx_msg void OnDblclkLstSpars();
 	virtual void OnOK();
@@ -78,11 +90,15 @@ protected:
 	CWing* wing;
 	CWing wingCopy;	// local copy to edit, update wing if ok.
 public:
-	CListBox m_lstCutouts;
 	afx_msg void OnBnClickedBtnAddCutout();
 	afx_msg void OnBnClickedBtnEditCutout();
 	afx_msg void OnBnClickedBtnDeleteCutout();
 	afx_msg void OnLbnDblclkLstCutouts();
+	afx_msg void OnChangeEdtRootChord();
+	afx_msg void OnChangeEdtRootThicknessMod();
+	afx_msg void OnChangeEdtRootWashout();
+	afx_msg void OnBnClickedCmdRootSectionName();
+	afx_msg void OnBnClickedCmdTipSectionName();
 };
 
 //{{AFX_INSERT_LOCATION}}

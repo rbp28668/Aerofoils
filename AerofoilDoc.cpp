@@ -384,9 +384,14 @@ void CAerofoilDoc::OnWingNew()
 		"Aerofoil Files (.DAT)|*.DAT||"
 		);
 
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select Root Section";
+
 	if(dlg.DoModal() == IDOK)
 	{
 		CString rootName = dlg.GetPathName();
+		ofn.lpstrTitle = "Select Tip Section";
+
 		if(dlg.DoModal() == IDOK)
 		{
 			CString tipName = dlg.GetPathName();
@@ -542,6 +547,9 @@ void CAerofoilDoc::OnFileDxf()
 		"DXF Files (.DXF)|*.DXF||"
 		);
 
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select DXF Output File";
+
 	if(dlg.DoModal() == IDOK)
 	{
 		//const char* psz = LPCTSTR(dlg.GetPathName());
@@ -561,6 +569,9 @@ void CAerofoilDoc::OnFileLaserjet()
 		"HPGL Files (.HPG)|*.HPG||"
 		);
 
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select HPGL Output File";
+
 	if(dlg.DoModal() == IDOK)
 	{
 		CLaserJetOutputDevice dev(LPCTSTR(dlg.GetPathName()));
@@ -578,6 +589,9 @@ void CAerofoilDoc::OnFilePostscript()
 		OFN_HIDEREADONLY,
 		"Postscript Files (.PS)|*.PS||"
 		);
+
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select PostScript Output File";
 
 	if(dlg.DoModal() == IDOK)
 	{

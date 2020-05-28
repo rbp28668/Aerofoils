@@ -58,6 +58,26 @@ CCoordMap::CCoordMap(NumericT sizex, NumericT sizey, CDC* pdc, NumericT zoom)
 
 }
 
+CCoordMap::CCoordMap(const RectT& logical, const RECT& physical)
+{
+	scalex = (physical.right - physical.left) / (logical.bottomRight.fx - logical.topLeft.fx);
+	scaley = (physical.bottom - physical.top) / (logical.topLeft.fy - logical.bottomRight.fy);
+	NumericT scale = min(scalex, scaley);
+
+	// If section doesn't fill the box in vertical direction want to centre it in y (don't care about x)
+	yoffset = 0;
+	if (scale < scaley) { // then doesn't fit all physical box in y direction
+		// So initialise yoffset with half the difference between what you're allowed (converted to logical coordinates)
+		// and what you've actually got.
+		yoffset = ((physical.bottom - physical.top) / scale - (logical.topLeft.fy - logical.bottomRight.fy) ) / 2;
+	}
+
+	scalex = scaley = scale;
+
+	xoffset = logical.topLeft.fx;
+	yoffset += logical.topLeft.fy;
+}
+
 CCoordMap::~CCoordMap()
 {
 
@@ -66,7 +86,7 @@ CCoordMap::~CCoordMap()
 POINT CCoordMap::toDevice(const PointT& pt)
 {
 	POINT np;
-	np.x = int(pt.fx * scalex + 0.5f);
+	np.x = int((pt.fx - xoffset) * scalex + 0.5f);
 	np.y = int((yoffset - pt.fy) * scaley + 0.5f);
 	return np;
 }
@@ -84,6 +104,7 @@ PointT CCoordMap::toLogical(POINT pt)
 {
 	PointT np;
 	np.fx = pt.x / scalex;
+	np.fx += xoffset;
 	np.fy = pt.y / scaley;
 	np.fy = yoffset - np.fy;
 	return np;

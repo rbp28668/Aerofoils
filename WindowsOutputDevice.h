@@ -35,6 +35,7 @@ class CWindowsOutputDevice : public COutputDevice
 {
 public:
 	CWindowsOutputDevice(NumericT sizex, NumericT sizey, CDC* pdc, float zoom);
+	CWindowsOutputDevice(CDC* pdc, const RectT& logical, const RECT& physical);
 	virtual ~CWindowsOutputDevice();
 
 	void setDrawMoves(bool drawMoves) { this->drawMoves = drawMoves; }

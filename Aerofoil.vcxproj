@@ -252,6 +252,7 @@
   <ItemGroup>
     <ClCompile Include="Aerofoil.cpp" />
     <ClCompile Include="AerofoilDoc.cpp" />
+    <ClCompile Include="AerofoilPreviewControl.cpp" />
     <ClCompile Include="AerofoilView.cpp" />
     <ClCompile Include="BackgroundGrid.cpp" />
     <ClCompile Include="BackgroundGridDlg.cpp" />
@@ -308,6 +309,7 @@
   <ItemGroup>
     <ClInclude Include="Aerofoil.h" />
     <ClInclude Include="AerofoilDoc.h" />
+    <ClInclude Include="AerofoilPreviewControl.h" />
     <ClInclude Include="AerofoilView.h" />
     <ClInclude Include="BackgroundGrid.hpp" />
     <ClInclude Include="BackgroundGridDlg.hpp" />
