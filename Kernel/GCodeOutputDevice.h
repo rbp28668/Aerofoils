@@ -69,8 +69,8 @@ public:
 	virtual PointT position(int iStream);
 
 	// These are optional but can provide hints to the output device.
-	virtual void startObject(const char* description);
-	virtual void endObject(const char* description);
+	virtual void startObject(const char* description, bool selected = false);
+	virtual void endObject(const char* description, bool selected = false);
 	virtual void startPlot();
 	virtual void endPlot();
 	virtual void passthrough(const char* data);
@@ -93,6 +93,12 @@ private:
 
 	bool fastFeedSet;
 	double currentFeedRate;
+
+	double xprevious;
+	double yprevious;
+	double uprevious;
+	double vprevious;
+	bool previousSet;
 
 	GCodeConfig defaultConfig;
 	GCodeConfig* config;
