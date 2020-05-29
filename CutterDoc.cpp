@@ -367,6 +367,9 @@ void CutterDoc::OnFileGcode()
 		"G-CODE Files (.GCODE)|*.GCODE||"
 	);
 
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select G-Code Output File";
+
 	if (dlg.DoModal() == IDOK)
 	{
 		GCodeOutputFile dev(&gcodeConfig, &geometry, (dlg.GetPathName()));

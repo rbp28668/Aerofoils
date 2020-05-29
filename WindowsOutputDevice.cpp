@@ -38,12 +38,26 @@ CWindowsOutputDevice::CWindowsOutputDevice(NumericT sx, NumericT sy, CDC* pdc, f
 , plotDC(pdc)
 , penBlack(0)
 , penGrey(0)
+, drawMoves(false)
+, lastStream(-1)
 {
 	penGrey = new CPen(PS_SOLID, 0, RGB(128, 128, 128));
 	penBlack = new CPen(PS_SOLID, 0, RGB(0,0,0));
 	penOriginal = pdc->SelectObject(penBlack);
 }
 
+CWindowsOutputDevice::CWindowsOutputDevice(CDC* pdc, const RectT& logical, const RECT& physical)
+	: map(logical, physical)
+	, plotDC(pdc)
+	, penBlack(0)
+	, penGrey(0)
+	, drawMoves(false)
+	, lastStream(-1)
+{
+	penGrey = new CPen(PS_SOLID, 0, RGB(128, 128, 128));
+	penBlack = new CPen(PS_SOLID, 0, RGB(0, 0, 0));
+	penOriginal = pdc->SelectObject(penBlack);
+}
 CWindowsOutputDevice::~CWindowsOutputDevice()
 {
 	plotDC->SelectObject(penOriginal);

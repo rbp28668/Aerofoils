@@ -464,6 +464,10 @@ void CGCodeDialog::OnBnClickedBtnLoad()
 		, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT
 		, "G-Code Files(*.gcode) |*.gcode;*.g|All Files(*.*) |*.*||"
 	); 
+
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select G-Code File";
+
 	if (dlg.DoModal() == IDOK)	{
 		CString pathName = dlg.GetPathName();
 		std::ifstream ifs(pathName);
@@ -491,6 +495,10 @@ void CGCodeDialog::OnBnClickedBtnSave()
 		, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT
 		, "G-Code Files(*.gcode) |*.gcode;*.g| All Files(*.*) |*.*||"
 	);
+
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select G-Code Output File";
+
 	if (dlg.DoModal() == IDOK) {
 		getProgramFromEdit();
 		CString pathName = dlg.GetPathName();

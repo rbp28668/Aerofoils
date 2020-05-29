@@ -97,6 +97,6 @@ private:
 	GCodeConfig defaultConfig;
 	GCodeConfig* config;
 	CutterGeometry* geometry;
-
+	
 };
 

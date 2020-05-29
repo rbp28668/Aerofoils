@@ -112,6 +112,9 @@ void CSectionDlg::OnCmdSectionName()
 		"Aerofoil Files (.DAT)|*.DAT||"
 		);
 
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select Section";
+
 	if(dlg.DoModal() == IDOK)
 	{
 		CString path = dlg.GetPathName();
