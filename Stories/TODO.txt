@@ -19,11 +19,14 @@ Possible to get into an odd mode where the serial data read from the cutter is b
 
 Improvements
 
-Separate cut of top and bottom from either direction
+Separate cut of top and bottom from either direction  DONE
 
 Create Plot from Cut and vice versa.
 
-Graphical output when Edit Wing dialog is open (add to dialog)  Also, remove root and tip dialogs and add their contents into Edit Wing.
+Graphical output when Edit Wing dialog is open (add to dialog)  DONE
+Also, remove root and tip dialogs and add their contents into Edit Wing. DONE
+
+Filter G-Code output to skip zero distance moves.
 
 Plan view of cutter when width and block position defined
 

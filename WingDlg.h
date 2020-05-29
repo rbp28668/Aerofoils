@@ -94,11 +94,18 @@ public:
 	afx_msg void OnBnClickedBtnEditCutout();
 	afx_msg void OnBnClickedBtnDeleteCutout();
 	afx_msg void OnLbnDblclkLstCutouts();
-	afx_msg void OnChangeEdtRootChord();
-	afx_msg void OnChangeEdtRootThicknessMod();
-	afx_msg void OnChangeEdtRootWashout();
 	afx_msg void OnBnClickedCmdRootSectionName();
 	afx_msg void OnBnClickedCmdTipSectionName();
+	afx_msg void OnKillfocusEdtRootChord();
+	afx_msg void OnKillfocusEdtRootThicknessMod();
+	afx_msg void OnKillfocusEdtRootWashout();
+	afx_msg void OnKillfocusEdtSkin();
+	afx_msg void OnKillfocusEdtSpan();
+	afx_msg void OnKillfocusEdtTipChord();
+	afx_msg void OnKillfocusEdtTipThicknessMod();
+	afx_msg void OnKillfocusEdtTipWashout();
+	afx_msg void OnKillfocusEdtLe();
+	afx_msg void OnKillfocusEdtTe();
 };
 
 //{{AFX_INSERT_LOCATION}}

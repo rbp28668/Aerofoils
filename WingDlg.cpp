@@ -118,11 +118,18 @@ BEGIN_MESSAGE_MAP(CWingDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_EDIT_CUTOUT, &CWingDlg::OnBnClickedBtnEditCutout)
 	ON_BN_CLICKED(IDC_BTN_DELETE_CUTOUT, &CWingDlg::OnBnClickedBtnDeleteCutout)
 	ON_LBN_DBLCLK(IDC_LST_CUTOUTS, &CWingDlg::OnLbnDblclkLstCutouts)
-	ON_EN_CHANGE(IDC_EDT_ROOT_CHORD, &CWingDlg::OnChangeEdtRootChord)
-	ON_EN_CHANGE(IDC_EDT_ROOT_THICKNESS_MOD, &CWingDlg::OnChangeEdtRootThicknessMod)
-	ON_EN_CHANGE(IDC_EDT_ROOT_WASHOUT, &CWingDlg::OnChangeEdtRootWashout)
 	ON_BN_CLICKED(IDC_CMD_ROOT_SECTION_NAME, &CWingDlg::OnBnClickedCmdRootSectionName)
 	ON_BN_CLICKED(IDC_CMD_TIP_SECTION_NAME, &CWingDlg::OnBnClickedCmdTipSectionName)
+	ON_EN_KILLFOCUS(IDC_EDT_ROOT_CHORD, &CWingDlg::OnKillfocusEdtRootChord)
+	ON_EN_KILLFOCUS(IDC_EDT_ROOT_THICKNESS_MOD, &CWingDlg::OnKillfocusEdtRootThicknessMod)
+	ON_EN_KILLFOCUS(IDC_EDT_ROOT_WASHOUT, &CWingDlg::OnKillfocusEdtRootWashout)
+	ON_EN_KILLFOCUS(IDC_EDT_SKIN, &CWingDlg::OnKillfocusEdtSkin)
+	ON_EN_KILLFOCUS(IDC_EDT_SPAN, &CWingDlg::OnKillfocusEdtSpan)
+	ON_EN_KILLFOCUS(IDC_EDT_TIP_CHORD, &CWingDlg::OnKillfocusEdtTipChord)
+	ON_EN_KILLFOCUS(IDC_EDT_TIP_THICKNESS_MOD, &CWingDlg::OnKillfocusEdtTipThicknessMod)
+	ON_EN_KILLFOCUS(IDC_EDT_TIP_WASHOUT, &CWingDlg::OnKillfocusEdtTipWashout)
+	ON_EN_KILLFOCUS(IDC_EDT_LE, &CWingDlg::OnKillfocusEdtLe)
+	ON_EN_KILLFOCUS(IDC_EDT_TE, &CWingDlg::OnKillfocusEdtTe)
 END_MESSAGE_MAP()
 
 void CWingDlg::addSparToList(CSpar* ps)
@@ -337,36 +344,6 @@ BOOL CWingDlg::OnInitDialog()
 
 
 
-
-
-
-void CWingDlg::OnChangeEdtRootChord()
-{
-	//if (UpdateData()) {
-	//	wingCopy.getRootTransform()->setChord(rootChord);
-	//	rootSection.RedrawWindow();
-	//}
-}
-
-
-void CWingDlg::OnChangeEdtRootThicknessMod()
-{
-	//if (UpdateData()) {
-	//	wingCopy.getRoot()->modifyThickness(rootThickness);
-	//	rootSection.RedrawWindow();
-	//}
-}
-
-
-void CWingDlg::OnChangeEdtRootWashout()
-{
-	//if (UpdateData()) {
-	//	wingCopy.getRootTransform()->setWashout(rootWashout);
-	//	rootSection.RedrawWindow();
-	//}
-}
-
-
 void CWingDlg::OnBnClickedCmdRootSectionName()
 {
 	CFileDialog dlg(TRUE,
@@ -409,3 +386,96 @@ void CWingDlg::OnBnClickedCmdTipSectionName()
 		tipSection.RedrawWindow();
 	}
 }
+
+
+void CWingDlg::OnKillfocusEdtRootChord()
+{
+	if (UpdateData()) {
+		wingCopy.getRootTransform()->setChord(rootChord);
+		rootSection.RedrawWindow();
+	}
+}
+
+
+void CWingDlg::OnKillfocusEdtRootThicknessMod()
+{
+	if (UpdateData()) {
+		wingCopy.getRoot()->modifyThickness(rootThickness);
+		rootSection.RedrawWindow();
+	}
+}
+
+void CWingDlg::OnKillfocusEdtRootWashout()
+{
+	if (UpdateData()) {
+		wingCopy.getRootTransform()->setWashout(rootWashout);
+		rootSection.RedrawWindow();
+	}
+}
+
+
+
+void CWingDlg::OnKillfocusEdtTipChord()
+{
+	if (UpdateData()) {
+		wingCopy.getTipTransform()->setChord(tipChord);
+		tipSection.RedrawWindow();
+	}
+}
+
+
+void CWingDlg::OnKillfocusEdtTipThicknessMod()
+{
+	if (UpdateData()) {
+		wingCopy.getTip()->modifyThickness(tipThickness);
+		tipSection.RedrawWindow();
+	}
+}
+
+void CWingDlg::OnKillfocusEdtTipWashout()
+{
+	if (UpdateData()) {
+		wingCopy.getTipTransform()->setWashout(tipWashout);
+		tipSection.RedrawWindow();
+	}
+}
+
+
+void CWingDlg::OnKillfocusEdtLe()
+{
+	if (UpdateData()) {
+		wingCopy.setLE(m_LE);
+		rootSection.RedrawWindow();
+		tipSection.RedrawWindow();
+	}
+}
+
+
+void CWingDlg::OnKillfocusEdtTe()
+{
+	if (UpdateData()) {
+		wingCopy.setTE(m_TE);
+		rootSection.RedrawWindow();
+		tipSection.RedrawWindow();
+	}
+}
+
+void CWingDlg::OnKillfocusEdtSkin()
+{
+	if (UpdateData()) {
+		wingCopy.setSkinThickness(m_fSkin);
+		rootSection.RedrawWindow();
+		tipSection.RedrawWindow();
+	}
+}
+
+
+void CWingDlg::OnKillfocusEdtSpan()
+{
+	if (UpdateData()) {
+		wingCopy.setSpan(m_span);
+		rootSection.RedrawWindow();
+		tipSection.RedrawWindow();
+	}
+}
+

@@ -35,7 +35,7 @@ void AerofoilPreviewControl::OnPaint()
     dc.FillRect(&r, &background);
 
     CPathPlotter plotter(pWing);
-    plotter.setInterpolate(true);
+    plotter.setInterpolate(true); 
     plotter.setInvert(false);
     plotter.setReflect(false);
     plotter.setPosition(0, 0);

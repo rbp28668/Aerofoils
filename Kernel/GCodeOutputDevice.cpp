@@ -46,7 +46,6 @@ GCodeOutputDevice::GCodeOutputDevice(GCodeOutputDevice::GCodeConfig* config, Cut
 	assert(config);
 	_isCNC = true;
 	currentFeedRate = config->cutFeedRate;
-
 }
 
 GCodeOutputDevice::~GCodeOutputDevice()
@@ -120,6 +119,7 @@ void GCodeOutputDevice::LineTo(int iStream, const PointT& pt)
 void GCodeOutputDevice::sendMove(const char* pszCommand) {
 	assert(this);
 	assert(pszCommand);
+
 
 	if (config->preCorrectGeometry && geometry) {
 		Position<double> axes;
