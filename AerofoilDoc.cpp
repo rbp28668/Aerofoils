@@ -229,9 +229,11 @@ void CAerofoilDoc::addStructure(CStructure* pStructure)
 	}
 	else if (pStructure->getType() == GCodeSnippet::TYPE) {
 		// NOP - not appropriate for plotting
+		delete pStructure;  // We're not looking after it so just delete.
 	}
 	else if (pStructure->getType() == DXFObject::TYPE) {
 		// TODO need DXFPlotter and GXFUIProxy
+		delete pStructure;
 	}
 	else {
 		assert(false); // A new structure type's been added we don't know about.
