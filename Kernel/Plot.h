@@ -56,6 +56,7 @@ public:
 	void plot(COutputDevice& pdev, CPlotStructure* selected=0);
 
 	// Add structure
+	void addStructure(CStructure* pStructure);  // created externally.
 	CWing* addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness);
 	CEllipsePair* addEllipsePair(const CEllipsePair& pair);
 	CPointStructure* addPointStructure(const CPointStructure& point);

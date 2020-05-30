@@ -30,6 +30,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "kernel\plot.h"
 
 class CPlotOrderDlg;
+class CStructure;
 
 class CAerofoilDoc : public CDocument
 {
@@ -61,6 +62,8 @@ public:
 
 	void UpdateNow();
 	void RedrawNow();
+
+	void addStructure(CStructure* pStructure); // created externally
 
 	void setSelection(CPlotStructure* ps);
 	void clearSelection();
@@ -127,7 +130,6 @@ protected:
 	afx_msg void OnFileDxf();
 	afx_msg void OnFileLaserjet();
 	afx_msg void OnFilePostscript();
-	afx_msg void OnFileGcode();
 	afx_msg void OnEditPosition();
 	afx_msg void OnUpdateItemIsSelected(CCmdUI* pCmdUI);
 	afx_msg void OnEditDelete();
@@ -136,12 +138,12 @@ protected:
 	afx_msg void OnPointNew();
 	afx_msg void OnEditPlotorder();
 	afx_msg void OnUpdateEditPlotorder(CCmdUI* pCmdUI);
-	afx_msg void OnFileCncoutput();
-	afx_msg void OnFileCncsetup();
 	afx_msg void OnEditDeletestructure();
 	afx_msg void OnFileSetgrid();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnFileCreatecutterdocument();
 };
 
 /////////////////////////////////////////////////////////////////////////////

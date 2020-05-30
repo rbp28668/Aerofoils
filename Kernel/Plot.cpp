@@ -101,6 +101,13 @@ void CPlot::plot(COutputDevice& pdev, CPlotStructure* selected)
 	pdev.endPlot();
 }
 
+void CPlot::addStructure(CStructure* pStructure)
+{
+	assert(this);
+	assert(pStructure);
+	structures.push_back(pStructure);
+}
+
 CWing* CPlot::addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness)
 {
 	assert(this);

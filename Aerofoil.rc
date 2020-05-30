@@ -57,6 +57,7 @@ BEGIN
         MENUITEM "&Close",                      ID_FILE_CLOSE
         MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
         MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM "Create Cutter Document",      ID_FILE_CREATECUTTERDOCUMENT
         MENUITEM SEPARATOR
         MENUITEM "Set P&lot Size",              ID_FILE_PLOT_SIZE
         MENUITEM "Set &Grid",                   ID_FILE_SETGRID
@@ -268,13 +269,9 @@ BEGIN
         MENUITEM "&Close",                      ID_FILE_CLOSE
         MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
         MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM "Create Aerofoil Document",    ID_FILE_CREATEAEROFOILDOCUMENT
         MENUITEM SEPARATOR
-        MENUITEM "Set P&lot Size",              ID_FILE_PLOT_SIZE
-        MENUITEM "Set &Grid",                   ID_FILE_SETGRID
-        MENUITEM "GCode Output",                ID_FILE_GCODE
-        MENUITEM SEPARATOR
-        MENUITEM "CNC S&etup",                  ID_FILE_CNCSETUP
-        MENUITEM "CNC O&utput",                 ID_FILE_CNCOUTPUT
+        MENUITEM "GCode Output to File...",     ID_FILE_GCODE
         MENUITEM SEPARATOR
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
         MENUITEM SEPARATOR
@@ -282,6 +279,7 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
+        MENUITEM "Set &Grid...",                ID_FILE_SETGRID
         MENUITEM "Zoom...",                     ID_VIEW_ZOOM
         MENUITEM SEPARATOR
         MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
@@ -295,6 +293,9 @@ BEGIN
         MENUITEM "Cutter Geometry",             ID_CUTTER_CUTTERGEOMETRY
         MENUITEM "&Preview Cut Path",           ID_VIEW_PREVIEW_CUT_PATH
         MENUITEM "Configure G-Code output",     ID_CUTTER_FEEDRATE
+        MENUITEM SEPARATOR
+        MENUITEM "CNC Network S&etup",          ID_FILE_CNCSETUP
+        MENUITEM "Send G-Code O&utput",         ID_FILE_CNCOUTPUT
     END
     POPUP "&Window"
     BEGIN

@@ -22,9 +22,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include <assert.h>
 #include <fstream>
+#include <sstream>
 #include "Aerofoil.h"
 #include "CutterDoc.h"
 #include "CutterView.h"
+#include "CutterTreeView.h"
+#include "AerofoilDoc.h"
 #include "BackgroundGridDlg.hpp"
 #include "CNCConnectionDlg.h"
 #include "ToolOffsetDialog.h"
@@ -52,6 +55,24 @@ CutterDoc::CutterDoc()
 	grid.setVerticalSize(10);
 	grid.enableHorizontal(true);
 	grid.enableVertical(true);
+}
+
+// For pushing structures in externally.  Ownership transfers to the cut.
+void CutterDoc::addStructure(CStructure* pStructure)
+{
+	cut.addStructure(pStructure);
+	assert(this);
+	POSITION pos = GetFirstViewPosition();
+	while (pos)
+	{
+		CView* pView = GetNextView(pos);
+		ASSERT_VALID(pView);
+		if (pView->IsKindOf(RUNTIME_CLASS(CutterTreeView))) {
+			CutterTreeView* pCutterView = static_cast<CutterTreeView*>(pView);
+			pCutterView->addStructure(pStructure);
+		}
+	}
+	return;
 }
 
 CWing * CutterDoc::newWing(const char * pszRootName, float rootThickness, const char * pszTipName, float tipThickness)
@@ -163,6 +184,7 @@ BEGIN_MESSAGE_MAP(CutterDoc, CDocument)
 	ON_COMMAND(ID_CUTTER_TOOLOFFSET, &CutterDoc::OnCutterTooloffset)
 	ON_COMMAND(ID_CUTTER_FEEDRATE, &CutterDoc::OnCutterFeedrate)
 	ON_COMMAND(ID_CUTTER_CUTTERGEOMETRY, &CutterDoc::OnCutterCuttergeometry)
+	ON_COMMAND(ID_FILE_CREATEAEROFOILDOCUMENT, &CutterDoc::OnFileCreateaerofoildocument)
 END_MESSAGE_MAP()
 
 BOOL CutterDoc::OnNewDocument()
@@ -415,4 +437,22 @@ void CutterDoc::OnCutterCuttergeometry()
 		}
 	}
 
+}
+
+extern CAerofoilApp theApp;
+
+void CutterDoc::OnFileCreateaerofoildocument()
+{
+	CAerofoilDoc* aerofoilDoc = theApp.createAerofoilDocument();
+
+	for (Cut::StructureIterator iter = cut.beginStructures(); iter != cut.endStructures(); ++iter) {
+		std::stringstream stream;
+		CObjectSerializer serializer(&stream);
+
+
+		(*iter)->serializeTo(serializer);
+		CStructure* copy = static_cast<CStructure*>(serializer.createSubtype());
+		copy->serializeFrom(serializer);
+		aerofoilDoc->addStructure(copy);
+	}
 }

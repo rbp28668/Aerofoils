@@ -23,11 +23,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 #include <fstream>
+#include <sstream>
 
 #include "Aerofoil.h"
 
 #include "AerofoilDoc.h"
 #include "AerofoilView.h"
+#include "CutterDoc.h"
 #include "SectionPositionDlg.h"
 #include "WingDlg.h"
 #include "EllipsePairDlg.h"
@@ -55,6 +57,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "kernel\EllipsePlotter.h"
 #include "kernel\PointStructure.h"
 #include "kernel\PointPlotter.h"
+#include "Kernel/GCodeSnippet.h"
+#include "Kernel/DXFObject.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -101,6 +105,7 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_STRUCTURE, OnUpdateItemIsSelected)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PLOTFLAGS, OnUpdateItemIsSelected)
 	ON_COMMAND(ID_FILE_SETGRID, OnFileSetgrid)
+	ON_COMMAND(ID_FILE_CREATECUTTERDOCUMENT, OnFileCreatecutterdocument)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -189,6 +194,50 @@ void CAerofoilDoc::RedrawNow()
     pView->RedrawWindow();
     }
   return;
+}
+
+void CAerofoilDoc::addStructure(CStructure* pStructure)
+{
+	if (pStructure->getType() == CWing::TYPE) {
+		CWing* pWing = static_cast<CWing*>(pStructure);
+		plot.addStructure(pStructure);
+		CPathPlotter* ppp = plot.addPathPlotter(pWing);
+		ppp->setUIProxy(new CWingUIProxy());
+		ppp->setPosition(place_x, place_y);
+		updatePlacePosition();
+		RedrawNow();
+
+	}
+	else if (pStructure->getType() == CEllipsePair::TYPE) {
+		CEllipsePair* pEllipses = static_cast<CEllipsePair*>(pStructure);
+		plot.addStructure(pStructure);
+		CEllipsePlotter* pep = plot.addEllipsePlotter(pEllipses);
+		pep->setUIProxy(new CEllipseUIProxy());
+		pep->setPosition(place_x, place_y);
+		updatePlacePosition();
+		RedrawNow();
+
+	}
+	else if (pStructure->getType() == CPointStructure::TYPE) {
+		CPointStructure* pPoint = static_cast<CPointStructure*>(pStructure);
+		plot.addStructure(pStructure);
+		CPointPlotter* ppp = plot.addPointPlotter(pPoint);
+		ppp->setUIProxy(new CPlotPointUIProxy());
+		ppp->setPosition(place_x, place_y);
+		updatePlacePosition();
+		RedrawNow();
+	}
+	else if (pStructure->getType() == GCodeSnippet::TYPE) {
+		// NOP - not appropriate for plotting
+	}
+	else if (pStructure->getType() == DXFObject::TYPE) {
+		// TODO need DXFPlotter and GXFUIProxy
+	}
+	else {
+		assert(false); // A new structure type's been added we don't know about.
+	}
+	
+
 }
 
 void CAerofoilDoc::setSelection(CPlotStructure* ps)
@@ -702,3 +751,21 @@ void CAerofoilDoc::OnFileSetgrid()
 }
 
 
+extern CAerofoilApp theApp;
+
+
+void CAerofoilDoc::OnFileCreatecutterdocument()
+{
+	CutterDoc* cutterDoc = theApp.createCutterDocument();
+
+	for (CPlot::StructureIterator iter = plot.getStructures(); iter != plot.endStructures(); ++iter) {
+		std::stringstream stream;
+		CObjectSerializer serializer(&stream);
+		
+
+		(*iter)->serializeTo(serializer);
+		CStructure* copy = static_cast<CStructure*>(serializer.createSubtype());
+		copy->serializeFrom(serializer);
+		cutterDoc->addStructure(copy);
+	}
+}

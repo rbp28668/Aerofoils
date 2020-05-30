@@ -66,6 +66,7 @@ public:
 	CBackgroundGrid& getGrid() { return grid; }
 
 
+	void addStructure(CStructure* pStructure); // created externally
 	CWing* newWing(const char* pszRootName, float rootThickness, const char* pszTipName, float tipThickness);
 	CEllipsePair* newEllipse(CEllipsePair& example);
 	CPointStructure* newPoint(CPointStructure& example);
@@ -106,4 +107,5 @@ public:
 	afx_msg void OnCutterTooloffset();
 	afx_msg void OnCutterFeedrate();
 	afx_msg void OnCutterCuttergeometry();
+	afx_msg void OnFileCreateaerofoildocument();
 };

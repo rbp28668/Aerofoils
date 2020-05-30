@@ -21,6 +21,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 class CutterDoc;
 
+
 // CutterView view provides the graphical view of the cutter path (not animated).
 // It's a dumb view with pretty much all the commands being handled by CutterTreeView.
 class CutterView : public CScrollView
@@ -42,7 +43,6 @@ public:
 #endif
 
 	CutterDoc* GetDocument();
-
 protected:
 	virtual void OnDraw(CDC* pDC);      // overridden to draw this view
 	virtual void OnInitialUpdate();     // first time after construct

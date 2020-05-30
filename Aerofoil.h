@@ -31,6 +31,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "resource.h"       // main symbols
 
+class CAerofoilDoc;
+class CutterDoc;
+
 /////////////////////////////////////////////////////////////////////////////
 // CAerofoilApp:
 // See Aerofoil.cpp for the implementation of this class
@@ -38,6 +41,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 class CAerofoilApp : public CWinApp
 {
+	CMultiDocTemplate* pAerofoilTemplate;
+	CMultiDocTemplate* pCutterTemplate;
+
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CAerofoilApp();
@@ -49,6 +55,9 @@ public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 	//}}AFX_VIRTUAL
+
+	CAerofoilDoc* createAerofoilDocument();
+	CutterDoc* createCutterDocument();
 
 // Implementation
 	//{{AFX_MSG(CAerofoilApp)

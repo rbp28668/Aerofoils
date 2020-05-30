@@ -100,20 +100,19 @@ BOOL CAerofoilApp::InitInstance()
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views.
 
-	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CMultiDocTemplate(
+	pAerofoilTemplate = new CMultiDocTemplate(
 		IDR_AEROFOTYPE,
 		RUNTIME_CLASS(CAerofoilDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CAerofoilView));
-	AddDocTemplate(pDocTemplate);
+	AddDocTemplate(pAerofoilTemplate);
 
-	pDocTemplate = new CMultiDocTemplate(
+	pCutterTemplate = new CMultiDocTemplate(
 		IDR_CUTTERTYPE,
 		RUNTIME_CLASS(CutterDoc),
 		RUNTIME_CLASS(CutterFrame), // custom MDI child frame
 		RUNTIME_CLASS(CutterView));
-	AddDocTemplate(pDocTemplate);
+	AddDocTemplate(pCutterTemplate);
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
@@ -201,6 +200,18 @@ int CAerofoilApp::ExitInstance()
 {
 	CObjectSerializer::CAbstractClassFactory::closeFactory();	
 	return CWinApp::ExitInstance();
+}
+
+CAerofoilDoc* CAerofoilApp::createAerofoilDocument()
+{
+	CDocument* pDoc = pAerofoilTemplate->OpenDocumentFile(NULL);
+	return static_cast<CAerofoilDoc*>(pDoc);
+}
+
+CutterDoc* CAerofoilApp::createCutterDocument()
+{
+	CDocument* pDoc = pCutterTemplate->OpenDocumentFile(NULL);
+	return static_cast<CutterDoc*>(pDoc);
 }
 
 BOOL CAboutDlg::OnInitDialog() 
