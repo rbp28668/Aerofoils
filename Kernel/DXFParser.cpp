@@ -483,6 +483,7 @@ void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 void LWPolyLine::serializeTo(CObjectSerializer & os) {
 	os.startSection("dxfLWPolyLine", this);
 	DXFItem::serializeTo(os);
+	os.write("closed", isClosed);
 	os.startCollection("vertices", (int)vertices.size());
 	for (std::vector<Coordinates>::iterator iter = vertices.begin();
 		iter != vertices.end();
@@ -497,6 +498,9 @@ void LWPolyLine::serializeTo(CObjectSerializer & os) {
 void LWPolyLine::serializeFrom(CObjectSerializer & os) {
 	os.startReadSection("dxfLWPolyLine", this);
 	DXFItem::serializeFrom(os);
+	if (os.ifExists("closed")) {
+		os.read("closed", isClosed);
+	}
 	int vertexCount = os.startReadCollection("vertices");
 	vertices.resize(vertexCount);
 	for(int i=0; i<vertexCount; ++i){
