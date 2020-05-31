@@ -22,7 +22,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <istream>
 #include <fstream>
 
-class CutStructure;
+class StructureOutput;
 class COutputDevice;
 class CObjectSerializer;
 
@@ -42,7 +42,7 @@ public:
 	virtual ~DXFItem() {}
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone() = 0;
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev) = 0;
+	virtual void cut(StructureOutput * pCut, COutputDevice * pdev) = 0;
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };

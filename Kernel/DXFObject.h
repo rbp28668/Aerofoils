@@ -22,7 +22,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "DXFParser.h"
 
 class CutStructure;
-class COutputDevice;
+class StructureOutput;
 
 // A structure object that holds the contents of a DXF file as a collection
 // of DXFItem.  Slightly unusual in that the corresponding DXFObjectCutter
@@ -50,6 +50,6 @@ public:
 	// DXFItemReceiver 
 	virtual void add(DXFItem* item);
 
-	void cutAll(CutStructure* pCut, COutputDevice* pdev);
+	void cutAll(StructureOutput* pOutput, COutputDevice* pdev);
 };
 

@@ -21,6 +21,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #error "CMDIChildWnd is not supported for Windows CE."
 #endif 
 
+class CStructure;
+
 // CutterFrame frame with splitter
 // Overall frame window for a Cutter Doc which manages a splitter window
 // for the cutter to provide a tree view of the structure/cuts and 
@@ -40,6 +42,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+
 	afx_msg void OnViewDrawmoves();
 	afx_msg void OnUpdateViewDrawmoves(CCmdUI *pCmdUI);
 	afx_msg void OnViewZoom();

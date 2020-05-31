@@ -26,7 +26,7 @@ Create Plot from Cut and vice versa.
 Graphical output when Edit Wing dialog is open (add to dialog)  DONE
 Also, remove root and tip dialogs and add their contents into Edit Wing. DONE
 
-Filter G-Code output to skip zero distance moves.
+Filter G-Code output to skip zero distance moves. DONE
 
 Plan view of cutter when width and block position defined
 

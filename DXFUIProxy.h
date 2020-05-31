@@ -1,5 +1,5 @@
 /* Aerofoil
-Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
 Copyright(C) 1995-2019 R Bruce Porteous
 
 This program is free software : you can redistribute it and / or modify
@@ -17,20 +17,22 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include <afxwin.h>
 
-// Class to provide area in a dialog that knows how to draw an aerofoil.
+#include "WindowsUIProxy.h"
 
-class CWing;
-class AerofoilPreviewControl :
-	public CStatic
+// User interface proxy for DXF Objects.
+
+class DXFUIProxy : public CWindowsUIProxy
 {
-	DECLARE_MESSAGE_MAP()
-	bool isRoot;
-	CWing* pWing;
-
 public:
-	AerofoilPreviewControl(CWing* pWing, bool isRoot);
-	afx_msg void OnPaint();
+	DXFUIProxy();
+	virtual ~DXFUIProxy();
+
+	const char* className() const; // use default serialization
+
+	virtual UINT getPopupID();
+	virtual bool Edit(CPlotStructure* toEdit);
+	virtual void SetSelectedStructure(CAerofoilDoc* pDoc, CPlotStructure* sel);
+
 };
 

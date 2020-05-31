@@ -1,5 +1,6 @@
 /* Aerofoil
 Aerofoil plotting and CNC cutter driver
+Kernel / core algorithms
 Copyright(C) 1995-2019 R Bruce Porteous
 
 This program is free software : you can redistribute it and / or modify
@@ -17,20 +18,20 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include <afxwin.h>
 
-// Class to provide area in a dialog that knows how to draw an aerofoil.
+#include "PointT.h"
+class COutputDevice;
 
-class CWing;
-class AerofoilPreviewControl :
-	public CStatic
+// StructureOutput defines a base interface that both cutters and plotters implement.  
+// Allows complex cut algorithms to be plotted to paper (and vice versa).
+// Not quite as useful as you'd expect as usually the cutting and plotting algorithms
+// are slightly different anyway to allow for kerf size etc in the case of cutting.
+
+class StructureOutput
 {
-	DECLARE_MESSAGE_MAP()
-	bool isRoot;
-	CWing* pWing;
-
 public:
-	AerofoilPreviewControl(CWing* pWing, bool isRoot);
-	afx_msg void OnPaint();
+	virtual void move(COutputDevice* pdev, const PointT& root, const PointT& tip) = 0;
+	virtual void line(COutputDevice* pdev, const PointT& root, const PointT& tip) = 0;
+
 };
 

@@ -102,11 +102,11 @@ void DXFObject::add(DXFItem * item)
 	items.push_back(item);
 }
 
-void DXFObject::cutAll(CutStructure * pCut, COutputDevice * pdev)
+void DXFObject::cutAll(StructureOutput * pOutput, COutputDevice * pdev)
 {
 	for (std::vector<DXFItem*>::iterator iter = items.begin();
 		iter != items.end();
 		++iter) {
-		(*iter)->cut(pCut, pdev);
+		(*iter)->cut(pOutput, pdev);
 	}
 }

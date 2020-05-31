@@ -59,7 +59,7 @@ class CutterTreeView : public CTreeView
 		void* pItem;
 		int popupIndex;
 		inline NodeT() : itemHandle(0), pItem(0), popupIndex(0) {}
-		inline NodeT(HTREEITEM item, void* object, Menus menu) : itemHandle(item), pItem(object), popupIndex(menu) {}
+		inline NodeT(HTREEITEM item, void* object, CutterTreeView::Menus menu) : itemHandle(item), pItem(object), popupIndex(menu) {}
 		inline NodeT(const NodeT & src) : itemHandle(src.itemHandle), pItem(src.pItem), popupIndex(src.popupIndex) {}
 	} Node;
 
@@ -103,6 +103,9 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
+
+	void addStructure(CStructure* pItem);
+
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	virtual void OnInitialUpdate();
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);

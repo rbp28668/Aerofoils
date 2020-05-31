@@ -330,7 +330,20 @@ void CutterTreeView::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
+
+
+// Allow structure to be fed in externally.
+void CutterTreeView::addStructure(CStructure* pItem)
+{
+	std::string typeName = pItem->getType();
+	Menus menu = menuLookup[typeName];
+	addStructureNode(pItem, menu);
+
+}
+
+//===============================================================
 // CutterTreeView message handlers
+//===============================================================
 
 
 int CutterTreeView::OnCreate(LPCREATESTRUCT lpCreateStruct)

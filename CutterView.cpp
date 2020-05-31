@@ -23,6 +23,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "Aerofoil.h"
 #include "CutterView.h"
 #include "CutterDoc.h"
+#include "CutterFrame.h"
 #include "CoordMap.h"
 #include "ZoomDlg.h"
 #include "WindowsOutputDevice.h"
@@ -83,6 +84,7 @@ CutterDoc * CutterView::GetDocument()
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CutterDoc)));
 	return static_cast<CutterDoc*>(m_pDocument);
 }
+
 
 void CutterView::OnDraw(CDC* pDC)
 {

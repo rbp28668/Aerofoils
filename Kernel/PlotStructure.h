@@ -35,11 +35,12 @@ to paper.  Compare with CutStructure which is the analogue for driving CNC.
 #include "RectT.h"
 #include "OutputDevice.h"
 #include "Structure.h"
+#include "StructureOutput.h"
 
 class CObjectSerializer;
 class CUIProxy;
 
-class CPlotStructure  
+class CPlotStructure : public StructureOutput
 {
 public:
 	CPlotStructure();
@@ -75,6 +76,10 @@ public:
 
 	virtual void serializeTo(CObjectSerializer& os);
 	virtual void serializeFrom(CObjectSerializer& os);
+
+	// Structure output
+	virtual void move(COutputDevice* pdev, const PointT& root, const PointT& tip);
+	virtual void line(COutputDevice* pdev, const PointT& root, const PointT& tip);
 
 protected:
 	PointT interpolate(const PointT& root, const PointT& tip) const;
