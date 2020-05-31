@@ -41,6 +41,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "WingUIProxy.h"
 #include "EllipseUIProxy.h"
 #include "PlotPointUIProxy.h"
+#include "DXFUIProxy.h"
 #include "PlotOrderDlg.h"
 
 #include "BackgroundGridDlg.hpp"
@@ -59,6 +60,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "kernel\PointPlotter.h"
 #include "Kernel/GCodeSnippet.h"
 #include "Kernel/DXFObject.h"
+#include "Kernel/DXFPlotter.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -106,6 +108,7 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PLOTFLAGS, OnUpdateItemIsSelected)
 	ON_COMMAND(ID_FILE_SETGRID, OnFileSetgrid)
 	ON_COMMAND(ID_FILE_CREATECUTTERDOCUMENT, OnFileCreatecutterdocument)
+	ON_COMMAND(ID_DXF_NEW, &CAerofoilDoc::OnDxfNew)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -114,6 +117,8 @@ END_MESSAGE_MAP()
 CAerofoilDoc::CAerofoilDoc()
 : currentWing(0)
 , currentEllipse(0)
+, currentPoint(0)
+, currentDxf(0)
 , selected(0)
 , plotOrderDialog(0)
 {
@@ -201,45 +206,73 @@ void CAerofoilDoc::addStructure(CStructure* pStructure)
 	if (pStructure->getType() == CWing::TYPE) {
 		CWing* pWing = static_cast<CWing*>(pStructure);
 		plot.addStructure(pStructure);
-		CPathPlotter* ppp = plot.addPathPlotter(pWing);
-		ppp->setUIProxy(new CWingUIProxy());
-		ppp->setPosition(place_x, place_y);
-		updatePlacePosition();
-		RedrawNow();
-
+		addWing(pWing);
 	}
 	else if (pStructure->getType() == CEllipsePair::TYPE) {
 		CEllipsePair* pEllipses = static_cast<CEllipsePair*>(pStructure);
 		plot.addStructure(pStructure);
-		CEllipsePlotter* pep = plot.addEllipsePlotter(pEllipses);
-		pep->setUIProxy(new CEllipseUIProxy());
-		pep->setPosition(place_x, place_y);
-		updatePlacePosition();
-		RedrawNow();
-
+		addEllipses(pEllipses);
 	}
 	else if (pStructure->getType() == CPointStructure::TYPE) {
 		CPointStructure* pPoint = static_cast<CPointStructure*>(pStructure);
 		plot.addStructure(pStructure);
-		CPointPlotter* ppp = plot.addPointPlotter(pPoint);
-		ppp->setUIProxy(new CPlotPointUIProxy());
-		ppp->setPosition(place_x, place_y);
-		updatePlacePosition();
-		RedrawNow();
+		addPointStructure(pPoint);
 	}
 	else if (pStructure->getType() == GCodeSnippet::TYPE) {
 		// NOP - not appropriate for plotting
 		delete pStructure;  // We're not looking after it so just delete.
 	}
 	else if (pStructure->getType() == DXFObject::TYPE) {
-		// TODO need DXFPlotter and GXFUIProxy
-		delete pStructure;
+		DXFObject* pdxf = static_cast<DXFObject*>(pStructure);
+		plot.addStructure(pStructure);
+		addDxfObject(pdxf);
 	}
 	else {
 		assert(false); // A new structure type's been added we don't know about.
 	}
 	
 
+}
+
+void CAerofoilDoc::addWing(CWing* pw)
+{
+	CPathPlotter* ppp = plot.addPathPlotter(pw);
+	ppp->setUIProxy(new CWingUIProxy());
+	ppp->setPosition(place_x, place_y);
+	updatePlacePosition();
+	RedrawNow();
+}
+
+void CAerofoilDoc::addEllipses(CEllipsePair* pep)
+{
+	CPlotStructure* pps = plot.addEllipsePlotter(pep);
+	pps->setUIProxy(new CEllipseUIProxy());
+	pps->setPosition(place_x, place_y);
+	updatePlacePosition();
+	RedrawNow();
+}
+
+void CAerofoilDoc::addPointStructure(CPointStructure* pps)
+{
+	CPointPlotter* ppp = plot.addPointPlotter(pps);
+	ppp->setUIProxy(new CPlotPointUIProxy());
+	ppp->setPosition(place_x, place_y);
+	updatePlacePosition();
+	RedrawNow();
+}
+
+void CAerofoilDoc::addDxfObject(DXFObject* pdxf)
+{
+	DXFPlotter* pdp = plot.addDxfPlotter(currentDxf);
+	pdp->setUIProxy(new DXFUIProxy());
+	// DXF objects quite often offset - i.e. drawing location rather
+	// than centred on 0,0 and then tranformed. So we need to bring it back.
+	// min value for x and midpoint of y works nicely even if appears inconsistent.
+	RectT bounds = pdp->getBounds();
+	pdp->setPosition(place_x - min(bounds.topLeft.fx, bounds.bottomRight.fx),
+		place_y - (bounds.topLeft.fy + bounds.bottomRight.fx) / 2);
+	updatePlacePosition();
+	RedrawNow();
 }
 
 void CAerofoilDoc::setSelection(CPlotStructure* ps)
@@ -288,6 +321,7 @@ void CAerofoilDoc::selectWing(CWing* pw)
 	currentWing = pw;
 	currentEllipse = 0;
 	currentPoint = 0;
+	currentDxf = 0;
 }
 
 void CAerofoilDoc::selectEllipses(CEllipsePair* pep)
@@ -297,6 +331,7 @@ void CAerofoilDoc::selectEllipses(CEllipsePair* pep)
 	currentWing = 0;
 	currentEllipse = pep;
 	currentPoint = 0;
+	currentDxf = 0;
 }
 
 void CAerofoilDoc::selectPointStructure(CPointStructure* pps)
@@ -306,6 +341,17 @@ void CAerofoilDoc::selectPointStructure(CPointStructure* pps)
 	currentWing = 0;
 	currentEllipse = 0;
 	currentPoint = pps;
+	currentDxf = 0;
+}
+
+void CAerofoilDoc::selectDxfObject(DXFObject* pdxf)
+{
+	assert(this);
+	assert(pdxf);
+	currentWing = 0;
+	currentEllipse = 0;
+	currentPoint = 0;
+	currentDxf = pdxf;
 }
 
 void CAerofoilDoc::closePlotOrderDialog()
@@ -447,11 +493,7 @@ void CAerofoilDoc::OnWingNew()
 		{
 			CString tipName = dlg.GetPathName();
 			currentWing = plot.addWing(rootName, 1.0f, tipName, 1.0f );
-			CPathPlotter* ppp = plot.addPathPlotter(currentWing);
-			ppp->setUIProxy(new CWingUIProxy());
-			ppp->setPosition(place_x,place_y);
-			updatePlacePosition();
-			RedrawNow();
+			addWing(currentWing);
 		}
 	}
 }
@@ -466,11 +508,7 @@ void CAerofoilDoc::OnEllipseNew()
 	{
 		CPlot& plot = getPlot();
 		currentEllipse = plot.addEllipsePair(pair);
-		CPlotStructure* pps = plot.addEllipsePlotter(currentEllipse);
-		pps->setUIProxy(new CEllipseUIProxy());
-		pps->setPosition(place_x,place_y);
-		updatePlacePosition();
-		RedrawNow();
+		addEllipses(currentEllipse);
 	}
 }
 
@@ -482,11 +520,28 @@ void CAerofoilDoc::OnPointNew()
 	{
 		CPlot& plot = getPlot();
 		currentPoint = plot.addPointStructure(point);
-		CPointPlotter* ppp = plot.addPointPlotter(currentPoint);
-		ppp->setUIProxy(new CPlotPointUIProxy());
-		ppp->setPosition(place_x,place_y);
-		updatePlacePosition();
-		RedrawNow();
+		addPointStructure(currentPoint);
+	}
+}
+
+
+void CAerofoilDoc::OnDxfNew()
+{
+	CFileDialog dlg(TRUE,
+		".DXF",
+		NULL,
+		OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
+		"DXF CAD File (.DXF)|*.DXF||"
+	);
+
+	OPENFILENAME& ofn = dlg.GetOFN();
+	ofn.lpstrTitle = "Select DXF File";
+
+	if (dlg.DoModal() == IDOK)
+	{
+		CString path = dlg.GetPathName();
+		currentDxf = plot.addDxfStructure(path.GetBuffer());
+		addDxfObject(currentDxf);
 	}
 }
 
@@ -771,3 +826,4 @@ void CAerofoilDoc::OnFileCreatecutterdocument()
 		cutterDoc->addStructure(copy);
 	}
 }
+

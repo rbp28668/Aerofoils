@@ -37,6 +37,7 @@
 #define IDD_FEED_RATE                   160
 #define IDD_EDIT_CUTOUT                 162
 #define IDR_CONTROLCUTTER               166
+#define IDR_DXF_FLOATING                167
 #define IDD_CUTTER_GEOMETRY             170
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
@@ -325,6 +326,7 @@
 #define ID_TYPE_BOTTOMTRAILINGTOLEADINGEDGE 32904
 #define ID_FILE_CREATECUTTERDOCUMENT    32905
 #define ID_FILE_CREATEAEROFOILDOCUMENT  32906
+#define ID_DXF_NEW                      32907
 
 // Next default values for new objects
 // 
@@ -332,7 +334,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
-#define _APS_NEXT_COMMAND_VALUE         32907
+#define _APS_NEXT_COMMAND_VALUE         32908
 #define _APS_NEXT_CONTROL_VALUE         1125
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

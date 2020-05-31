@@ -36,11 +36,13 @@ class CStructure;
 class CWing;
 class CEllipsePair;
 class CPointStructure;
+class DXFObject;
 
 class CPlotStructure;
 class CPathPlotter;
 class CEllipsePlotter;
 class CPointPlotter;
+class DXFPlotter;
 
 class CObjectSerializer;
 
@@ -60,11 +62,13 @@ public:
 	CWing* addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness);
 	CEllipsePair* addEllipsePair(const CEllipsePair& pair);
 	CPointStructure* addPointStructure(const CPointStructure& point);
+	DXFObject* addDxfStructure(const char* importPath);
 
 	// Add plotters
 	CPathPlotter* addPathPlotter(CWing* pWing);
 	CEllipsePlotter* addEllipsePlotter(CEllipsePair* pep);
 	CPointPlotter* addPointPlotter(CPointStructure* pps);
+	DXFPlotter* addDxfPlotter(DXFObject* pdxf);
 
 	// plotter manipulation
 	void deletePlotStructure(CPlotStructure* toDelete);

@@ -28,9 +28,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "cutpath.h"  // "PathCutter.h"
 #include "EllipsePlotter.h"
 #include "PointPlotter.h"
+#include "DXFPlotter.h"
 #include "Wing.h"
 #include "EllipsePair.h"
 #include "PointStructure.h"
+#include "DXFObject.h"
 #include "ObjectSerializer.h"
 
 #ifdef max
@@ -132,13 +134,14 @@ CPointStructure* CPlot::addPointStructure(const CPointStructure& point)
 	return pp;
 }
 
+DXFObject* CPlot::addDxfStructure(const char* importPath)
+{
+	DXFObject* pdxf = new DXFObject(importPath);
+	structures.push_back(pdxf);
+	return pdxf;
 
-//CEllipsePair* CPlot::addEllipsePair()
-//{
-//	assert(this);
-//	assert(false);
-//	return 0;
-//}
+}
+
 
 CPathPlotter* CPlot::addPathPlotter(CWing* pWing)
 {
@@ -163,6 +166,14 @@ CPointPlotter* CPlot::addPointPlotter(CPointStructure* pps)
 	CPointPlotter* plot = new CPointPlotter(pps);
 	plot_structures.push_back(plot);
 //	points.push_back(plot);
+	return plot;
+}
+
+DXFPlotter* CPlot::addDxfPlotter(DXFObject* pdxf)
+{
+	assert(this);
+	DXFPlotter* plot = new DXFPlotter(pdxf);
+	plot_structures.push_back(plot);
 	return plot;
 }
 

@@ -30,7 +30,7 @@ DXF Reference: https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-refer
 #include <algorithm>
 #include "trim.h"
 #include "DXFParser.h" 
-#include "CutStructure.h"
+#include "StructureOutput.h"
 #include "OutputDevice.h"
 #include "ObjectSerializer.h"
 
@@ -51,7 +51,7 @@ class Arc : public DXFItem {
 	public: Arc(): r(0), startAngle(0), endAngle(2 * pi) {}
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 
@@ -63,7 +63,7 @@ class Circle : public DXFItem {
 	public: Circle() : r(0) {}
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -77,7 +77,7 @@ class Ellipse : public DXFItem {
 	public: Ellipse() : ratio(1), start(0), end(360) {}
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -88,7 +88,7 @@ class Line : public DXFItem {
 public:
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -104,7 +104,7 @@ public:
 	LWPolyLine() : vertexCount(0),isClosed(false), hasX(false), hasY(false) {}
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -114,7 +114,7 @@ class Point : public DXFItem {
 public:
 	virtual void add(int code, const std::string& value);
 	virtual DXFItem* clone();
-	virtual void cut(CutStructure * pCut, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -157,7 +157,7 @@ void Arc::add(int code, const std::string& value) {
 
 DXFItem* Arc::clone() { return new Arc(*this); }
 
-void Arc::cut(CutStructure * pCut, COutputDevice * pdev){
+void Arc::cut(StructureOutput * pOutput, COutputDevice * pdev){
 
 	double circumference = 2 * pi * r; // of the circle overlaying the arc
 	int steps = int(ceil(circumference)); // use 1mm lines (arbitrary)
@@ -175,19 +175,19 @@ void Arc::cut(CutStructure * pCut, COutputDevice * pdev){
 	double x = centre.x + r* cos(startRadians);
 	double y = centre.y + r* sin(startRadians);
 	PointT pt(x, y);
-	pCut->move(pdev, pt, pt);
+	pOutput->move(pdev, pt, pt);
 
 	for (double theta = startRadians + dt; theta < endRadians; theta += dt) {
 		x = centre.x + r* cos(theta);
 		y = centre.y + r* sin(theta);
 		pt.fx = x;
 		pt.fy = y;
-		pCut->line(pdev, pt, pt);
+		pOutput->line(pdev, pt, pt);
 	}
 
 	pt.fx = centre.x + r* cos(endRadians);
 	pt.fy = centre.y + r* sin(endRadians);
-	pCut->line(pdev, pt, pt);
+	pOutput->line(pdev, pt, pt);
 
 }
 
@@ -228,7 +228,7 @@ void Circle::add(int code, const std::string& value) {
 
 DXFItem* Circle::clone() { return new Circle(*this); }
 
-void Circle::cut(CutStructure * pCut, COutputDevice * pdev) {
+void Circle::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 
 	double circumference = 2 * pi * r;
 	int steps = int(ceil(circumference)); // use 1mm lines (arbitrary)
@@ -238,19 +238,19 @@ void Circle::cut(CutStructure * pCut, COutputDevice * pdev) {
 	double x = centre.x + r;
 	double y = centre.y;
 	PointT pt(x, y);
-	pCut->move(pdev, pt, pt);
+	pOutput->move(pdev, pt, pt);
 
 	for (double theta = dt; theta < 2 * pi; theta += dt) {
 		x = centre.x + r* cos(theta);
 		y = centre.y + r* sin(theta);
 		pt.fx = x;
 		pt.fy = y;
-		pCut->line(pdev, pt, pt);
+		pOutput->line(pdev, pt, pt);
 	}
 
 	pt.fx = centre.x + r;
 	pt.fy = centre.y;
-	pCut->line(pdev, pt, pt);
+	pOutput->line(pdev, pt, pt);
 }
 
 
@@ -290,7 +290,7 @@ void Ellipse::add(int code, const std::string& value) {
 
 DXFItem* Ellipse::clone() { return new Ellipse(*this); }
 
-void Ellipse::cut(CutStructure * pCut, COutputDevice * pdev) {
+void Ellipse::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 	double dx = masterAxis.x; // major axis a relative value.
 	double dy = masterAxis.y;
 	double majorRadius = sqrt(dx*dx + dy*dy);
@@ -324,7 +324,7 @@ void Ellipse::cut(CutStructure * pCut, COutputDevice * pdev) {
 	double ry = centre.y + y*cr + x*sr;
 
 	PointT pt(rx, ry);
-	pCut->move(pdev, pt, pt);
+	pOutput->move(pdev, pt, pt);
 
 	for (double theta = startRadians + dt; theta < endRadians; theta += dt) {
 		x = majorRadius * cos(theta);
@@ -333,7 +333,7 @@ void Ellipse::cut(CutStructure * pCut, COutputDevice * pdev) {
 		ry = centre.y + y*cr + x*sr;
 		pt.fx = rx;
 		pt.fy = ry;
-		pCut->line(pdev, pt, pt);
+		pOutput->line(pdev, pt, pt);
 	}
 
 	x = majorRadius * cos(endRadians);
@@ -343,7 +343,7 @@ void Ellipse::cut(CutStructure * pCut, COutputDevice * pdev) {
 	pt.fx = rx;
 	pt.fy = ry;
 
-	pCut->line(pdev, pt, pt);
+	pOutput->line(pdev, pt, pt);
 }
 
 
@@ -388,11 +388,11 @@ void Line::add(int code, const std::string& value) {
 
 DXFItem* Line::clone() { return new Line(*this); }
 
-void Line::cut(CutStructure * pCut, COutputDevice * pdev) {
+void Line::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 	PointT startPoint(start.x, start.y);
 	PointT endPoint(end.x, end.y);
-	pCut->move(pdev, startPoint, startPoint);
-	pCut->line(pdev, endPoint, endPoint);
+	pOutput->move(pdev, startPoint, startPoint);
+	pOutput->line(pdev, endPoint, endPoint);
 }
 
 
@@ -456,7 +456,7 @@ void LWPolyLine::add(int code, const std::string& value) {
 
 DXFItem* LWPolyLine::clone() { return new LWPolyLine(*this); }
 
-void LWPolyLine::cut(CutStructure * pCut, COutputDevice * pdev) {
+void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 
 	bool isFirst = true;
 	for (std::vector<Coordinates>::iterator iter = vertices.begin();
@@ -465,16 +465,16 @@ void LWPolyLine::cut(CutStructure * pCut, COutputDevice * pdev) {
 
 		PointT p(iter->x, iter->y);
 		if (isFirst) {
-			pCut->move(pdev, p, p);
+			pOutput->move(pdev, p, p);
 			isFirst = false;
 		} else {
-			pCut->line(pdev, p, p);
+			pOutput->line(pdev, p, p);
 		}
 	}
 
 	if (isClosed) {
 		PointT p(vertices.front().x, vertices.front().y);
-		pCut->line(pdev, p, p);
+		pOutput->line(pdev, p, p);
 	}
 
 }
@@ -522,9 +522,9 @@ void Point::add(int code, const std::string& value) {
 
 DXFItem* Point::clone() { return new Point(*this); }
 
-void Point::cut(CutStructure * pCut, COutputDevice * pdev) {
+void Point::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 	PointT pt(point.x, point.y);
-	pCut->line(pdev, pt, pt);
+	pOutput->line(pdev, pt, pt);
 }
 
 class DXFItemFactory {

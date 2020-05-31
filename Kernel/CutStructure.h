@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <string>
 #include "Kernel.h"
+#include "StructureOutput.h"
 #include "CutStructure.h"
 #include "PointT.h"
 
@@ -33,7 +34,7 @@ class Bounds;
 // that will drive a CNC machine.
 
 
-class CutStructure 
+class CutStructure : public StructureOutput
 {
 	PointT rootOffsets;
 	PointT tipOffsets;
@@ -46,8 +47,8 @@ class CutStructure
 	Bounds* pBounds;
 	
 public:
-	void move(COutputDevice *pdev, const PointT& root, const PointT& tip);
-	void line(COutputDevice *pdev, const PointT& root, const PointT& tip);
+	virtual void move(COutputDevice *pdev, const PointT& root, const PointT& tip);
+	virtual void line(COutputDevice *pdev, const PointT& root, const PointT& tip);
 protected:
 	void transform(PointT& r, PointT& t) const;
 	void updateBounds();

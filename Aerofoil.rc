@@ -103,6 +103,10 @@ BEGIN
         MENUITEM "&New",                        ID_POINT_NEW
         MENUITEM "&Edit",                       ID_POINT_EDIT
     END
+    POPUP "DXF"
+    BEGIN
+        MENUITEM "&New",                        ID_DXF_NEW
+    END
     POPUP "&View"
     BEGIN
         MENUITEM "Zoom...",                     ID_VIEW_ZOOM
@@ -325,6 +329,15 @@ BEGIN
         MENUITEM "x5",                          ID_SPEED_X5
         MENUITEM "x10",                         ID_SPEED_X10
         MENUITEM "Full",                        ID_SPEED_FULL
+    END
+END
+
+IDR_DXF_FLOATING MENU
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Position",                   ID_EDIT_POSITION
+        MENUITEM "&Delete",                     ID_POPUP_ELLIPSE_DELETE
     END
 END
 

@@ -254,6 +254,7 @@
     <ClCompile Include="DXFObject.cpp" />
     <ClCompile Include="DXFObjectCutter.cpp" />
     <ClCompile Include="DXFParser.cpp" />
+    <ClCompile Include="DXFPlotter.cpp" />
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="EllipseCutter.cpp" />
     <ClCompile Include="EllipseFlags.cpp" />
@@ -284,6 +285,7 @@
     <ClCompile Include="Spline.cpp" />
     <ClCompile Include="Steps.cpp" />
     <ClCompile Include="Structure.cpp" />
+    <ClCompile Include="StructureOutput.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIProxy.cpp" />
     <ClCompile Include="Wing.cpp" />
@@ -308,6 +310,7 @@
     <ClInclude Include="DXFObject.h" />
     <ClInclude Include="DXFObjectCutter.h" />
     <ClInclude Include="DXFParser.h" />
+    <ClInclude Include="DXFPlotter.h" />
     <ClInclude Include="Ellipse.h" />
     <ClInclude Include="EllipseCutter.h" />
     <ClInclude Include="EllipseFlags.h" />
@@ -342,6 +345,7 @@
     <ClInclude Include="Spline.h" />
     <ClInclude Include="Steps.h" />
     <ClInclude Include="Structure.h" />
+    <ClInclude Include="StructureOutput.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="trim.h" />
     <ClInclude Include="UIProxy.h" />

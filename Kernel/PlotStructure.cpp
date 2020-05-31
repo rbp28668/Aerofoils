@@ -271,6 +271,16 @@ void CPlotStructure::serializeFrom(CObjectSerializer& os)
 	os.endReadSection();
 }
 
+void CPlotStructure::move(COutputDevice* pdev, const PointT& root, const PointT& tip)
+{
+	interp_move_to(pdev, root, tip);
+}
+
+void CPlotStructure::line(COutputDevice* pdev, const PointT& root, const PointT& tip)
+{
+	interp_line_to(pdev, root, tip);
+}
+
 /************************************************************/
 /** setRootSize sets up the side of the wing root.       **/
 /************************************************************/

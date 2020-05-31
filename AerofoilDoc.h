@@ -65,6 +65,11 @@ public:
 
 	void addStructure(CStructure* pStructure); // created externally
 
+	void addWing(CWing* pw);
+	void addEllipses(CEllipsePair* pep);
+	void addPointStructure(CPointStructure* pps);
+	void addDxfObject(DXFObject* pdxf);
+
 	void setSelection(CPlotStructure* ps);
 	void clearSelection();
 	CPlotStructure* getSelection() {return selected;}
@@ -72,6 +77,8 @@ public:
 	void selectWing(CWing* pw);
 	void selectEllipses(CEllipsePair* pep);
 	void selectPointStructure(CPointStructure* pps);
+	void selectDxfObject(DXFObject* pdxf);
+
 
 	void closePlotOrderDialog();
 
@@ -97,6 +104,7 @@ private:
 	CWing* currentWing;	
 	CEllipsePair* currentEllipse;
 	CPointStructure* currentPoint;
+	DXFObject* currentDxf;
 
 	CPlotStructure* selected;
 
@@ -144,6 +152,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnFileCreatecutterdocument();
+	afx_msg void OnDxfNew();
 };
 
 /////////////////////////////////////////////////////////////////////////////
