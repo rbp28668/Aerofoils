@@ -3,6 +3,7 @@
 #include "Kernel/Cut.h"
 #include "Kernel/Position.h"
 #include "Kernel/CutterSimulation.h"
+#include "Kernel/CutStructure.h"
 
 // CutterPreviewWindow
 
@@ -14,7 +15,7 @@ class CutterPreviewWindow : public CFrameWnd, public PointPlotter
 	DECLARE_DYNAMIC(CutterPreviewWindow)
 
 public:
-	CutterPreviewWindow(CWnd* parentWindow,const Cut* cut, const CutterGeometry* geometry);
+	CutterPreviewWindow(CWnd* parentWindow,const Cut* cut, const CutterGeometry* geometry, const CutStructure::Context& context);
 	virtual ~CutterPreviewWindow();
 	void runCut();
 
@@ -23,6 +24,7 @@ protected:
 	Cut cut;
 	CutterSimulation* simulation;
 	CutterSimulationOutputDevice* device;
+	CutStructure::Context context;
 
 	const int DEFAULT_STEPS_PER_SEC = 50;
 

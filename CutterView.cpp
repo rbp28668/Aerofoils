@@ -212,6 +212,7 @@ void CutterView::OnViewZoom()
 		}
 
 		OnInitialUpdate(); // recalc sizes.
+		GetDocument()->RedrawNow();
 	}
 
 }
@@ -224,9 +225,7 @@ void CutterView::OnUpdateViewZoom(CCmdUI *pCmdUI)
 
 void CutterView::OnViewPreviewCutPath()
 {
-	
-	CutterPreviewWindow* preview = new CutterPreviewWindow(this, &(GetDocument()->cut), &(GetDocument()->getGeometry()));
+	CutterPreviewWindow* preview = new CutterPreviewWindow(this, &(GetDocument()->cut), &(GetDocument()->getGeometry()), GetDocument()->getContext());
 	preview->ShowWindow(TRUE);
-
 }
 

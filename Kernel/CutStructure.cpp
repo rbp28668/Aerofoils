@@ -66,7 +66,9 @@ void CutStructure::updateBounds()
 	} else {
 		pb = new Bounds(); 
 	}
-	cut(pb, 0.0);
+	CutStructure::Context context;
+	context.toolOffset = 0;
+	cut(pb, context);
 	pBounds = pb;
 }
 
@@ -166,4 +168,23 @@ void CutStructure::serializeFrom(CObjectSerializer & os)
 	os.read("reflect", reflect); // FIXME - derived state won't be set
 	os.endReadSection();
 
+}
+
+void CutStructure::Context::serializeTo(CObjectSerializer& os) const
+{
+	assert(this);
+	os.startSection("CutContext", this);
+	os.write("toolOffset", toolOffset);
+	os.write("optimiseOutput", optimiseOutput);
+	os.write("tolerance", tolerance);
+	os.endSection();
+}
+
+void CutStructure::Context::serializeFrom(CObjectSerializer& os)
+{
+	os.startReadSection("CutContext", this);
+	os.write("toolOffset", toolOffset);
+	os.write("optimiseOutput", optimiseOutput);
+	os.write("tolerance", tolerance);
+	os.endReadSection();
 }

@@ -33,6 +33,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "ToolOffsetDialog.h"
 #include "FeedRateDialog.h"
 #include "CutterGeometryDialog.h"
+#include "CutOptimiseDlg.h"
 #include "Kernel\Wing.h"
 #include "Kernel\EllipsePair.h"
 #include "Kernel\PointStructure.h"
@@ -157,7 +158,7 @@ void CutterDoc::deleteCut(CutStructure * pCut)
 void CutterDoc::runCut(COutputDevice& pdev)
 {
 	try {
-		cut.cut(pdev);
+		cut.cut(pdev, context);
 	}
 	catch (COutputDevice::StoppedException & /*stopped*/) {
 		// Nop
@@ -185,6 +186,7 @@ BEGIN_MESSAGE_MAP(CutterDoc, CDocument)
 	ON_COMMAND(ID_CUTTER_FEEDRATE, &CutterDoc::OnCutterFeedrate)
 	ON_COMMAND(ID_CUTTER_CUTTERGEOMETRY, &CutterDoc::OnCutterCuttergeometry)
 	ON_COMMAND(ID_FILE_CREATEAEROFOILDOCUMENT, &CutterDoc::OnFileCreateaerofoildocument)
+	ON_COMMAND(ID_CUTTER_OPTIMISEOUTPUT, &CutterDoc::OnCutterOptimiseoutput)
 END_MESSAGE_MAP()
 
 BOOL CutterDoc::OnNewDocument()
@@ -209,6 +211,9 @@ BOOL CutterDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		geometry.serializeFrom(serializer);
 		if (serializer.ifExists("GCodeConfig")) {
 			gcodeConfig.serializeFrom(serializer);
+		}
+		if (serializer.ifExists("CutContext")) {
+			context.serializeFrom(serializer);
 		}
 		cut.serializeFrom(serializer);
 		serializer.endReadSection();
@@ -241,6 +246,7 @@ BOOL CutterDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		grid.serializeTo(serializer);
 		geometry.serializeTo(serializer);
 		gcodeConfig.serializeTo(serializer);
+		context.serializeTo(serializer);
 		cut.serializeTo(serializer);
 		serializer.endSection();
 	}
@@ -354,7 +360,7 @@ void CutterDoc::OnFileCncoutput()
 		try
 		{
 			CCNCConnectionOutputDevice dev(&gcodeConfig, &geometry, cncHost.c_str(), cncPort);
-			cut.cut(dev);
+			cut.cut(dev, context);
 		}
 		catch (std::exception& e)
 		{
@@ -395,7 +401,7 @@ void CutterDoc::OnFileGcode()
 	if (dlg.DoModal() == IDOK)
 	{
 		GCodeOutputFile dev(&gcodeConfig, &geometry, (dlg.GetPathName()));
-		cut.cut(dev);
+		cut.cut(dev, context);
 	}
 }
 
@@ -403,9 +409,10 @@ void CutterDoc::OnFileGcode()
 void CutterDoc::OnCutterTooloffset()
 {
 	ToolOffsetDialog dlg;
-	dlg.toolOffset = cut.getToolOffset();
+	dlg.toolOffset = context.toolOffset;
 	if (dlg.DoModal() == IDOK) {
-		cut.setToolOffset(dlg.toolOffset);
+		context.toolOffset = dlg.toolOffset;
+		UpdateNow();
 		RedrawNow();
 	}
 }
@@ -454,5 +461,19 @@ void CutterDoc::OnFileCreateaerofoildocument()
 		CStructure* copy = static_cast<CStructure*>(serializer.createSubtype());
 		copy->serializeFrom(serializer);
 		aerofoilDoc->addStructure(copy);
+	}
+}
+
+
+void CutterDoc::OnCutterOptimiseoutput()
+{
+	CutOptimiseDlg dlg;
+	dlg.optimiseOutput = context.optimiseOutput ? TRUE : FALSE;
+	dlg.resolution = context.tolerance * 2;
+	if (dlg.DoModal()) {
+		context.optimiseOutput = dlg.optimiseOutput == TRUE;
+		context.tolerance = dlg.resolution /2;
+		UpdateNow();
+		RedrawNow();
 	}
 }

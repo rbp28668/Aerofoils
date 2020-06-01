@@ -21,24 +21,27 @@ Improvements
 
 Separate cut of top and bottom from either direction  DONE
 
-Create Plot from Cut and vice versa.
+Create Plot from Cut and vice versa. DONE
+Add DXF import into plot DONE
 
 Graphical output when Edit Wing dialog is open (add to dialog)  DONE
 Also, remove root and tip dialogs and add their contents into Edit Wing. DONE
 
 Filter G-Code output to skip zero distance moves. DONE
 
+Have all the G-Code related stuff in Cutter menu rather than some in File menu. DONE
+
+Adaptive step size in cutter for G-code output- start large and reduce step in U until error in x/y < 0.5*resolution. DONE
+
 Plan view of cutter when width and block position defined
+
 
 Rotate tapered wing to make TE parallel to edge of block
 
-Have all the G-Code related stuff in Cutter menu rather than some in File menu.
 
-Adaptive step size in cutter for G-code output- start large and reduce step in U until error in x/y < 0.5*resolution.
 
-Add DXF import into plot
 
-Extend scope of DXF import
+Extend scope of DXF import - include blocks.
 
 Splash screen on Cutter
 

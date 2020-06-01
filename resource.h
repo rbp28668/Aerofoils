@@ -39,6 +39,7 @@
 #define IDR_CONTROLCUTTER               166
 #define IDR_DXF_FLOATING                167
 #define IDD_CUTTER_GEOMETRY             170
+#define IDD_CUT_OPTIMISE                172
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -153,6 +154,7 @@
 #define IDC_CHK_INCLUDE_FEED            1094
 #define IDC_CHK_TOP_SURFACE             1094
 #define IDC_CHK_PLOT_CUTOUTS            1094
+#define IDC_CHK_OPTIMISE_CUT            1094
 #define IDC_CHK_CENTRE                  1095
 #define IDC_CHK_USE_G1_FOR_MOVES        1095
 #define IDC_CHK_SEND_WIRE_CODES         1096
@@ -187,6 +189,7 @@
 #define IDC_EDT_TIP_WASHOUT             1123
 #define IDC_EDT_TIP_THICKNESS_MOD       1124
 #define IDC_EDT_ROOT_CHORD              1125
+#define IDC_EDIT_RESOLUTION             1125
 #define IDC_EDT_ROOT_SWEEP              1126
 #define IDC_EDT_ROOT_WASHOUT            1127
 #define IDC_EDT_ROOT_THICKNESS_MOD      1128
@@ -327,15 +330,16 @@
 #define ID_FILE_CREATECUTTERDOCUMENT    32905
 #define ID_FILE_CREATEAEROFOILDOCUMENT  32906
 #define ID_DXF_NEW                      32907
+#define ID_CUTTER_OPTIMISEOUTPUT        32908
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        172
-#define _APS_NEXT_COMMAND_VALUE         32908
-#define _APS_NEXT_CONTROL_VALUE         1125
+#define _APS_NEXT_RESOURCE_VALUE        174
+#define _APS_NEXT_COMMAND_VALUE         32909
+#define _APS_NEXT_CONTROL_VALUE         1126
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

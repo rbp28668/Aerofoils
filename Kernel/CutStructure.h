@@ -54,10 +54,21 @@ protected:
 	void updateBounds();
 
 public:
+	class Context {
+	public:
+		double toolOffset;
+		bool optimiseOutput;
+		double tolerance;
+		Context() : toolOffset(0.5), optimiseOutput(true), tolerance(0.005) {}
+		void serializeTo(CObjectSerializer& os) const;
+		void serializeFrom(CObjectSerializer& os);
+
+	};
+	
 	CutStructure();
 	~CutStructure();
 
-	virtual void cut(COutputDevice *pdev, double toolOffset) = 0;
+	virtual void cut(COutputDevice *pdev, const CutStructure::Context& context) = 0;
 
 	virtual std::string getDescriptiveText() const = 0; // For UI
 	virtual std::string getType() const = 0; // for serialization, basic type identification etc.

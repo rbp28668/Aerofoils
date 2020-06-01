@@ -33,7 +33,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 Cut::Cut()
-	: toolOffset(0.5)
 {
 }
 
@@ -59,7 +58,7 @@ Cut::~Cut()
 }
 
 
-void Cut::cut(COutputDevice & pdev)
+void Cut::cut(COutputDevice & pdev, const CutStructure::Context& context)
 {
 	try {
 		pdev.startPlot();
@@ -70,7 +69,7 @@ void Cut::cut(COutputDevice & pdev)
 		{
 			CutStructure* pcs = *iter;
 			pdev.startObject(pcs->getDescriptiveText().c_str());
-			pcs->cut(&pdev, toolOffset);
+			pcs->cut(&pdev, context);
 			pdev.endObject(pcs->getDescriptiveText().c_str());
 		}
 		pdev.Flush();
@@ -246,7 +245,6 @@ void Cut::deleteStructure(CStructure * toDelete)
 void Cut::serializeTo(CObjectSerializer & os) const
 {
 	os.startSection("cut", this);
-	os.write("toolOffset", toolOffset);
 	// Removed feed rate as now stored in GCodeConfig
 	os.startCollection("structures", (int)structures.size());
 	for (StructureConstIterator si = structures.begin();
@@ -279,7 +277,13 @@ void Cut::serializeFrom(CObjectSerializer & os)
 	bool useFeedRate;
 
 	os.startReadSection("cut", this);
-	os.read("toolOffset", toolOffset);
+	if (os.ifExists("toolOffset")) {
+		double toolOffset;
+		os.read("toolOffset", toolOffset);
+		// and ignore!
+	}
+
+
 	if (os.ifExists("feedRate")) {
 		os.read("feedRate", feedRate);
 	}

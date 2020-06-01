@@ -29,7 +29,7 @@ public:
 	HomeCutter();
 	~HomeCutter();
 
-	virtual void cut(COutputDevice *pdev, double toolOffset);
+	virtual void cut(COutputDevice *pdev, const CutStructure::Context& context);
 
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;

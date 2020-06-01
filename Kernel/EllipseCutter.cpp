@@ -48,7 +48,7 @@ EllipseCutter::~EllipseCutter()
 {
 }
 
-void EllipseCutter::cut(COutputDevice * pdev, double toolOffset)
+void EllipseCutter::cut(COutputDevice * pdev, const CutStructure::Context& context)
 {
 	assert(this);
 	assert(pdev);

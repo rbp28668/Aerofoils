@@ -80,7 +80,7 @@ private:
 		bool skipSegment() const { return skip; }		// Go straight on to next intercept with this flag set
 		void setSkip(bool skip) { this->skip = skip; }
 
-		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame) = 0;
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame, const CutStructure::Context& context) = 0;
 	};
 
 	// Ordered list of intercepts.
@@ -100,24 +100,24 @@ private:
 	};
 
 
-	NumericT tool_offset;
-	bool blToolOffsetSet;
 	CPlotFlags plot_flags;
 	const CWing* pWing;
-	Mode mode;
+	CPathCutter::Mode mode;
 
 	void find_forward_PointT(const CAerofoil& foil, NumericT* u);
-	void plot_segment(COutputDevice* pdev, Intercept* start, Intercept* finish, NumericT delta);
-	void plot_segment_reverse(COutputDevice* pdev,  Intercept* start, Intercept* finish, NumericT delta);
+	void plot_segment(COutputDevice* pdev, Intercept* start, Intercept* finish, NumericT delta, const CutStructure::Context& context);
+	void plot_segment_reverse(COutputDevice* pdev, Intercept* start, Intercept* finish, NumericT delta, const CutStructure::Context& context);
+	void plot_segment_opt(COutputDevice* pdev, NumericT ru0, NumericT ru1, NumericT tu0, NumericT tu1, NumericT scaledTolerance, const CutStructure::Context& context);
+	NumericT error_distance(PointT p0, PointT p1, PointT midpoint);
 	void toPoint(NumericT ru, COutputDevice* pdev,  Intercept* start, Intercept* finish, NumericT r_skin, NumericT t_skin);
-	void calc_skin(NumericT& r_skin, NumericT& t_skin) const;
-	void set_le_intercept(Intercepts& intercepts, const Frame* frame);
-	void set_te_intercept(Intercepts& intercepts, const Frame* frame);
-	void set_spars_intercept(Intercepts& intercepts, const Frame* frame);
-	void set_cutouts_intercept(Intercepts& intercepts, const Frame* frame);
+	void calc_skin(NumericT& r_skin, NumericT& t_skin, const CutStructure::Context& context) const;
+	void set_le_intercept(Intercepts& intercepts, const Frame* frame, const CutStructure::Context& context);
+	void set_te_intercept(Intercepts& intercepts, const Frame* frame, const CutStructure::Context& context);
+	void set_spars_intercept(Intercepts& intercepts, const Frame* frame, const CutStructure::Context& context);
+	void set_cutouts_intercept(Intercepts& intercepts, const Frame* frame, const CutStructure::Context& context);
 
-	void createFrame(Frame& frame);
-	void createIntercepts(Intercepts& intercepts, const Frame& frame);
+	void createFrame(Frame& frame, const CutStructure::Context& context);
+	void createIntercepts(Intercepts& intercepts, const Frame& frame, const CutStructure::Context& context);
 
 public:
 
@@ -126,15 +126,12 @@ public:
 	CPathCutter(const CWing* pWing);
 	explicit CPathCutter(); // for serialization
 
-	NumericT set_tool_offset(NumericT fNewOffset);
-	NumericT get_tool_offset(void);
-
-	Mode get_mode() const { return mode; }
-	void set_mode(Mode mode) { this->mode = mode; }
-
+	CPathCutter::Mode get_mode() const { return mode; }
+	void set_mode(CPathCutter::Mode mode) { this->mode = mode; }
+	
 	const CWing* wing() const { return pWing; }
 
-	virtual void cut(COutputDevice* pdev, double toolOffset);
+	virtual void cut(COutputDevice* pdev, const CutStructure::Context& context);
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;
 	virtual CStructure* getStructure();
@@ -149,7 +146,7 @@ private:
 	class NoOpIntercept : public Intercept {
 	public:
 		NoOpIntercept(NumericT ru, NumericT tu);
-		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame, const CutStructure::Context& context);
 	};
 
 	// Cut the leading edge at this position
@@ -157,7 +154,7 @@ private:
 		bool topSurface;
 	public:
 		LeadingEdgeIntercept(NumericT ru, NumericT tu, bool topSurface);
-		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame, const CutStructure::Context& context);
 	};
 
 	// Cut the trailing edge at this position
@@ -165,7 +162,7 @@ private:
 		bool topSurface;
 	public:
 		TrailingEdgeIntercept(NumericT ru, NumericT tu, bool topSurface);
-		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame, const CutStructure::Context& context);
 	};
 
 	// Cut a spar at this position
@@ -173,7 +170,7 @@ private:
 		const CSpar* pSpar;
 	public:
 		SparIntercept(NumericT ru, NumericT tu, const CSpar* spar);
-		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame, const CutStructure::Context& context);
 	};
 
 	// Cut a Cutout at this position
@@ -181,7 +178,7 @@ private:
 		const Cutout* pCutout;
 	public:
 		CutoutIntercept(NumericT ru, NumericT tu, const Cutout* cutout);
-		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame);
+		virtual void process(CPathCutter* cutter, COutputDevice* output, Frame* frame, const CutStructure::Context& context);
 	};
 
 

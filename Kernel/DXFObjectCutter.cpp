@@ -43,7 +43,7 @@ DXFObjectCutter::~DXFObjectCutter()
 {
 }
 
-void DXFObjectCutter::cut(COutputDevice * pdev, double toolOffset)
+void DXFObjectCutter::cut(COutputDevice * pdev, const CutStructure::Context& context)
 {
 	pDxfObject->cutAll(this, pdev);
 }

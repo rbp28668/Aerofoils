@@ -33,7 +33,7 @@ HomeCutter::~HomeCutter()
 {
 }
 
-void HomeCutter::cut(COutputDevice * pdev, double toolOffset)
+void HomeCutter::cut(COutputDevice * pdev, const CutStructure::Context& context)
 {
 	assert(this);
 	assert(pdev);

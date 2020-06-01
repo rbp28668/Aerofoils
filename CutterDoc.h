@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <string>
 #include "BackgroundGrid.hpp"
+#include "Kernel/CutStructure.h"
 #include "Kernel/CutterGeometry.h"
 #include "Kernel/GCodeOutputDevice.h"
 #include "kernel/cut.h"
@@ -35,7 +36,7 @@ class CutterDoc : public CDocument
 	CBackgroundGrid grid;
 	CutterGeometry geometry;
 	GCodeOutputDevice::GCodeConfig gcodeConfig;
-
+	CutStructure::Context context;
 	std::string cncHost;
 	unsigned int cncPort;
 	bool cncIsSetup;
@@ -62,6 +63,8 @@ public:
 	double sizeX() const { return geometry.getXTravel(); }
 	double sizeY() const { return geometry.getYTravel(); }
 	const CutterGeometry& getGeometry() { return geometry; }
+
+	inline CutStructure::Context& getContext() { return context; }
 
 	CBackgroundGrid& getGrid() { return grid; }
 
@@ -108,4 +111,5 @@ public:
 	afx_msg void OnCutterFeedrate();
 	afx_msg void OnCutterCuttergeometry();
 	afx_msg void OnFileCreateaerofoildocument();
+	afx_msg void OnCutterOptimiseoutput();
 };
