@@ -55,7 +55,7 @@ void PointCutter::setFast(bool fast)
 	this->fast = fast;
 }
 
-void PointCutter::cut(COutputDevice * pdev, double toolOffset)
+void PointCutter::cut(COutputDevice * pdev, const CutStructure::Context& context)
 {
 	assert(this);
 	assert(pdev);

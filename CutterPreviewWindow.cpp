@@ -22,7 +22,7 @@
 
 IMPLEMENT_DYNAMIC(CutterPreviewWindow, CFrameWnd)
 
-CutterPreviewWindow::CutterPreviewWindow(CWnd* parentWindow, const Cut* cut, const CutterGeometry* geometry)
+CutterPreviewWindow::CutterPreviewWindow(CWnd* parentWindow, const Cut* cut, const CutterGeometry* geometry, const CutStructure::Context& context) 
 	: bitmap(0)
 	, nWidth(0)
 	, nHeight(0)
@@ -38,6 +38,7 @@ CutterPreviewWindow::CutterPreviewWindow(CWnd* parentWindow, const Cut* cut, con
 	, isCutting(false)
 	, isPaused(false)
 	, hasFlash(false)
+	, context(context)
 
 {
 
@@ -119,7 +120,7 @@ void CutterPreviewWindow::runCut() {
 	simulation->reset();
 	
 	try {
-		cut.cut(*device);
+		cut.cut(*device, context);
 	}
 	catch (COutputDevice::StoppedException & ) {
 		// Nop

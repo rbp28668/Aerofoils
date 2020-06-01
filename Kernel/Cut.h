@@ -19,6 +19,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <list>
 #include "Kernel.h"
+#include "CutStructure.h"
 
 class COutputDevice;
 class CWing;
@@ -45,9 +46,6 @@ class Cut
 
 	StructureList structures;
 	CutList cut_structures;
-
-	// Cutter parameters
-	double toolOffset;
 	
 public:
 
@@ -59,10 +57,8 @@ public:
 	Cut();
 	~Cut();
 
-	inline double getToolOffset() const { return toolOffset; }
-	inline void setToolOffset(double offset) { toolOffset = offset; }
 
-	void cut(COutputDevice& pdev);
+	void cut(COutputDevice& pdev, const CutStructure::Context& context);
 
 	// Add structure
 	void addStructure(CStructure* pStructure);

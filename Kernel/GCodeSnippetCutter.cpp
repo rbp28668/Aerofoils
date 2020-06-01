@@ -44,7 +44,7 @@ GCodeSnippetCutter::~GCodeSnippetCutter()
 {
 }
 
-void GCodeSnippetCutter::cut(COutputDevice * pdev, double toolOffset)
+void GCodeSnippetCutter::cut(COutputDevice * pdev, const CutStructure::Context& context)
 {
 	assert(this);
 	assert(pdev);
