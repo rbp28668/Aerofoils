@@ -87,6 +87,8 @@
 #define IDC_RADZOOMFIT                  1033
 #define IDC_RADZOOM50                   1034
 #define IDC_RAD_A4                      1035
+#define IDC_RADZOOM201                  1035
+#define IDC_RADZOOM1000                 1035
 #define IDC_RAD_A4L                     1036
 #define IDC_RAD_A3                      1037
 #define IDC_RAD_A3L                     1038
@@ -337,7 +339,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        174
+#define _APS_NEXT_RESOURCE_VALUE        175
 #define _APS_NEXT_COMMAND_VALUE         32909
 #define _APS_NEXT_CONTROL_VALUE         1126
 #define _APS_NEXT_SYMED_VALUE           107

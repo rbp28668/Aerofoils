@@ -29,9 +29,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 class CZoomDlg : public CDialog
 {
-// Construction
 public:
+
+	double zoom;
+	bool fit;
+
+	// Construction
 	CZoomDlg(CWnd* pParent = NULL);   // standard constructor
+
+protected:
 
 // Dialog Data
 	//{{AFX_DATA(CZoomDlg)
@@ -43,7 +49,6 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CZoomDlg)
-	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -55,6 +60,7 @@ protected:
 		// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+	virtual void OnOK();
 };
 
 //{{AFX_INSERT_LOCATION}}

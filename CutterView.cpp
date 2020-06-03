@@ -180,17 +180,9 @@ void CutterView::OnUpdateViewDrawmoves(CCmdUI *pCmdUI)
 void CutterView::OnViewZoom()
 {
 	CZoomDlg dlg;
-	dlg.m_zoomIndex = 1; // 100%
 	if (dlg.DoModal())
 	{
-		switch (dlg.m_zoomIndex)
-		{
-		case 0:	zoom = 2;		break;
-		case 1: zoom = 1;		break;
-		case 2: zoom = 0.5f;	break;
-		case 3: zoom = 0.25f;	break;
-		case 4:
-		{
+		if(dlg.fit) {
 			// Get current size of window
 			CRect rClient;
 			GetClientRect(&rClient);
@@ -207,8 +199,8 @@ void CutterView::OnViewZoom()
 			float zy = float(rClient.Height() / float(size.y));
 
 			zoom = min(zx, zy);
-			break;
-		}
+		} else {
+			zoom = dlg.zoom;
 		}
 
 		OnInitialUpdate(); // recalc sizes.

@@ -34,9 +34,11 @@ static char THIS_FILE[] = __FILE__;
 
 CZoomDlg::CZoomDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CZoomDlg::IDD, pParent)
+	, zoom(1)
+	, fit(false)
 {
 	//{{AFX_DATA_INIT(CZoomDlg)
-	m_zoomIndex = -1;
+	m_zoomIndex = 2;
 	//}}AFX_DATA_INIT
 }
 
@@ -45,7 +47,7 @@ void CZoomDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CZoomDlg)
-	DDX_Radio(pDX, IDC_RADZOOM200, m_zoomIndex);
+	DDX_Radio(pDX, IDC_RADZOOM1000, m_zoomIndex);
 	//}}AFX_DATA_MAP
 }
 
@@ -58,3 +60,25 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CZoomDlg message handlers
+
+
+void CZoomDlg::OnOK()
+{
+	if (UpdateData()) {
+		fit = false;
+		switch (m_zoomIndex)
+		{
+		case 0:	zoom = 10;		break;
+		case 1: zoom = 2;		break;
+		case 2: zoom = 1;	break;
+		case 3: zoom = 0.5;	break;
+		case 4: zoom = 0.25; break;
+		default:
+			zoom = -1;
+			fit = true;
+			break;
+		}
+	}
+
+	CDialog::OnOK();
+}
