@@ -17,7 +17,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
 
-class CutterGeometry;
+#include "CutPlanformControl.h"
+#include "Kernel/CutterGeometry.h"
+class Cut;
 
 // CutterGeometryDialog dialog
 
@@ -27,9 +29,11 @@ class CutterGeometryDialog : public CDialogEx
 	DECLARE_DYNAMIC(CutterGeometryDialog)
 
 	CutterGeometry* pGeometry;
+	Cut* pCut;
+	CutterGeometry copy;
 
 public:
-	CutterGeometryDialog(CutterGeometry* geometry, CWnd* pParent = nullptr);  
+	CutterGeometryDialog(CutterGeometry* geometry, Cut* cut, CWnd* pParent = nullptr);  
 	virtual ~CutterGeometryDialog();
 
 // Dialog Data
@@ -49,4 +53,12 @@ public:
 	double block_width;
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
+	CutPlanformControl cutPlanform;
+		
+	afx_msg void OnKillfocusEdtXtravel();
+	afx_msg void OnKillfocusEdtYtravel();
+	afx_msg void OnKillfocusEdtWidth();
+	afx_msg void OnKillfocusEdtBlocklhs();
+//	afx_msg void OnChangeEdtBlockwidth();
+	afx_msg void OnKillfocusEdtBlockwidth();
 };

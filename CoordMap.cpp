@@ -83,7 +83,7 @@ CCoordMap::~CCoordMap()
 
 }
 
-POINT CCoordMap::toDevice(const PointT& pt)
+POINT CCoordMap::toDevice(const PointT& pt) const
 {
 	POINT np;
 	np.x = int((pt.fx - xoffset) * scalex + 0.5f);
@@ -91,7 +91,7 @@ POINT CCoordMap::toDevice(const PointT& pt)
 	return np;
 }
 
-RECT CCoordMap::toDevice(const RectT& r)
+RECT CCoordMap::toDevice(const RectT& r) const
 {
 	POINT tl = toDevice(r.topLeft);
 	POINT br = toDevice(r.bottomRight);

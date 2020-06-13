@@ -41,8 +41,8 @@ public:
 	CCoordMap(const RectT& logical, const RECT& physical);
 	virtual ~CCoordMap();
 
-	POINT toDevice(const PointT& pt);
-	RECT  toDevice(const RectT& r);
+	POINT toDevice(const PointT& pt) const;
+	RECT  toDevice(const RectT& r) const;
 
 	PointT toLogical(POINT pt);
 private:

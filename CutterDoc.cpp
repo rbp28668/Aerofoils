@@ -436,7 +436,7 @@ void CutterDoc::OnCutterCuttergeometry()
 	double oldx = geometry.getXTravel();
 	double oldy = geometry.getYTravel();
 
-	CutterGeometryDialog dlg(&geometry);
+	CutterGeometryDialog dlg(&geometry,&cut);
 	if (dlg.DoModal() == IDOK) {
 		// X and Y travel drive the document size so see if these have changed and if so update.
 		if ((oldx != geometry.getXTravel()) || (oldy != geometry.getYTravel())) {

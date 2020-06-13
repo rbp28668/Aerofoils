@@ -32,9 +32,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 IMPLEMENT_DYNAMIC(CutterGeometryDialog, CDialogEx)
 
-CutterGeometryDialog::CutterGeometryDialog(CutterGeometry* geometry, CWnd* pParent /*=nullptr*/)
+CutterGeometryDialog::CutterGeometryDialog(CutterGeometry* geometry, Cut* cut, CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CUTTER_GEOMETRY, pParent)
+	, copy(*geometry)
+	, cutPlanform(cut, &copy)
 	, pGeometry(geometry)
+	, pCut(cut)
 	, x_travel(0)
 	, y_travel(0)
 	, cutter_width(0)
@@ -61,8 +64,8 @@ void CutterGeometryDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDT_BLOCKLHS, block_lhs);
 	DDV_MinMaxDouble(pDX, block_lhs, 0, cutter_width);
 	DDX_Text(pDX, IDC_EDT_BLOCKWIDTH, block_width);
-	DDV_MinMaxDouble(pDX, block_width, 0, cutter_width-block_lhs);
-	
+	DDV_MinMaxDouble(pDX, block_width, 0, cutter_width - block_lhs);
+
 
 #ifndef NDEBUG
 	if (pDX->m_bSaveAndValidate) {
@@ -72,10 +75,17 @@ void CutterGeometryDialog::DoDataExchange(CDataExchange* pDX)
 	}
 #endif
 
+	DDX_Control(pDX, IDC_PLANFORM_CONTROL, cutPlanform);
 }
 
 
 BEGIN_MESSAGE_MAP(CutterGeometryDialog, CDialogEx)
+	ON_EN_KILLFOCUS(IDC_EDT_XTRAVEL, &CutterGeometryDialog::OnKillfocusEdtXtravel)
+	ON_EN_KILLFOCUS(IDC_EDT_YTRAVEL, &CutterGeometryDialog::OnKillfocusEdtYtravel)
+	ON_EN_KILLFOCUS(IDC_EDT_WIDTH, &CutterGeometryDialog::OnKillfocusEdtWidth)
+	ON_EN_KILLFOCUS(IDC_EDT_BLOCKLHS, &CutterGeometryDialog::OnKillfocusEdtBlocklhs)
+//	ON_EN_CHANGE(IDC_EDT_BLOCKWIDTH, &CutterGeometryDialog::OnChangeEdtBlockwidth)
+ON_EN_KILLFOCUS(IDC_EDT_BLOCKWIDTH, &CutterGeometryDialog::OnKillfocusEdtBlockwidth)
 END_MESSAGE_MAP()
 
 
@@ -109,4 +119,51 @@ BOOL CutterGeometryDialog::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+
+void CutterGeometryDialog::OnKillfocusEdtXtravel()
+{
+	if (UpdateData()) {
+		copy.setXTravel(x_travel);
+		cutPlanform.RedrawWindow();
+	}
+}
+
+
+void CutterGeometryDialog::OnKillfocusEdtYtravel()
+{
+	if (UpdateData()) {
+		copy.setYTravel(y_travel);
+		cutPlanform.RedrawWindow();
+	}
+}
+
+
+void CutterGeometryDialog::OnKillfocusEdtWidth()
+{
+	if (UpdateData()) {
+		copy.setWidth(cutter_width);
+		cutPlanform.RedrawWindow();
+	}
+
+}
+
+
+void CutterGeometryDialog::OnKillfocusEdtBlocklhs()
+{
+	if (UpdateData()) {
+		copy.setBlockLeft(block_lhs);
+		copy.setBlockRight(block_lhs + block_width);
+		cutPlanform.RedrawWindow();
+	}
+}
+
+
+void CutterGeometryDialog::OnKillfocusEdtBlockwidth()
+{
+	if (UpdateData()) {
+		copy.setBlockRight(block_lhs + block_width);
+		cutPlanform.RedrawWindow();
+	}
 }

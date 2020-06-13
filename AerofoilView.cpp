@@ -338,35 +338,26 @@ void CAerofoilView::OnInitialUpdate()
 void CAerofoilView::OnViewZoom() 
 {
 	CZoomDlg dlg;
-	dlg.m_zoomIndex = 1; // 100%
-	if(dlg.DoModal())
-	{
-		switch(dlg.m_zoomIndex)
-		{
-		case 0:	zoom = 2;		break;
-		case 1: zoom = 1;		break;
-		case 2: zoom = 0.5f;	break;
-		case 3: zoom = 0.25f;	break;
-		case 4: 
-			{
-				// Get current size of window
-				CRect rClient;
-				GetClientRect(&rClient);
+	if(dlg.DoModal()) {
+		if(dlg.fit) {
+			// Get current size of window
+			CRect rClient;
+			GetClientRect(&rClient);
 
-				// Get size of window needed for client at 1.0 zoom
-				CAerofoilDoc* doc = GetDocument();
+			// Get size of window needed for client at 1.0 zoom
+			CAerofoilDoc* doc = GetDocument();
 
-				PointT docSize(doc->sizeX(), doc->sizeY());
-				CCoordMap map(docSize.fx, docSize.fy, GetDC(), 1.0f);
-				docSize.fy = 0;	// due to inversion of coords in MM_TEXT
-				POINT size = map.toDevice(docSize);
+			PointT docSize(doc->sizeX(), doc->sizeY());
+			CCoordMap map(docSize.fx, docSize.fy, GetDC(), 1.0f);
+			docSize.fy = 0;	// due to inversion of coords in MM_TEXT
+			POINT size = map.toDevice(docSize);
 				
-				float zx =  float(rClient.Width() / float(size.x));
-				float zy = float(rClient.Height() / float(size.y));
+			float zx =  float(rClient.Width() / float(size.x));
+			float zy = float(rClient.Height() / float(size.y));
 
-				zoom  = min(zx,zy);
-				break;
-			}
+			zoom  = min(zx,zy);
+		} else {
+			zoom = dlg.zoom;
 		}
 
 		OnInitialUpdate(); // recalc sizes.

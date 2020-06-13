@@ -33,12 +33,12 @@ Have all the G-Code related stuff in Cutter menu rather than some in File menu. 
 
 Adaptive step size in cutter for G-code output- start large and reduce step in U until error in x/y < 0.5*resolution. DONE
 
-Plan view of cutter when width and block position defined
+Plan view of cutter when width and block position defined DONE
 
 
 Rotate tapered wing to make TE parallel to edge of block
 
-
+Make ellipse tool offset aware.
 
 
 Extend scope of DXF import - include blocks.

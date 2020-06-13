@@ -150,6 +150,9 @@
     <ClCompile Include="CutOptimiseDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CutPlanformControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Aerofoil.rc">
@@ -296,6 +299,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutOptimiseDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CutPlanformControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
