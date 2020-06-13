@@ -87,7 +87,6 @@
 #define IDC_RADZOOMFIT                  1033
 #define IDC_RADZOOM50                   1034
 #define IDC_RAD_A4                      1035
-#define IDC_RADZOOM201                  1035
 #define IDC_RADZOOM1000                 1035
 #define IDC_RAD_A4L                     1036
 #define IDC_RAD_A3                      1037
@@ -193,6 +192,7 @@
 #define IDC_EDT_ROOT_CHORD              1125
 #define IDC_EDIT_RESOLUTION             1125
 #define IDC_EDT_ROOT_SWEEP              1126
+#define IDC_PLANFORM_CONTROL            1126
 #define IDC_EDT_ROOT_WASHOUT            1127
 #define IDC_EDT_ROOT_THICKNESS_MOD      1128
 #define IDC_CMD_ROOT_SECTION_NAME       1129
@@ -341,7 +341,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        175
 #define _APS_NEXT_COMMAND_VALUE         32909
-#define _APS_NEXT_CONTROL_VALUE         1126
+#define _APS_NEXT_CONTROL_VALUE         1127
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

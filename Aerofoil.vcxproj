@@ -261,6 +261,7 @@
     <ClCompile Include="CoordMap.cpp" />
     <ClCompile Include="CutOptimiseDlg.cpp" />
     <ClCompile Include="CutoutDialog.cpp" />
+    <ClCompile Include="CutPlanformControl.cpp" />
     <ClCompile Include="CutterDoc.cpp" />
     <ClCompile Include="CutterFrame.cpp" />
     <ClCompile Include="CutterGeometryDialog.cpp" />
@@ -320,6 +321,7 @@
     <ClInclude Include="CoordMap.h" />
     <ClInclude Include="CutOptimiseDlg.h" />
     <ClInclude Include="CutoutDialog.h" />
+    <ClInclude Include="CutPlanformControl.h" />
     <ClInclude Include="CutterDoc.h" />
     <ClInclude Include="CutterFrame.h" />
     <ClInclude Include="CutterGeometryDialog.h" />
