@@ -78,6 +78,8 @@ void EllipseCutter::cut(COutputDevice * pdev, const CutStructure::Context& conte
 		h1.fx = x1 + second->getX();
 		h1.fy = y1 + second->getY();
 
+		h0.fz = 0;
+		h1.fz = pEllipses->getSpan();
 		move(pdev, h0, h1);
 
 		for (theta = DELTA; theta <= 180.0f; theta += DELTA)
@@ -91,6 +93,8 @@ void EllipseCutter::cut(COutputDevice * pdev, const CutStructure::Context& conte
 			h0.fy = y0 + first->getY();
 			h1.fx = x1 + second->getX();
 			h1.fy = y1 + second->getY();
+			h0.fz = 0;
+			h1.fz = pEllipses->getSpan();
 			line(pdev, h0, h1);
 		}
 	}
@@ -108,6 +112,8 @@ void EllipseCutter::cut(COutputDevice * pdev, const CutStructure::Context& conte
 		h1.fx = x1 + second->getX();
 		h1.fy = y1 + second->getY();
 
+		h0.fz = 0;
+		h1.fz = pEllipses->getSpan();
 		line(pdev, h0, h1);
 
 		for (theta = 180.0f + DELTA; theta <= 360.0f; theta += DELTA)
@@ -121,6 +127,8 @@ void EllipseCutter::cut(COutputDevice * pdev, const CutStructure::Context& conte
 			h0.fy = y0 + first->getY();
 			h1.fx = x1 + second->getX();
 			h1.fy = y1 + second->getY();
+			h0.fz = 0;
+			h1.fz = pEllipses->getSpan();
 			line(pdev, h0, h1);
 		}
 	}

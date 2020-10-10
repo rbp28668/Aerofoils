@@ -41,9 +41,11 @@ void CutStructure::line(COutputDevice * pdev, const PointT & root, const PointT 
 	pdev->LineTo(tip_stream, t);
 }
 
+// TODO 3D transform
 void CutStructure::transform(PointT& r, PointT& t) const
 {
 	if (invert && pBounds) {
+
 		r.fy = pBounds->height() - r.fy;
 		t.fy = pBounds->height() - t.fy;
 	}
@@ -146,8 +148,10 @@ void CutStructure::serializeTo(CObjectSerializer & os)
 	os.startSection("cutStructure", this);
 	os.write("rootX", rootOffsets.fx);
 	os.write("rootY", rootOffsets.fy);
+	os.write("rootZ", rootOffsets.fz);
 	os.write("tipX", tipOffsets.fx);
 	os.write("tipY", tipOffsets.fy);
+	os.write("tipZ", tipOffsets.fz);
 	os.write("rootLeft", rootIsOnLeft);
 	os.write("invert", invert);
 	os.write("reflect", reflect);
@@ -160,8 +164,20 @@ void CutStructure::serializeFrom(CObjectSerializer & os)
 	os.startReadSection("cutStructure", this);
 	os.read("rootX", rootOffsets.fx);
 	os.read("rootY", rootOffsets.fy);
+	if (os.ifExists("rootZ")) {
+		os.read("rootZ", rootOffsets.fz);
+	}
+	else {
+		rootOffsets.fz = 0;
+	}
 	os.read("tipX", tipOffsets.fx);
 	os.read("tipY", tipOffsets.fy);
+	if (os.ifExists("tipZ")) {
+		os.read("tipZ", tipOffsets.fz);
+	}
+	else {
+		tipOffsets.fz = 0;
+	}
 	os.read("rootLeft", rootIsOnLeft);
 	setRootSide(rootIsOnLeft);
 	os.read("invert", invert);   // FIXME - derived state won't be set

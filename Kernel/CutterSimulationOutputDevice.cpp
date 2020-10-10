@@ -27,15 +27,17 @@ void CutterSimulationOutputDevice::MoveTo(int iStream, const PointT & pt)
 	if (iStream == 0) {
 		x = pt.fx;
 		y = pt.fy;
+		zl = pt.fz;
 		hasLeft = true;
 	}
 	if (iStream == 1) {
 		u = pt.fx;
 		v = pt.fy;
+		zr = pt.fz;
 		hasRight = true;
 	}
 	if (hasLeft && hasRight) {
-		pCutter->stepTo(x, y, u, v);
+		pCutter->stepTo(x, y, u, v, zl, zr);
 		hasLeft = hasRight = false;
 	}
 
@@ -49,15 +51,17 @@ void CutterSimulationOutputDevice::LineTo(int iStream, const PointT & pt)
 	if (iStream == 0) {
 		x = pt.fx;
 		y = pt.fy;
+		zl = pt.fz;
 		hasLeft = true;
 	}
 	if (iStream == 1) {
 		u = pt.fx;
 		v = pt.fy;
+		zr = pt.fz;
 		hasRight = true;
 	}
 	if (hasLeft && hasRight) {
-		pCutter->stepTo(x, y, u, v);
+		pCutter->stepTo(x, y, u, v, zl, zr);
 		hasLeft = hasRight = false;
 	}
 
@@ -71,7 +75,7 @@ void CutterSimulationOutputDevice::Label(int iStream, const char * psz)
 void CutterSimulationOutputDevice::Home()
 {
 	x = y = u = v = 0;
-	pCutter->stepTo(0, 0, 0, 0);
+	pCutter->stepTo(0, 0, 0, 0, 0, 0);
 }
 
 void CutterSimulationOutputDevice::Flush()
@@ -96,6 +100,6 @@ PointT CutterSimulationOutputDevice::position(int iStream)
 
 void CutterSimulationOutputDevice::reset()
 {
-	x = y = u = v = 0;
+	x = y = u = v = zl = zr = 0;
 	hasLeft = hasRight = false;
 }

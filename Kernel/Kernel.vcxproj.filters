@@ -170,6 +170,9 @@
     <ClCompile Include="StructureOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BlockCorrectionOutputDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aerofoil.h">
@@ -347,6 +350,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StructureOutput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockCorrectionOutputDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

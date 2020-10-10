@@ -31,13 +31,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 class PointT  
 {
 public:
-	PointT(NumericT x = 0, NumericT y = 0);
+	PointT(NumericT x = 0, NumericT y = 0, NumericT z = 0);
 	PointT(const PointT& pt);
 	~PointT();
 
 	NumericT fx;
 	NumericT fy;
-	inline PointT operator+= (const PointT& other) { fx += other.fx; fy += other.fy; return *this; }
+	NumericT fz;
+	inline PointT operator+= (const PointT& other) { fx += other.fx; fy += other.fy; fz += other.fz;  return *this; }
 };
+
 
 #endif // !defined(AFX_POINTT_H__A4E22B61_B474_11D6_AF75_002018BA082E__INCLUDED_)

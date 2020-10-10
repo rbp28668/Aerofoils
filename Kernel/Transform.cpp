@@ -41,6 +41,7 @@ CTransform::CTransform()
 	set_rotate(washout);
 }
 
+
 CTransform::~CTransform()
 {
 

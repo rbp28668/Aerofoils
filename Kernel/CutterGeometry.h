@@ -43,7 +43,7 @@ public:
 	void serializeTo(CObjectSerializer & os);
 	void serializeFrom(CObjectSerializer & os);
 
-	void blockToAxes(Position<double>& pos);
+	void blockToAxes(Position<double>& pos, double zl, double zr);
 	void setGeometry();
 
 };

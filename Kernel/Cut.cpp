@@ -30,6 +30,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "DXFObjectCutter.h"
 #include "GCodeSnippetCutter.h"
 #include "HomeCutter.h"
+#include "Bounds.h"
+#include "BlockCorrectionOutputDevice.h"
 
 
 Cut::Cut()
@@ -60,8 +62,25 @@ Cut::~Cut()
 
 void Cut::cut(COutputDevice & pdev, const CutStructure::Context& context)
 {
+	// Get bounds - Z axis we're interested in.
+	Bounds bounds;
+	bounds.startPlot();
+	for (auto iter = cut_structures.begin(); iter != cut_structures.end(); ++iter)	{
+		CutStructure* pcs = *iter;
+		pcs->cut(&bounds, context);
+	}
+	bounds.endPlot();
+
+	// Create proxy output device to perform correction to edges of virtual block
+	BlockCorrectionOutputDevice proxy(&pdev, bounds);
+	pdev = proxy;
+
 	try {
 		pdev.startPlot();
+		
+		std::ostringstream os;
+		os << "(--EFFECTIVE_SPAN=" << bounds.depth() << ")";
+		pdev.passthrough(os.str().c_str());
 
 		for (CutIterator iter = cut_structures.begin();
 			iter != cut_structures.end();
