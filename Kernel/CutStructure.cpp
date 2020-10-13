@@ -41,11 +41,22 @@ void CutStructure::line(COutputDevice * pdev, const PointT & root, const PointT 
 	pdev->LineTo(tip_stream, t);
 }
 
-// TODO 3D transform
 void CutStructure::transform(PointT& r, PointT& t) const
 {
-	if (invert && pBounds) {
+	if (rotateRadians != 0 && (r.fz != 0 || t.fz != 0) ) {
+		double rx = r.fx - rotateOrigin.fx;
+		double rz = r.fz - rotateOrigin.fz;
+		double tx = t.fx -rotateOrigin.fx;
+		double tz = t.fz - rotateOrigin.fz;
 
+		// Rotate on Z,X around Y.
+		r.fz = rotateOrigin.fz + rz* rotateCos + rx * rotateSin;
+		r.fx = rotateOrigin.fx - rz * rotateSin + rx * rotateCos;
+		t.fz = rotateOrigin.fz + tz * rotateCos + tx * rotateSin;
+		t.fx = rotateOrigin.fx - tz * rotateSin + tx * rotateCos;
+	}
+
+	if (invert && pBounds) {
 		r.fy = pBounds->height() - r.fy;
 		t.fy = pBounds->height() - t.fy;
 	}
@@ -56,6 +67,8 @@ void CutStructure::transform(PointT& r, PointT& t) const
 
 	r += rootOffsets;
 	t += tipOffsets;
+
+	
 }
 
 void CutStructure::updateBounds()
@@ -82,6 +95,9 @@ CutStructure::CutStructure()
 	, root_stream(0)
 	, tip_stream(1)
 	, pBounds(0)
+	, rotateRadians(0)
+	, rotateSin(0)
+	, rotateCos(1)
 {
 }
 
@@ -142,6 +158,14 @@ void CutStructure::setReflect(bool ref)
 	}
 }
 
+void CutStructure::setRotation(PointT origin, double angleRadians)
+{
+	rotateOrigin = origin;
+	rotateRadians = angleRadians;
+	rotateSin = sin(angleRadians);
+	rotateCos = cos(angleRadians);
+}
+
 void CutStructure::serializeTo(CObjectSerializer & os)
 {
 	assert(this);
@@ -155,6 +179,9 @@ void CutStructure::serializeTo(CObjectSerializer & os)
 	os.write("rootLeft", rootIsOnLeft);
 	os.write("invert", invert);
 	os.write("reflect", reflect);
+	os.write("rotateRadians", rotateRadians);
+	os.write("rotateOriginX", rotateOrigin.fx);
+	os.write("rotateOriginZ", rotateOrigin.fz);
 	os.endSection();
 
 }
@@ -182,6 +209,15 @@ void CutStructure::serializeFrom(CObjectSerializer & os)
 	setRootSide(rootIsOnLeft);
 	os.read("invert", invert);   // FIXME - derived state won't be set
 	os.read("reflect", reflect); // FIXME - derived state won't be set
+
+	PointT rotateOrigin(0,0,0);
+	double rotateRadians(0);
+	if (os.ifExists("rotateRadians")) {
+		os.read("rotateRadians", rotateRadians);
+		os.read("rotateOriginX", rotateOrigin.fx);
+		os.read("rotateOriginZ", rotateOrigin.fz);
+	}
+	setRotation(rotateOrigin, rotateRadians); // ensure derived values set.
 	os.endReadSection();
 
 }

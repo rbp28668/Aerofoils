@@ -58,7 +58,7 @@ void CutterGeometry::blockToAxes(Position<double>& pos, double zl, double zr) {
 	// But maybe not so if explictly moved or a cut is rotated.
 	// If so, recalculate factors to allow for given z locations
 	// Note zl and zr treated relative to left of nominal block position.
-	if (zl != 0 && zr != 0) {
+	if (zl != 0 || zr != 0) {
 		wl = getBlockLeft() + zl;
 		wr = getBlockLeft() + zr;
 

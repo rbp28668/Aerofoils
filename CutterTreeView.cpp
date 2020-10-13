@@ -310,6 +310,9 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_TYPE_TOPTRAILINGTOLEADINGEDGE, &CutterTreeView::OnWingCutTypeTopTeToLe)
 	ON_COMMAND(ID_TYPE_BOTTOMLEADINGTOTRAILINGEDGE, &CutterTreeView::OnWingCutTypeBottomLeToTe)
 	ON_COMMAND(ID_TYPE_BOTTOMTRAILINGTOLEADINGEDGE, &CutterTreeView::OnWingCutTypeBottomTeToLe)
+	ON_COMMAND(ID_ALIGN_LEADINGEDGE, &CutterTreeView::OnWingCutAlignLeadingedge)
+	ON_COMMAND(ID_ALIGN_TRAILINGEDGE, &CutterTreeView::OnWingCutAlignTrailingedge)
+	ON_COMMAND(ID_ALIGN_NOTHING, &CutterTreeView::OnWingCutAlignNothing)
 END_MESSAGE_MAP()
 
 
@@ -836,6 +839,75 @@ void CutterTreeView::setWingCutMode(CPathCutter::Mode mode) {
 		CPathCutter* pcut = static_cast<CPathCutter*>(node->pItem);
 		pcut->set_mode(mode);
 		GetTreeCtrl().SetItemText(item, pcut->getDescriptiveText().c_str());
+		GetDocument()->RedrawNow();
+	}
+}
+
+
+void CutterTreeView::OnWingCutAlignLeadingedge()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		CPathCutter* pcut = static_cast<CPathCutter*>(node->pItem);
+		
+		const CWing* pWing = pcut->wing();
+
+		const CTransform* rt = pWing->getRootTransform();
+		const CTransform* tt = pWing->getTipTransform();
+		NumericT rx = rt->getSweep();
+		NumericT tx = tt->getSweep();
+
+		NumericT z = pWing->getSpan();
+		if (z > 0) {
+			NumericT dx = tx - rx;
+			double angle = atan2(dx, z);
+			PointT origin(rx, 0, 0);
+			pcut->setRotation(origin, angle);
+		}
+
+		GetDocument()->RedrawNow();
+	}
+}
+
+
+void CutterTreeView::OnWingCutAlignTrailingedge()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		CPathCutter* pcut = static_cast<CPathCutter*>(node->pItem);
+
+		const CWing* pWing = pcut->wing();
+
+		const CTransform* rt = pWing->getRootTransform();
+		const CTransform* tt = pWing->getTipTransform();
+		NumericT rx = rt->getSweep() + rt->getChord();
+		NumericT tx = tt->getSweep() + tt->getChord();
+
+		NumericT z = pWing->getSpan();
+		if (z > 0) {
+			NumericT dx = tx - rx;
+			double angle = atan2(dx, z);
+			PointT origin(rt->getSweep(), 0, 0);
+			pcut->setRotation(origin, angle);
+		}
+		GetDocument()->RedrawNow();
+	}
+}
+
+
+void CutterTreeView::OnWingCutAlignNothing()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		CPathCutter* pcut = static_cast<CPathCutter*>(node->pItem);
+		PointT origin(0, 0, 0);
+		pcut->setRotation(origin, 0);
 		GetDocument()->RedrawNow();
 	}
 }

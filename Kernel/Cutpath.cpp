@@ -929,7 +929,7 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 
 	// Set the z coordinates appropriately.
 	rt.fz = rb.fz = ri.fz = rh.fz = 0;
-	tt.fz = rb.fz = ti.fz = th.fz = wing->getSpan();
+	tt.fz = tb.fz = ti.fz = th.fz = wing->getSpan();
 
 
 	// This is one of the few (only?) intercept that cares which direction

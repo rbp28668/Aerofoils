@@ -223,6 +223,12 @@ BEGIN
             MENUITEM "Bottom leading to trailing edge", ID_TYPE_BOTTOMLEADINGTOTRAILINGEDGE
             MENUITEM "Bottom trailing to leading edge", ID_TYPE_BOTTOMTRAILINGTOLEADINGEDGE
         END
+        POPUP "Align"
+        BEGIN
+            MENUITEM "Leading Edge",                ID_ALIGN_LEADINGEDGE
+            MENUITEM "Trailing Edge",               ID_ALIGN_TRAILINGEDGE
+            MENUITEM "Nothing",                     ID_ALIGN_NOTHING
+        END
         MENUITEM "Move Up",                     ID_CUT_MOVEUP
         MENUITEM "Move Down",                   ID_CUT_MOVEDOWN
         MENUITEM "Delete",                      ID_WINGCUT_D

@@ -161,6 +161,9 @@ public:
 	afx_msg void OnWingCutTypeBottomLeToTe();
 	afx_msg void OnWingCutTypeBottomTeToLe();
 	void setWingCutMode(CPathCutter::Mode mode);
+	afx_msg void OnWingCutAlignLeadingedge();
+	afx_msg void OnWingCutAlignTrailingedge();
+	afx_msg void OnWingCutAlignNothing();
 };
 
 

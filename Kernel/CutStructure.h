@@ -44,6 +44,11 @@ class CutStructure : public StructureOutput
 	int root_stream;     // stream to use for root
 	int tip_stream;      // stream to use for tip
 
+	PointT rotateOrigin;
+	double rotateRadians;
+	double rotateSin;
+	double rotateCos;
+
 	Bounds* pBounds;
 	
 public:
@@ -59,6 +64,7 @@ public:
 		double toolOffset;
 		bool optimiseOutput;
 		double tolerance;
+
 		Context() : toolOffset(0.5), optimiseOutput(true), tolerance(0.005) {}
 		void serializeTo(CObjectSerializer& os) const;
 		void serializeFrom(CObjectSerializer& os);
@@ -90,6 +96,8 @@ public:
 
 	void setReflect(bool ref);
 	bool isReflected() const { return reflect; }
+
+	void setRotation(PointT origin, double angleRadians);
 
 	virtual void serializeTo(CObjectSerializer& os);
 	virtual void serializeFrom(CObjectSerializer& os);
