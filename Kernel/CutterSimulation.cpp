@@ -48,11 +48,11 @@ void CutterSimulation::setGeometry(const CutterGeometry & geometry)
 	this->geometry = geometry;
 }
 
-void CutterSimulation::stepTo(double x, double y, double u, double v)
+void CutterSimulation::stepTo(double x, double y, double u, double v, double zl, double zr)
 {
 	// Work out the position that the actual axes have to move to for a given position on the block.
 	Position<double> axes(x,y,u,v);
-	geometry.blockToAxes(axes);
+	geometry.blockToAxes(axes, zl, zr);
 
 	// axes now contains the coordinates of where we want the motors to actually end up.
 	// in practice, they'll get close as there's not infinite resolution.

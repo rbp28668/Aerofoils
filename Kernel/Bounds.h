@@ -40,12 +40,21 @@ public:
 	virtual PointT position(int iStream) { return PointT(); }
 
 	RectT getBounds() const;
-	NumericT width() { return maxx - minx; }
-	NumericT height() { return maxy - miny; }
+	RectT getPlanBounds() const;
+	NumericT width() const { return maxx - minx; }
+	NumericT height() const { return maxy - miny; }
+	NumericT depth() const { return maxz - minz; }
+	NumericT getMinx() const { return minx; }
+	NumericT getMaxx() const { return maxx; }
+	NumericT getMiny() const { return miny; }
+	NumericT getMaxy() const { return maxy; }
+	NumericT getMinz() const { return minz; }
+	NumericT getMaxz() const { return maxz; }
+
 	void reset();
 
 private:
-	NumericT minx, maxx, miny, maxy;
+	NumericT minx, maxx, miny, maxy, minz, maxz;
 	PointT lastMove[2];
 	bool lastOpIsMove[2];
 

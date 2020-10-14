@@ -30,6 +30,9 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 class CObjectSerializer;
 
+// CTransform is used to scale a raw aerofoil section with a 
+// chord 0..1 to the actual size, thickness and washout that's 
+// on the wing.
 class CTransform  
 {
 public:

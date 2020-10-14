@@ -234,7 +234,8 @@ void CPathCutter::plot_segment_opt(COutputDevice* pdev, NumericT ru0, NumericT r
 
 		r_here = pWing->getRootTransform()->transform(r_here);
 		t_here = pWing->getTipTransform()->transform(t_here);
-
+		r_here.fz = 0;
+		t_here.fz = pWing->getSpan();
 		line(pdev, r_here, t_here);
 	}
 	else {  // Else out of tolerance so need to split
@@ -282,7 +283,8 @@ void CPathCutter::toPoint(NumericT ru, COutputDevice* pdev, Intercept* start, In
 
 	r_here = pWing->getRootTransform()->transform(r_here);
 	t_here = pWing->getTipTransform()->transform(t_here);
-
+	r_here.fz = 0;
+	t_here.fz = pWing->getSpan();
 	line(pdev, r_here, t_here);
 }
 
@@ -567,6 +569,8 @@ void CPathCutter::cut(COutputDevice* pdev, const CutStructure::Context& context)
 	PointT tle = pWing->getTip()->PointAtSkin(frame.tipForward(), t_skin);
 	tle = pWing->getTipTransform()->transform(tle);
 
+	rte.fz = rle.fz = 0;
+	tte.fz = tle.fz = pWing->getSpan();
 
 	/* Work out delta (in U) to give a line segment length of about 0.2 mm */
 	NumericT delta = max(root_chord, tip_chord);
@@ -781,8 +785,10 @@ void CPathCutter::serializeFrom(CObjectSerializer& os)
 	pWing = static_cast<CWing*>(os.readReference("wing"));
 	
 	// Now passed in, read this to allow old files to work.
-	double tool_offset;
-	os.read("toolOffset",tool_offset);
+	if (os.ifExists("toolOffset")) {
+		double tool_offset;
+		os.read("toolOffset", tool_offset);
+	}
 
 	if(os.ifExists("mode")) {
 		int imode;
@@ -886,19 +892,6 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 	tb.fy += sign * sqrt(dx * dx + dy * dy); // up
 
 
-	/* // old code - don't want to chop skin at normal vector,
-	rt.fx -= r_skin * rtt.fy;
-	rt.fy += r_skin * rtt.fx;
-
-	rb.fx -= r_skin * rbt.fy;
-	rb.fy += r_skin * rbt.fx;
-
-	tt.fx -= t_skin * ttt.fy;
-	tt.fy += t_skin * ttt.fx;
-
-	tb.fx -= t_skin * tbt.fy;
-	tb.fy += t_skin * tbt.fx;
-	*/
 
 	/* Now work out where the tangents meet: calculate ru and tu
 	// at intersection PointT such that these values of u, placed
@@ -921,6 +914,7 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 	PointT rh = PointT((rt.fx + rb.fx) / 2, (rt.fy + rb.fy) / 2);
 	PointT th = PointT((tt.fx + tb.fx) / 2, (tt.fy + tb.fy) / 2);
 
+	// Convert from aerofoil coordinate space to proper size, thickness, sweep etc.
 	rh = rootTransform->transform(rh);
 	th = tipTransform->transform(th);
 
@@ -932,6 +926,11 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 	tt = tipTransform->transform(tt);
 	tb = tipTransform->transform(tb);
 	ti = tipTransform->transform(ti);
+
+	// Set the z coordinates appropriately.
+	rt.fz = rb.fz = ri.fz = rh.fz = 0;
+	tt.fz = tb.fz = ti.fz = th.fz = wing->getSpan();
+
 
 	// This is one of the few (only?) intercept that cares which direction
 	// the cutter is going. Most are symmetric and don't care so...
@@ -1057,6 +1056,10 @@ void CPathCutter::TrailingEdgeIntercept::process(CPathCutter* cutter, COutputDev
 	tt = tipTransform->transform(tt);
 	tb = tipTransform->transform(tb);
 	tm = tipTransform->transform(tm);
+
+	rt.fz = rb.fz = rm.fz = 0;
+	tt.fz = tb.fz = tm.fz = wing->getSpan();
+	
 
 	/* Now cut... */
 	cutter->line(output, rm, tm);    /* cut to midPointT */
@@ -1213,6 +1216,8 @@ void CPathCutter::SparIntercept::process(CPathCutter* cutter, COutputDevice* out
 	{
 		rpos[i] = rootTransform->transform(rpos[i]);
 		tpos[i] = tipTransform->transform(tpos[i]);
+		rpos[i].fz = 0;
+		tpos[i].fz = wing->getSpan();
 
 		/* Now cut... */
 		cutter->line(output, rpos[i], tpos[i]);    /* cut to midPointT */
@@ -1321,7 +1326,11 @@ void CPathCutter::CutoutIntercept::process(CPathCutter* cutter, COutputDevice* o
 	PointT tip_start(tpos.fx - t_skin * ttan.fy, tpos.fy + t_skin * ttan.fx);
 
 	/* So transform back into real space and cut*/
-	cutter->line(output, rootTransform->transform(root_start), tipTransform->transform(tip_start));
+	PointT sr = rootTransform->transform(root_start);
+	PointT st = tipTransform->transform(tip_start);
+	sr.fz = 0;
+	st.fz = wing->getSpan();
+	cutter->line(output, sr, st);
 	
 	/* Find where the line from the start points heading inwards hits the cutout.  Need to go there!*/
 	/* Note we've got the centre of the ellipse in aerofoil space and the root and tip start points*/
@@ -1349,11 +1358,13 @@ void CPathCutter::CutoutIntercept::process(CPathCutter* cutter, COutputDevice* o
 		PointT t(tx + cos(angle + tip_start_angle) * tw2, ty + sin(angle + tip_start_angle) * th2);
 		r = rootTransform->transform(r);
 		t = tipTransform->transform(t);
+		r.fz = 0;
+		t.fz = wing->getSpan();
 		cutter->line(output, r, t);
 	}
 
 	// Need to move back to where we started.
-	cutter->line(output, rootTransform->transform(root_start), tipTransform->transform(tip_start));
+	cutter->line(output, sr, st);
 
 }
 

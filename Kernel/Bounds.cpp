@@ -49,13 +49,17 @@ void Bounds::LineTo(int iStream, const PointT& pt)
 
 	assert(pt.fx != std::numeric_limits<float>::infinity());
 	assert(pt.fy != std::numeric_limits<float>::infinity());
+	assert(pt.fz != std::numeric_limits<float>::infinity());
 	assert(pt.fx != -std::numeric_limits<float>::infinity());
 	assert(pt.fy != -std::numeric_limits<float>::infinity());
+	assert(pt.fz != -std::numeric_limits<float>::infinity());
 
 	if (pt.fx < minx) minx = pt.fx;
 	if (pt.fx > maxx) maxx = pt.fx;
 	if (pt.fy < miny) miny = pt.fy;
 	if (pt.fy > maxy) maxy = pt.fy;
+	if (pt.fz < minz) minz = pt.fz;
+	if (pt.fz > maxz) maxz = pt.fz;
 }
 
 RectT Bounds::getBounds() const
@@ -64,10 +68,16 @@ RectT Bounds::getBounds() const
 	return bounds;
 }
 
+RectT Bounds::getPlanBounds() const
+{
+	RectT bounds(minz, maxx, maxz, minx);
+	return bounds;
+}
+
 void Bounds::reset()
 {
-	minx = miny = std::numeric_limits<NumericT>::max();
-	maxx = maxy = -std::numeric_limits<NumericT>::max();
+	minx = miny = minz = std::numeric_limits<NumericT>::max();
+	maxx = maxy = maxz = -std::numeric_limits<NumericT>::max();
 	lastOpIsMove[0] = lastOpIsMove[1] = false;
 	lastMove[0] = lastMove[1] = PointT();
 }

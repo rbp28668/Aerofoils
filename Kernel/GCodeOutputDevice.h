@@ -87,6 +87,8 @@ private:
 	double y;
 	double u;
 	double v;
+	double zl;
+	double zr;
 
 	bool hasLeft;
 	bool hasRight;

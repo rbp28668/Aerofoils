@@ -237,6 +237,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aerofoil.cpp" />
+    <ClCompile Include="BlockCorrectionOutputDevice.cpp" />
     <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="CNCConnectionOutputDevice.cpp" />
     <ClCompile Include="CNCSocket.cpp" />
@@ -292,6 +293,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aerofoil.h" />
+    <ClInclude Include="BlockCorrectionOutputDevice.h" />
     <ClInclude Include="Bounds.h" />
     <ClInclude Include="CNCConnectionOutputDevice.h" />
     <ClInclude Include="CNCSocket.h" />

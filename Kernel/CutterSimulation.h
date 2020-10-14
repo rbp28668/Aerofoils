@@ -38,7 +38,7 @@ public:
 
 	void setGeometry(const CutterGeometry& geometry);
 
-	void stepTo(double x, double y, double u, double v);
+	void stepTo(double x, double y, double u, double v, double zl, double zr);
 	Position<double> getPosition();
 	void reset();
 

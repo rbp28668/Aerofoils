@@ -151,6 +151,7 @@
 #define IDC_EDIT1                       1093
 #define IDC_EDIT_FEED_RATE              1093
 #define IDC_EDT_XTRAVEL                 1093
+#define IDC_EDT_SPACING                 1093
 #define IDC_CHECK1                      1094
 #define IDC_CHK_INCLUDE_FEED            1094
 #define IDC_CHK_TOP_SURFACE             1094
@@ -333,14 +334,18 @@
 #define ID_FILE_CREATEAEROFOILDOCUMENT  32906
 #define ID_DXF_NEW                      32907
 #define ID_CUTTER_OPTIMISEOUTPUT        32908
+#define ID_WINGCUT_ALIGN                32909
+#define ID_ALIGN_LEADINGEDGE            32910
+#define ID_ALIGN_TRAILINGEDGE           32911
+#define ID_ALIGN_NOTHING                32912
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        175
-#define _APS_NEXT_COMMAND_VALUE         32909
+#define _APS_NEXT_RESOURCE_VALUE        176
+#define _APS_NEXT_COMMAND_VALUE         32913
 #define _APS_NEXT_CONTROL_VALUE         1127
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

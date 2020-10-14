@@ -36,13 +36,18 @@ class Bounds;
 
 class CutStructure : public StructureOutput
 {
-	PointT rootOffsets;
-	PointT tipOffsets;
-	bool invert;
-	bool reflect;
-	bool rootIsOnLeft;
-	int root_stream;
-	int tip_stream;
+	PointT rootOffsets;  // Offsets in XYZ of where we put the root
+	PointT tipOffsets;   // offsets in XYZ of where we put the tip
+	bool invert;         // invert this plot if true
+	bool reflect;        // reflect front to back if true
+	bool rootIsOnLeft;   // swap root and tip if true
+	int root_stream;     // stream to use for root
+	int tip_stream;      // stream to use for tip
+
+	PointT rotateOrigin;
+	double rotateRadians;
+	double rotateSin;
+	double rotateCos;
 
 	Bounds* pBounds;
 	
@@ -59,6 +64,7 @@ public:
 		double toolOffset;
 		bool optimiseOutput;
 		double tolerance;
+
 		Context() : toolOffset(0.5), optimiseOutput(true), tolerance(0.005) {}
 		void serializeTo(CObjectSerializer& os) const;
 		void serializeFrom(CObjectSerializer& os);
@@ -90,6 +96,8 @@ public:
 
 	void setReflect(bool ref);
 	bool isReflected() const { return reflect; }
+
+	void setRotation(PointT origin, double angleRadians);
 
 	virtual void serializeTo(CObjectSerializer& os);
 	virtual void serializeFrom(CObjectSerializer& os);

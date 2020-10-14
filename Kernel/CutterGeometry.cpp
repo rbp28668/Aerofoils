@@ -41,11 +41,32 @@ void CutterGeometry::setYTravel(double yTravel) {
 }
 
 
-void CutterGeometry::blockToAxes(Position<double>& pos) {
+void CutterGeometry::blockToAxes(Position<double>& pos, double zl, double zr) {
 	double x = pos.x;
 	double y = pos.y;
 	double u = pos.u;
 	double v = pos.v;
+
+	// Default is that root and tip are on the edges of the block so
+	// default translation factors to allow this.
+	double wl = this->wl;
+	double wr = this->wr;
+	double wl1 = this->wl1;
+	double wr1 = this->wr1;
+	double wd = wr - wl;
+
+	// But maybe not so if explictly moved or a cut is rotated.
+	// If so, recalculate factors to allow for given z locations
+	// Note zl and zr treated relative to left of nominal block position.
+	if (zl != 0 || zr != 0) {
+		wl = getBlockLeft() + zl;
+		wr = getBlockLeft() + zr;
+
+		wl1 = getWidth() - wl;
+		wr1 = getWidth() - wr;
+		wd = wr - wl;
+
+	}
 
 	pos.x = (x * wr - u * wl) / wd;
 	pos.u = (u * wl1 - x * wr1) / wd;
@@ -60,7 +81,6 @@ void CutterGeometry::setGeometry() {
 	wl1 = getWidth() - wl;
 	wr1 = getWidth() - wr;
 	wd = wr - wl;
-
 }
 
 void CutterGeometry::serializeTo(CObjectSerializer & os)

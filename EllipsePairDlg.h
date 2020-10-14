@@ -48,6 +48,7 @@ public:
 	float	m_secondB;
 	float	m_secondABottom;
 	float	m_secondATop;
+	double spacing;
 	//}}AFX_DATA
 
 
@@ -70,6 +71,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	CEllipsePair* ellipses;
+	
 };
 
 //{{AFX_INSERT_LOCATION}}

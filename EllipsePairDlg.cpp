@@ -37,6 +37,7 @@ static char THIS_FILE[] = __FILE__;
 CEllipsePairDlg::CEllipsePairDlg(CEllipsePair* pep, CWnd* pParent /*=NULL*/)
 	: CDialog(CEllipsePairDlg::IDD, pParent)
 	, ellipses(pep)
+	, spacing(0)
 {
 	//{{AFX_DATA_INIT(CEllipsePairDlg)
 	m_firstABottom = 0.0f;
@@ -68,6 +69,7 @@ void CEllipsePairDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDT_SECOND_A_BOTTOM, m_secondABottom);
 	DDX_Text(pDX, IDC_EDT_SECOND_A_TOP, m_secondATop);
 	//}}AFX_DATA_MAP
+	DDX_Text(pDX, IDC_EDT_SPACING, spacing);
 }
 
 
@@ -98,6 +100,8 @@ BOOL CEllipsePairDlg::OnInitDialog()
 	m_secondY = second->getY();
 	m_secondB = second->getB();
 
+	spacing = ellipses->getSpan();
+
 	UpdateData(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -121,6 +125,8 @@ void CEllipsePairDlg::OnOK()
 		second->setX(m_secondX);
 		second->setY(m_secondY);
 		second->setB(m_secondB);
+
+		ellipses->setSpan(spacing);
 
 		CDialog::OnOK();
 	}

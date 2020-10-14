@@ -25,13 +25,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-PointT::PointT(NumericT x, NumericT y)
-: fx(x), fy(y)
+PointT::PointT(NumericT x, NumericT y, NumericT z)
+: fx(x), fy(y), fz(z)
 {
 }
 
 PointT::PointT(const PointT & pt)
-	: fx(pt.fx), fy(pt.fy)
+	: fx(pt.fx), fy(pt.fy), fz(pt.fz)
 {
 }
 

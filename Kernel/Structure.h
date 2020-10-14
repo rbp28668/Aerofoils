@@ -42,10 +42,10 @@ public:
 	virtual std::string getDescriptiveText() const = 0;
 	virtual std::string getType() const = 0;
 
-	float getSpan() const {return span;}
-	void setSpan(float s) {span = s;}
+	NumericT getSpan() const {return span;}
+	void setSpan(NumericT s) {span = s;}
 
-	float span;           /* span of this wing (root to tip) */
+	NumericT span;     /* span of this wing (root to tip) or depth of object across the cutter */
 
 };
 

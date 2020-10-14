@@ -60,11 +60,16 @@ void PointCutter::cut(COutputDevice * pdev, const CutStructure::Context& context
 	assert(this);
 	assert(pdev);
 
+	PointT r = pStructure->getRoot();
+	PointT t = pStructure->getTip();
+	r.fz = 0;
+	t.fz = pStructure->getSpan();
+
 	if (fast) {
-		move(pdev, pStructure->getRoot(), pStructure->getTip());
+		move(pdev, r, t);
 	}
 	else {
-		line(pdev, pStructure->getRoot(), pStructure->getTip());
+		line(pdev, r, t);
 	}
 }
 

@@ -42,7 +42,6 @@ public:
 	void setB(float rhs)  { b = rhs;}
 	void setX(float rhs)  { centre_x = rhs;}
 	void setY(float rhs)  { centre_y = rhs;}
-
 	void serializeTo(CObjectSerializer& os);
 	void serializeFrom(CObjectSerializer& os);
 

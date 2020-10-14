@@ -29,7 +29,7 @@ END_MESSAGE_MAP()
 class PlanformBounds :
 	public COutputDevice
 {
-	NumericT minlx, maxlx, minrx, maxrx;
+	NumericT minlx, maxlx, minrx, maxrx, minz, maxz;
 	PointT lastMove[2];
 	bool lastOpIsMove[2];
 
@@ -52,6 +52,8 @@ public:
 	NumericT maxLeft() const { return maxlx; }
 	NumericT minRight() const { return minrx; }
 	NumericT maxRight() const { return maxrx; }
+	NumericT minZ() const { return minz; }
+	NumericT maxZ() const { return maxz; }
 
 private:
 
@@ -98,12 +100,16 @@ void PlanformBounds::LineTo(int iStream, const PointT& pt)
 		if (pt.fx < minrx) minrx = pt.fx;
 		if (pt.fx > maxrx) maxrx = pt.fx;
 	}
+
+	if (pt.fz < minz) minz = pt.fz;
+	if (pt.fz > maxz) maxz = pt.fz;
+
 }
 
 void PlanformBounds::reset()
 {
-	minlx = minrx = std::numeric_limits<NumericT>::max();
-	maxlx = maxrx = -std::numeric_limits<NumericT>::max();
+	minlx = minrx = minz = std::numeric_limits<NumericT>::max();
+	maxlx = maxrx = maxz = -std::numeric_limits<NumericT>::max();
 	lastOpIsMove[0] = lastOpIsMove[1] = false;
 	lastMove[0] = lastMove[1] = PointT();
 }
@@ -231,7 +237,13 @@ PointT PlanformDrawDevice::position(int iStream)
 
 PointT PlanformDrawDevice::toPlanform(int iStream, const PointT& pt) {
 	PointT p;
-	p.fx = (iStream == 0) ? geometry->getBlockLeft() : geometry->getBlockRight();
+	// Note swap of coordinates as want z/x plot to appear as x/y
+	p.fx = geometry->getBlockLeft() + pt.fz;
+
+	// If z on RHS is zero then not been set so assume RHS of block.
+	if (iStream == 1 && pt.fz == 0) {
+		p.fx = geometry->getBlockRight(); 
+	}
 	p.fy = pt.fx;
 	return p;
 }
