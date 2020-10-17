@@ -18,6 +18,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <vector>
 #include <list>
+#include <map>
 #include <iostream>
 #include "ParserContext.h"
 
@@ -73,6 +74,9 @@ public:
 	void start();	 // before run or step.
 	bool step();  // one program line, true if there's still stuff to do 
 	void reset();    // ready for start or run
+
+	typedef std::map<std::string, std::string> AuxInfoT;
+	bool getAuxInformation(AuxInfoT& info) const;
 
 	// Error reporting
 	void clearErrors();

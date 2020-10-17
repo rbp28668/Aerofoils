@@ -17,6 +17,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include<assert.h>
+#include<regex>
 #include "GCodeInterpreter.h"
 #include "GCodeProgram.h"
 #include "ObjectSerializer.h"
@@ -195,6 +196,24 @@ void GCodeProgram::reset()
 	bPaused = false;
 	bRunning = false;
 	currentLine = lines.end();
+}
+
+bool GCodeProgram::getAuxInformation(GCodeProgram::AuxInfoT& info) const
+{
+	std::regex re("^\\(--(\\w+)=([^)]+)\\)$");
+	std::smatch match;
+	bool found = false;
+	for (auto it = lines.begin(); it != lines.end(); ++it) {
+		if (std::regex_match
+		(*it, match, re) && match.size() > 2) {
+			std::string key = match.str(1);
+			std::string value = match.str(2);
+			info.emplace(key, value);
+			found = true;
+		}
+
+	}
+	return found;
 }
 
 void GCodeProgram::clearErrors()

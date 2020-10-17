@@ -133,6 +133,8 @@
 #define IDC_BTN_PROG_14                 1111
 #define IDC_BTN_PROG_15                 1112
 #define IDC_BTN_PROG_16                 1113
+#define IDC_CHECK1                      1114
+#define IDC_CHK_USE_GEOMETRY            1114
 
 // Next default values for new objects
 // 
@@ -140,7 +142,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1101
+#define _APS_NEXT_CONTROL_VALUE         1115
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

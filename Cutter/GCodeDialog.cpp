@@ -25,6 +25,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "afxdialogex.h"
 #include "resource.h"
 #include "CutterConfig.h"
+#include "CutterDlg.h"
 #include "../Kernel/Cutter.h"
 #include "../Kernel/GCodeInterpreter.h"
 #include "../Kernel/GCodeProgram.h"
@@ -297,6 +298,7 @@ void CGCodeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_PROG_14, buttonProg14);
 	DDX_Control(pDX, IDC_BTN_PROG_15, buttonProg15);
 	DDX_Control(pDX, IDC_BTN_PROG_16, buttonProg16);
+	DDX_Control(pDX, IDC_CHK_USE_GEOMETRY, chkUseGeometry);
 }
 
 
@@ -340,6 +342,7 @@ BEGIN_MESSAGE_MAP(CGCodeDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_PROG_14, &CGCodeDialog::OnBnClickedBtnProg14)
 	ON_BN_CLICKED(IDC_BTN_PROG_15, &CGCodeDialog::OnBnClickedBtnProg15)
 	ON_BN_CLICKED(IDC_BTN_PROG_16, &CGCodeDialog::OnBnClickedBtnProg16)
+	ON_BN_CLICKED(IDC_CHK_USE_GEOMETRY, &CGCodeDialog::OnBnClickedChkUseGeometry)
 END_MESSAGE_MAP()
 
 
@@ -475,6 +478,49 @@ void CGCodeDialog::OnBnClickedBtnLoad()
 		pProgram->load(ifs);
 		ifs.close();
 
+		bool useGeometry = true;
+
+		GCodeProgram::AuxInfoT info;
+		if (pProgram->getAuxInformation(info)) {
+
+			CNCFoamCutter* pCutter = pMainDialog->getCutter();
+
+			auto it = info.find("PRE_CORRECT_GEOMETRY");
+			if (it != info.end() &&  it->second == "TRUE") {
+				double width = 0;
+				double left = 0;
+				double right = 0;
+				it = info.find("CUTTER_WIDTH");	if (it != info.end()) width = stod(it->second);
+				it = info.find("BLOCK_LEFT"); if (it != info.end()) left = stod(it->second);
+				it = info.find("BLOCK_RIGHT"); if (it != info.end()) right = stod(it->second);
+
+				std::ostringstream msg;
+				msg << "Cut is pre-corrected for block geometry." << std::endl
+					<< "Cutter width: " << width << std::endl
+					<< "Block left: " << left << std::endl
+					<< "Block right: " << right << std::endl
+					<< "Disable local correction?";
+				if (AfxMessageBox(msg.str().c_str(), MB_ICONQUESTION | MB_YESNO) == IDYES) {
+					useGeometry = false;
+				}
+
+			}
+			else {
+				it = info.find("EFFECTIVE_SPAN");
+				if (it != info.end()) {
+					std::ostringstream msg;
+					double depth = stod(it->second);
+					msg << "Core has effective span of " << depth << "\n. Use this value for block width?";
+					if (AfxMessageBox(msg.str().c_str(), MB_ICONQUESTION | MB_YESNO) == IDYES) {
+						pCutter->setBlockRight(pCutter->getBlockLeft() + depth);
+						
+					}
+				}
+			}
+			// Want to turn on by default if loading new unprecompensated plot.
+			pCutter->setUseGeometry(useGeometry);
+			chkUseGeometry.SetCheck(useGeometry ? BST_CHECKED : BST_UNCHECKED);
+		}
 		programUpdated();
 	}
 
@@ -517,6 +563,9 @@ BOOL CGCodeDialog::OnInitDialog()
 	HBITMAP hBitmap = (HBITMAP)stopBitmap.GetSafeHandle();
 	stopButton.SetBitmap(hBitmap);
 	configUpdated(pConfig);
+
+	CNCFoamCutter* pCutter = pMainDialog->getCutter();
+	chkUseGeometry.SetCheck( pCutter->getUseGeometry() ? BST_CHECKED : BST_UNCHECKED);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -790,4 +839,12 @@ void CGCodeDialog::OnBnClickedBtnProg15()
 void CGCodeDialog::OnBnClickedBtnProg16()
 {
 	runProgramButton(15);
+}
+
+
+void CGCodeDialog::OnBnClickedChkUseGeometry()
+{
+	bool useGeometry = chkUseGeometry.GetCheck() == BST_CHECKED;
+	CNCFoamCutter* pCutter = pMainDialog->getCutter();
+	pCutter->setUseGeometry(useGeometry);
 }

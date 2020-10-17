@@ -438,7 +438,7 @@ void CAerofoilDoc::OnFilePlotSize()
 	dlg.m_width = size_x;
 	dlg.m_height = size_y;
 	dlg.m_sizeSelect = 1;	// default to A4
-	if(dlg.DoModal())
+	if(dlg.DoModal() == IDOK)
 	{
 		switch(dlg.m_sizeSelect)
 		{
@@ -575,7 +575,7 @@ void CAerofoilDoc::OnWingFlags()
 	assert(currentWing);
 
 	CWingFlagsDlg dlg(currentWing->getPlotFlags());
-	if(dlg.DoModal())
+	if(dlg.DoModal() == IDOK)
 		RedrawNow();
 }
 

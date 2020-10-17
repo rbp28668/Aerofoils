@@ -338,7 +338,7 @@ void CAerofoilView::OnInitialUpdate()
 void CAerofoilView::OnViewZoom() 
 {
 	CZoomDlg dlg;
-	if(dlg.DoModal()) {
+	if(dlg.DoModal() == IDOK) {
 		if(dlg.fit) {
 			// Get current size of window
 			CRect rClient;

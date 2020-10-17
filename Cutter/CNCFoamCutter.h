@@ -35,6 +35,7 @@ class CNCFoamCutter : public Cutter {
 	double stepFrequency; // of steppers in Hz
 
 	CutterGeometry geometry;
+	bool useGeometry;
 
 	Position<double> currentPosition;  // on side of block
 	Position<long long> axesPosition;     // of hardware axes in microsteps
@@ -49,27 +50,28 @@ public:
 	virtual ~CNCFoamCutter();
 
 	// Config
-	inline double getWidth() { return geometry.getWidth(); }
+	inline double getWidth() const { return geometry.getWidth(); }
 	void setWidth(double width);
-	inline double getXLead() { return xLead; }
+	inline double getXLead() const { return xLead; }
 	void setXLead(double lead);
-	inline double getYLead() { return yLead; }
+	inline double getYLead() const { return yLead; }
 	void setYLead(double lead);
-	inline int getXStepsPerRev(){ return xStepsPerRev; }
+	inline int getXStepsPerRev() const { return xStepsPerRev; }
 	void setXStepsPerRev(int steps);
-	inline int getYStepsPerRev() { return yStepsPerRev; }
+	inline int getYStepsPerRev() const { return yStepsPerRev; }
 	void setYStepsPerRev(int steps);
-	inline int getXMicroStepping() { return xMicroStep; }
+	inline int getXMicroStepping() const { return xMicroStep; }
 	void setXMicroStepping(int steps);
-	inline int getYMicroStepping() { return yMicroStep; }
+	inline int getYMicroStepping() const { return yMicroStep; }
 	void setYMicroStepping(int steps);
-	inline double getBlockLeft() { return geometry.getBlockLeft(); }
+	inline double getBlockLeft() const { return geometry.getBlockLeft(); }
 	void setBlockLeft(double side);
-	inline double getBlockRight() { return geometry.getBlockRight(); }
+	inline double getBlockRight() const { return geometry.getBlockRight(); }
 	void setBlockRight(double side);
-	inline double getStepFrequency() { return stepFrequency; }
+	inline double getStepFrequency() const { return stepFrequency; }
 	void setStepFrequency(double hz);
-
+	inline bool getUseGeometry() const { return useGeometry; }
+	inline void setUseGeometry(bool set) { useGeometry = set; }
 	virtual double getFeedRate();
 	virtual void setFeedRate(double feedRate);
 	// Set if we can't achieve desired feed rate.
