@@ -64,4 +64,5 @@ public:
 	afx_msg void OnBnClickedBtnUpdate();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSelchangeLstButtons();
+	CButton useCutterGeometry;
 };

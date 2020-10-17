@@ -119,6 +119,8 @@ public:
 	CButton buttonProg15;
 	CButton buttonProg16;
 
+	CButton chkUseGeometry;
+
 	void programUpdated();
 	virtual BOOL OnInitDialog();
 
@@ -164,4 +166,5 @@ public:
 	afx_msg void OnBnClickedBtnProg15();
 	afx_msg void OnBnClickedBtnProg16();
 
+	afx_msg void OnBnClickedChkUseGeometry();
 };

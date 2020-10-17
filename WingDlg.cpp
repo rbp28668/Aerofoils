@@ -160,7 +160,7 @@ void CWingDlg::OnCmdAddSpar()
 {
 	CSpar spar;
 	CSparDlg dlg(&spar);
-	if(dlg.DoModal())
+	if(dlg.DoModal() == IDOK)
 	{
 		CSpar* ps = wingCopy.addSpar(spar);	
 		addSparToList(ps);
@@ -192,7 +192,7 @@ void CWingDlg::OnCmdSparEdit()
 	{
 		CSpar* ps = (CSpar*)m_lstSpars.GetItemDataPtr(idx);
 		CSparDlg dlg(ps);
-		if(dlg.DoModal())
+		if(dlg.DoModal() == IDOK)
 		{
 			m_lstSpars.DeleteString(idx);
 			m_lstSpars.InsertString(idx, ps->getText());
@@ -220,7 +220,7 @@ void CWingDlg::OnBnClickedBtnAddCutout()
 {
 	Cutout cutout;
 	CutoutDialog dlg(&cutout);
-	if (dlg.DoModal())
+	if (dlg.DoModal() == IDOK)
 	{
 		Cutout* pc = wingCopy.addCutout(cutout);
 		addCutoutToList(pc);
@@ -237,7 +237,7 @@ void CWingDlg::OnBnClickedBtnEditCutout()
 	{
 		Cutout* pc = (Cutout*)m_lstCutouts.GetItemDataPtr(idx);
 		CutoutDialog dlg(pc);
-		if (dlg.DoModal())
+		if (dlg.DoModal() == IDOK)
 		{
 			m_lstCutouts.DeleteString(idx);
 			m_lstCutouts.InsertString(idx, pc->getText());

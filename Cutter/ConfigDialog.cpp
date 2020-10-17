@@ -121,7 +121,6 @@ void CConfigDialog::OnBnClickedBtnUpdateCutter()
 		pCutter->setBlockRight(config->blockRight);
 		pCutter->setWidth(config->cutterWidth);
 		pCutter->setFeedRate(config->defaultFeedRate);
-
 		pMainDialog->configUpdated(config);
 	}
 }

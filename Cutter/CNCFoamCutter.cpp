@@ -42,7 +42,8 @@ CNCFoamCutter::CNCFoamCutter(CutterHardware* ph)
 	yMicroStep(4),
 	stepFrequency(2500),
 	feedRate(2.0), // arbitrary 2mm per sec
-	feedRateError(false)
+	feedRateError(false),
+	useGeometry(true)
 {
 	assert(this);
 	assert(ph);
@@ -156,7 +157,9 @@ void CNCFoamCutter::fastMove(const Position<double> & deltas)
 {
 	currentPosition.add(deltas);  // new current position;
 	Position<double> axes(currentPosition);
-	geometry.blockToAxes(axes, 0, 0);  // Note - no Z information available at this stage.
+	if (useGeometry) {
+		geometry.blockToAxes(axes, 0, 0);  // Note - no Z information available at this stage.
+	}
 
 	// axes now contains the coordinates of where we want the motors to actually end up.
 	// in practice, they'll get close as there's not infinite resolution.
@@ -190,7 +193,9 @@ void CNCFoamCutter::cutMove(const Position<double> & deltas)
 {
 	currentPosition.add(deltas);  // new current position;
 	Position<double> axes(currentPosition);
-	geometry.blockToAxes(axes, 0, 0);  // No Z information
+	if (useGeometry) {
+		geometry.blockToAxes(axes, 0, 0);  // No Z information
+	}
 
 	// axes now contains the coordinates of where we want the motors to actually end up.
 	// in practice, they'll get close as there's not infinite resolution.
