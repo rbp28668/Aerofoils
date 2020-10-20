@@ -36,7 +36,7 @@ Adaptive step size in cutter for G-code output- start large and reduce step in U
 Plan view of cutter when width and block position defined DONE
 
 
-Rotate tapered wing to make TE parallel to edge of block
+Rotate tapered wing to make TE parallel to edge of block DONE
 
 Make ellipse tool offset aware.
 
