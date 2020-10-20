@@ -154,7 +154,7 @@ void FeedRateDialog::OnOK()
 		pConfig->sendEnableControls = sendEnableControls == TRUE;
 		pConfig->sendMirror = sendMirror == TRUE;
 		pConfig->sendWorkshifts = sendWorkshifts == TRUE;
-		pConfig->preCorrectGeometry = useCutterGeometry = TRUE;
+		pConfig->preCorrectGeometry = useCutterGeometry == TRUE;
 
 	}
 

@@ -66,3 +66,4 @@ AEROFOIL/x86/*
 *.suo  
 *.tlog  # build log
 /.vs/Aerofoil/v16
+/Test/coords.txt

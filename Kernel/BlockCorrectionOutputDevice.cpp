@@ -4,7 +4,9 @@
 
 BlockCorrectionOutputDevice::BlockCorrectionOutputDevice(COutputDevice* delegate, const Bounds& bounds)
 	: delegate(delegate),
-	bounds(bounds)
+	bounds(bounds),
+	hasLeft(false),
+	hasRight(false)
 {
 	// Set geometry so that a virtual block with the same width as the effective span of the cut
 	// defines the nominal edges of the block.
@@ -37,8 +39,10 @@ void BlockCorrectionOutputDevice::transformCaptured() {
 	geometry.blockToAxes(axes, left.fz - bounds.getMinz(), right.fz - bounds.getMinz());
 	left.fx = axes.x;
 	left.fy = axes.y;
+	left.fz = 0;
 	right.fx = axes.u;
 	right.fy = axes.v;
+	right.fz = bounds.depth();
 }
 
 void BlockCorrectionOutputDevice::MoveTo(int iStream, const PointT& pt)

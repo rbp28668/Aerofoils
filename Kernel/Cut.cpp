@@ -73,26 +73,25 @@ void Cut::cut(COutputDevice & pdev, const CutStructure::Context& context)
 
 	// Create proxy output device to perform correction to edges of virtual block
 	BlockCorrectionOutputDevice proxy(&pdev, bounds);
-	pdev = proxy;
 
 	try {
-		pdev.startPlot();
+		proxy.startPlot();
 		
 		std::ostringstream os;
 		os << "(--EFFECTIVE_SPAN=" << bounds.depth() << ")";
-		pdev.passthrough(os.str().c_str());
+		proxy.passthrough(os.str().c_str());
 
 		for (CutIterator iter = cut_structures.begin();
 			iter != cut_structures.end();
 			++iter)
 		{
 			CutStructure* pcs = *iter;
-			pdev.startObject(pcs->getDescriptiveText().c_str());
-			pcs->cut(&pdev, context);
-			pdev.endObject(pcs->getDescriptiveText().c_str());
+			proxy.startObject(pcs->getDescriptiveText().c_str());
+			pcs->cut(&proxy, context);
+			proxy.endObject(pcs->getDescriptiveText().c_str());
 		}
-		pdev.Flush();
-		pdev.endPlot();
+		proxy.Flush();
+		proxy.endPlot();
 	}
 	catch (COutputDevice::OutputException& /*ex*/) {
 		// NOP for the time being.
