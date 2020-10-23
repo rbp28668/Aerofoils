@@ -90,3 +90,5 @@ void CutterFrame::OnViewPreviewCutPath()
 {
 	static_cast<CutterView*>(m_wndSplitter.GetPane(0, 1))->OnViewPreviewCutPath();
 }
+
+

@@ -56,10 +56,19 @@ void CutStructure::transform(PointT& r, PointT& t) const
 		t.fx = rotateOrigin.fx - tz * rotateSin + tx * rotateCos;
 	}
 
-	if (invert && pBounds) {
-		r.fy = pBounds->height() - r.fy;
-		t.fy = pBounds->height() - t.fy;
+	// For cutting cores use of bounds has become problematic for inverting as now we can split cores
+	// In these circumstances bounds makes alignment hard and worse - bounds may include cutouts etc.
+	// So revert to a simple inversion of y before offsets are added.
+	//if (invert && pBounds) {
+	//	r.fy = pBounds->height() - r.fy;
+	//	t.fy = pBounds->height() - t.fy;
+	//}
+	if (invert) {
+		r.fy = -r.fy;
+		t.fy = -t.fy;
 	}
+
+	// It's fine for X though.
 	if (reflect && pBounds) {
 		r.fx = pBounds->width() - r.fx;
 		t.fx = pBounds->width() - t.fx;

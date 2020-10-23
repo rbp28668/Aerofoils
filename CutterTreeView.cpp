@@ -83,7 +83,25 @@ CutterDoc * CutterTreeView::GetDocument()
 }
 
 
-CutterTreeView::Node* CutterTreeView::newNode(HTREEITEM item, void * object, Menus menu)
+CutterTreeView::Node* CutterTreeView::newNode(HTREEITEM item, CStructure* object, Menus menu)
+{
+	assert(this);
+	assert(object);
+	assert(item);
+	Node* node = new Node(item, object, menu);
+	treeNodes.insert(std::pair<HTREEITEM, Node*>(item, node));
+	return node;
+}
+CutterTreeView::Node* CutterTreeView::newNode(HTREEITEM item, CutStructure* object, Menus menu)
+{
+	assert(this);
+	assert(object);
+	assert(item);
+	Node* node = new Node(item, object, menu);
+	treeNodes.insert(std::pair<HTREEITEM, Node*>(item, node));
+	return node;
+}
+CutterTreeView::Node* CutterTreeView::newNode(HTREEITEM item, void* object, Menus menu)
 {
 	assert(this);
 	assert(object);
@@ -299,6 +317,8 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_DXFCUT_DELETE, &CutterTreeView::OnDxfcutDelete)
 	ON_COMMAND(ID_CUT_MOVEUP, &CutterTreeView::OnCutMoveup)
 	ON_COMMAND(ID_CUT_MOVEDOWN, &CutterTreeView::OnCutMovedown)
+	ON_COMMAND(ID_CUT_MOVETOTOP, &CutterTreeView::OnCutMovetotop)
+	ON_COMMAND(ID_CUT_MOVETOBOTTOM, &CutterTreeView::OnCutMovetobottom)
 	ON_COMMAND(ID_CUT_TRANSFORM, &CutterTreeView::OnCutTransform)
 	ON_COMMAND(ID_WING_PLOTFLAGS, &CutterTreeView::OnWingPlotflags)
 	ON_COMMAND(ID_POINT_NEWMOVE, &CutterTreeView::OnPointNewmove)
@@ -313,6 +333,15 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_ALIGN_LEADINGEDGE, &CutterTreeView::OnWingCutAlignLeadingedge)
 	ON_COMMAND(ID_ALIGN_TRAILINGEDGE, &CutterTreeView::OnWingCutAlignTrailingedge)
 	ON_COMMAND(ID_ALIGN_NOTHING, &CutterTreeView::OnWingCutAlignNothing)
+	ON_COMMAND(ID_EDIT_MOVEUP, &CutterTreeView::OnCutMoveup)
+	ON_COMMAND(ID_EDIT_MOVEDOWN, &CutterTreeView::OnCutMovedown)
+	ON_COMMAND(ID_EDIT_MOVETOTOP, &CutterTreeView::OnCutMovetotop)
+	ON_COMMAND(ID_EDIT_MOVETOBOTTOM, &CutterTreeView::OnCutMovetobottom)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVEUP, &CutterTreeView::OnUpdateIsCutterNode)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVEDOWN, &CutterTreeView::OnUpdateIsCutterNode)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVETOTOP, &CutterTreeView::OnUpdateIsCutterNode)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVETOBOTTOM, &CutterTreeView::OnUpdateIsCutterNode)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_CLONE, &CutterTreeView::OnUpdateIsCutterNode)
 END_MESSAGE_MAP()
 
 
@@ -764,11 +793,13 @@ void CutterTreeView::OnCutMoveup()
 	if (item) {
 		Node* node = getNode(item);
 		assert(node->itemHandle == item);
-		CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
-		GetDocument()->moveUp(pCut);
-		labelCutterNodes();
-		sortCutterNodes();
-		GetDocument()->RedrawNow();
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			GetDocument()->moveUp(pCut);
+			labelCutterNodes();
+			sortCutterNodes();
+			GetDocument()->RedrawNow();
+		}
 	}
 }
 
@@ -779,14 +810,49 @@ void CutterTreeView::OnCutMovedown()
 	if (item) {
 		Node* node = getNode(item);
 		assert(node->itemHandle == item);
-		CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
-		GetDocument()->moveDown(pCut);
-		labelCutterNodes();
-		sortCutterNodes();
-		GetDocument()->RedrawNow();
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			GetDocument()->moveDown(pCut);
+			labelCutterNodes();
+			sortCutterNodes();
+			GetDocument()->RedrawNow();
+		}
 	}
 }
 
+void CutterTreeView::OnCutMovetotop()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			GetDocument()->moveToTop(pCut);
+			labelCutterNodes();
+			sortCutterNodes();
+			GetDocument()->RedrawNow();
+		}
+	}
+
+}
+
+
+void CutterTreeView::OnCutMovetobottom()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			GetDocument()->moveToBottom(pCut);
+			labelCutterNodes();
+			sortCutterNodes();
+			GetDocument()->RedrawNow();
+		}
+	}
+}
 
 
 
@@ -910,4 +976,16 @@ void CutterTreeView::OnWingCutAlignNothing()
 		pcut->setRotation(origin, 0);
 		GetDocument()->RedrawNow();
 	}
+}
+
+void CutterTreeView::OnUpdateIsCutterNode(CCmdUI* pCmdUI)
+{
+	bool cutterSelected = false;
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		cutterSelected = node->isCutter;
+	}
+	pCmdUI->Enable(cutterSelected ? TRUE : FALSE);
 }

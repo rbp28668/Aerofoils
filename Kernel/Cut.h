@@ -72,9 +72,10 @@ public:
 	HomeCutter* addHomePosition();
 
 	// plotter manipulation
+	int indexOf(CutStructure* cs);
 	void moveUp(CutStructure* cs);
 	void moveDown(CutStructure* cs);
-	int indexOf(CutStructure* cs);
+	void moveToStart(CutStructure* cs);
 	void moveToEnd(CutStructure* cs);
 	void deleteCut(CutStructure* toDelete);
 	void deleteStructure(CStructure* toDelete);
