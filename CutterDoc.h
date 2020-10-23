@@ -87,6 +87,8 @@ public:
 	HomeCutter* newHomePosition();
 	inline void moveUp(CutStructure* cs) { cut.moveUp(cs); }
 	inline void moveDown(CutStructure* cs) { cut.moveDown(cs); }
+	inline void moveToTop(CutStructure* cs) { cut.moveToStart(cs); }
+	inline void moveToBottom(CutStructure* cs) { cut.moveToEnd(cs); }
 	inline int indexOf(CutStructure* cs) { return cut.indexOf(cs); }
 	Cut::CutIterator beginCutStructures() { return cut.beginCutStructures(); }
 	Cut::CutIterator endCutStructures() { return cut.endCutStructures(); }

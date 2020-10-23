@@ -31,7 +31,8 @@ class CutStructure;
 
 class CutterTreeView : public CTreeView
 {
-
+	// Tracks popup menus - needs to align with IDR_CUTTER_POPUPS menu
+	// Used to select correct popup via NodeT below.
 	enum Menus {
 		// Top level
 		STRUCTURE = 0,
@@ -54,13 +55,42 @@ class CutterTreeView : public CTreeView
 
 	// NodeT is used to store the relationship between items in the tree,
 	// the actual object and the popup menu used to edit that item.
+	// Also, different constructors implement a degree of run-time type information as most specific constructor should be called.
 	typedef struct NodeT {
 		HTREEITEM itemHandle;
 		void* pItem;
 		int popupIndex;
-		inline NodeT() : itemHandle(0), pItem(0), popupIndex(0) {}
-		inline NodeT(HTREEITEM item, void* object, CutterTreeView::Menus menu) : itemHandle(item), pItem(object), popupIndex(menu) {}
-		inline NodeT(const NodeT & src) : itemHandle(src.itemHandle), pItem(src.pItem), popupIndex(src.popupIndex) {}
+		bool isCutter;
+		bool isStructure;
+		inline NodeT() : itemHandle(0), pItem(0), popupIndex(0), isCutter(false), isStructure(false) {}
+		inline NodeT(HTREEITEM item, CStructure* structure, CutterTreeView::Menus menu) : 
+			itemHandle(item), 
+			pItem(structure), 
+			popupIndex(menu), 
+			isStructure(true), 
+			isCutter(false) 
+		{}
+		inline NodeT(HTREEITEM item, CutStructure* object, CutterTreeView::Menus menu) : 
+			itemHandle(item), 
+			pItem(object), 
+			popupIndex(menu),
+			isStructure(false),
+			isCutter(true)
+		{}
+		inline NodeT(HTREEITEM item, void* object, CutterTreeView::Menus menu) : 
+			itemHandle(item), 
+			pItem(object), 
+			popupIndex(menu) ,
+			isStructure(false),
+			isCutter(false)
+		{}
+		inline NodeT(const NodeT & src) : 
+			itemHandle(src.itemHandle), 
+			pItem(src.pItem), 
+			popupIndex(src.popupIndex),
+			isStructure(src.isStructure),
+			isCutter(src.isCutter)
+		{}
 	} Node;
 
 	HTREEITEM hSelected;
@@ -83,6 +113,8 @@ protected:
 	void addCutNode(CutStructure* pItem, Menus menu);
 	void deleteCutNode();
 
+	Node* newNode(HTREEITEM item, CStructure* object, Menus menu);
+	Node* newNode(HTREEITEM item, CutStructure* object, Menus menu);
 	Node* newNode(HTREEITEM item, void* object, Menus menu);
 	Node* getNode(HTREEITEM item);
 	void freeNode(HTREEITEM item);
@@ -150,6 +182,8 @@ public:
 	afx_msg void OnDxfcutDelete();
 	afx_msg void OnCutMoveup();
 	afx_msg void OnCutMovedown();
+	afx_msg void OnCutMovetotop();
+	afx_msg void OnCutMovetobottom();
 	afx_msg void OnCutTransform();
 	afx_msg void OnWingPlotflags();
 	afx_msg void OnPointcutMakecut();
@@ -164,6 +198,7 @@ public:
 	afx_msg void OnWingCutAlignLeadingedge();
 	afx_msg void OnWingCutAlignTrailingedge();
 	afx_msg void OnWingCutAlignNothing();
+	afx_msg void OnUpdateIsCutterNode(CCmdUI* pCmdUI);
 };
 
 

@@ -160,6 +160,21 @@ HomeCutter * Cut::addHomePosition()
 	return phc;
 }
 
+int Cut::indexOf(CutStructure* cs)
+{
+	// simple linear search.
+	int index = -1;
+	int idx = 0;
+	for (CutIterator it = cut_structures.begin(); it != cut_structures.end(); ++it) {
+		if (*it == cs) {
+			index = idx;
+			break;
+		}
+		++idx;
+	}
+	return index;
+}
+
 void Cut::moveUp(CutStructure * cs)
 {
 	CutIterator it = cut_structures.begin(); 
@@ -203,19 +218,12 @@ void Cut::moveDown(CutStructure * cs)
 	}
 }
 
-int Cut::indexOf(CutStructure * cs)
+void Cut::moveToStart(CutStructure* cs)
 {
-	// simple linear search.
-	int index = -1;
-	int idx = 0;
-	for (CutIterator it = cut_structures.begin(); it != cut_structures.end(); ++it) {
-		if (*it == cs) {
-			index = idx;
-			break;
-		}
-		++idx;
-	}
-	return index;
+	assert(this);
+	assert(cs);
+	cut_structures.remove(cs);
+	cut_structures.push_front(cs);
 }
 
 void Cut::moveToEnd(CutStructure * cs)
@@ -224,7 +232,6 @@ void Cut::moveToEnd(CutStructure * cs)
 	assert(cs);
 	cut_structures.remove(cs);
 	cut_structures.push_back(cs);
-
 }
 
 void Cut::deleteCut(CutStructure * toDelete)

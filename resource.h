@@ -338,6 +338,25 @@
 #define ID_ALIGN_LEADINGEDGE            32910
 #define ID_ALIGN_TRAILINGEDGE           32911
 #define ID_ALIGN_NOTHING                32912
+#define ID_WINGCUT_MOVETOTOP            32913
+#define ID_WINGCUT_MOVETOBOTTOM         32914
+#define ID_EDIT_MOVEUP                  32915
+#define ID_EDIT_MOVEDOWN                32916
+#define ID_ID                           32917
+#define ID_EDIT_MOVETOTOP               32922
+#define ID_EDIT_MOVETOBOTTOM            32923
+#define ID_EDIT_CLONE                   32924
+#define ID_CUT_MOVETOTOP                32928
+#define ID_CUT_MOVETOBOTTOM             32929
+#define ID_WINGCUT_DELETE               32930
+#define ID_POINTCUT_MOVETOTOP           32931
+#define ID_POINTCUT_MOVETOBOTTOM        32932
+#define ID_DXFCUT_MOVETOTOP             32933
+#define ID_DXFCUT_MOVETOBOTTOM          32934
+#define ID_GCODECUT_MOVETOTOP           32935
+#define ID_GCODECUT_MOVETOBOTTOM        32936
+#define ID_HOMECUT_MOVETOTOP            32937
+#define ID_HOMECUT_MOVETOBOTTOM         32938
 
 // Next default values for new objects
 // 
@@ -345,7 +364,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        176
-#define _APS_NEXT_COMMAND_VALUE         32913
+#define _APS_NEXT_COMMAND_VALUE         32939
 #define _APS_NEXT_CONTROL_VALUE         1127
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
