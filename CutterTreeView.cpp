@@ -345,11 +345,13 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_EDIT_MOVETOTOP, &CutterTreeView::OnCutMovetotop)
 	ON_COMMAND(ID_EDIT_MOVETOBOTTOM, &CutterTreeView::OnCutMovetobottom)
 	ON_COMMAND(ID_EDIT_CLONE, &CutterTreeView::OnCutClone)
+	ON_COMMAND(ID_EDIT_DELETE, &CutterTreeView::OnCutDelete)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVEUP, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVEDOWN, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVETOTOP, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVETOBOTTOM, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CLONE, &CutterTreeView::OnUpdateIsCutterNode)
+	ON_COMMAND(ID_HOMECUT_DELETE, &CutterTreeView::OnHomecutDelete)
 END_MESSAGE_MAP()
 
 
@@ -708,6 +710,12 @@ void CutterTreeView::OnCuttingHome()
 }
 
 
+void CutterTreeView::OnHomecutDelete()
+{
+	deleteCutNode();
+}
+
+
 void CutterTreeView::OnCutTransform()
 {
 	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
@@ -890,6 +898,13 @@ void CutterTreeView::OnCutClone()
 	}
 }
 
+
+void CutterTreeView::OnCutDelete()
+{
+	deleteCutNode();
+}
+
+
 void CutterTreeView::OnWingCutTypeNormal()
 {
 	setWingCutMode(CPathCutter::Mode::NORMAL);
@@ -1017,5 +1032,7 @@ void CutterTreeView::OnUpdateIsCutterNode(CCmdUI* pCmdUI)
 	}
 	pCmdUI->Enable(cutterSelected ? TRUE : FALSE);
 }
+
+
 
 

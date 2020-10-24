@@ -322,6 +322,7 @@ BEGIN
         MENUITEM "Move to Top\tCtrl-T",         ID_EDIT_MOVETOTOP
         MENUITEM "Move to Bottom\tCtrl-B",      ID_EDIT_MOVETOBOTTOM
         MENUITEM "Clone",                       ID_EDIT_CLONE
+        MENUITEM "Delete",                      ID_EDIT_DELETE
     END
     POPUP "&View"
     BEGIN

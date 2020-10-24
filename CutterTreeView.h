@@ -184,6 +184,8 @@ public:
 	afx_msg void OnCutMovedown();
 	afx_msg void OnCutMovetotop();
 	afx_msg void OnCutMovetobottom();
+	afx_msg void OnCutClone();
+	afx_msg void OnCutDelete();
 	afx_msg void OnCutTransform();
 	afx_msg void OnWingPlotflags();
 	afx_msg void OnPointcutMakecut();
@@ -198,8 +200,9 @@ public:
 	afx_msg void OnWingCutAlignLeadingedge();
 	afx_msg void OnWingCutAlignTrailingedge();
 	afx_msg void OnWingCutAlignNothing();
+	afx_msg void OnHomecutDelete();
 	afx_msg void OnUpdateIsCutterNode(CCmdUI* pCmdUI);
-	afx_msg void OnCutClone();
+	
 };
 
 
