@@ -39,6 +39,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "Kernel\PointStructure.h"
 #include "Kernel\GCodeSnippet.h"
 #include "Kernel\DXFObject.h"
+#include "Kernel\Cutpath.h"
+#include "Kernel\EllipseCutter.h"
+#include "Kernel\PointCutter.h"
+#include "Kernel\DXFObjectCutter.h"
+#include "Kernel\GCodeSnippetCutter.h"
+#include "Kernel\HomeCutter.h"
+
 #include "Kernel\GCodeOutputFile.h"
 #include "Kernel\CNCConnectionOutputDevice.h"
 #include "Kernel\ObjectSerializer.h"
@@ -120,32 +127,49 @@ void CutterDoc::deleteStructure(CStructure * pStructure)
 
 CPathCutter * CutterDoc::newPathCutter(CWing * pStructure)
 {
-	return cut.addPathCutter(pStructure);
+	CPathCutter* ppc = new CPathCutter(pStructure);
+	cut.addCutter(ppc);
+	return ppc;
 }
 
 EllipseCutter * CutterDoc::newElipseCutter(CEllipsePair * pEllipses)
 {
-	return cut.addEllipseCutter(pEllipses);
+	EllipseCutter* pec = new EllipseCutter(pEllipses);
+	cut.addCutter(pec);
+	return pec;
 }
 
 PointCutter * CutterDoc::newPointCutter(CPointStructure * pPoints)
 {
-	return cut.addPointCutter(pPoints);
+	PointCutter* ppc = new PointCutter(pPoints);
+	cut.addCutter(ppc);
+	return ppc;
 }
 
 DXFObjectCutter * CutterDoc::newDXFObjectCutter(DXFObject* pdxf)
 {
-	return cut.addDXFObjectCutter(pdxf);
+	DXFObjectCutter* pcut = new DXFObjectCutter(pdxf);
+	cut.addCutter(pcut);
+	return pcut;
 }
 
 GCodeSnippetCutter * CutterDoc::newGCodeSnippetCutter(GCodeSnippet* pgcode)
 {
-	return cut.addGCodeSnippetCutter(pgcode);
+	GCodeSnippetCutter* pcut = new GCodeSnippetCutter(pgcode);
+	cut.addCutter(pcut);
+	return pcut;
 }
 
 HomeCutter * CutterDoc::newHomePosition()
 {
-	return cut.addHomePosition();
+	HomeCutter* phc = new HomeCutter();
+	cut.addCutter(phc);
+	return phc;
+}
+
+void CutterDoc::insertCutterAfter(const CutStructure* existing, CutStructure* newCut)
+{
+	cut.insertAfter(existing, newCut);
 }
 
 void CutterDoc::deleteCut(CutStructure * pCut)

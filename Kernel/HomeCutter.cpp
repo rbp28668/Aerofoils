@@ -28,6 +28,11 @@ HomeCutter::HomeCutter()
 {
 }
 
+HomeCutter::HomeCutter(const HomeCutter& source)
+	: CutStructure(source)
+{
+}
+
 
 HomeCutter::~HomeCutter()
 {
@@ -48,6 +53,11 @@ std::string HomeCutter::getDescriptiveText() const
 std::string HomeCutter::getType() const
 {
 	return TYPE;
+}
+
+CutStructure* HomeCutter::clone() const
+{
+	return new HomeCutter(*this);
 }
 
 CStructure * HomeCutter::getStructure()

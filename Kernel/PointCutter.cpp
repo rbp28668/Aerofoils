@@ -39,6 +39,13 @@ PointCutter::PointCutter(CPointStructure* pps)
 	assert(pps);
 }
 
+PointCutter::PointCutter(const PointCutter& source)
+	: CutStructure(source)
+	, pStructure(source.pStructure)
+	, fast(source.fast)
+{
+}
+
 
 PointCutter::~PointCutter()
 {
@@ -93,6 +100,11 @@ std::string PointCutter::getDescriptiveText() const
 std::string PointCutter::getType() const
 {
 	return TYPE;
+}
+
+CutStructure* PointCutter::clone() const
+{
+	return new PointCutter(*this);
 }
 
 CStructure* PointCutter::getStructure()

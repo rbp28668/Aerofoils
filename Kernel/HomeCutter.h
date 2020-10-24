@@ -27,12 +27,14 @@ public:
 	static const std::string TYPE;
 
 	HomeCutter();
+	explicit HomeCutter(const HomeCutter& source);
 	~HomeCutter();
 
 	virtual void cut(COutputDevice *pdev, const CutStructure::Context& context);
 
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;
+	virtual CutStructure* clone() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 	virtual void serializeTo(CObjectSerializer & os);

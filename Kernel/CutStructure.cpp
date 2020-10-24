@@ -110,6 +110,23 @@ CutStructure::CutStructure()
 {
 }
 
+CutStructure::CutStructure(const CutStructure& source)
+	: rootOffsets(source.rootOffsets)
+	, tipOffsets(source.tipOffsets)
+	, invert(source.invert)
+	, reflect(source.reflect)
+	, rootIsOnLeft(source.rootIsOnLeft)
+	, root_stream(source.root_stream)
+	, tip_stream(source.tip_stream)
+	, pBounds(0) //  recalculate bounds for copy.
+	, rotateOrigin(source.rotateOrigin)
+	, rotateRadians(source.rotateRadians)
+	, rotateSin(source.rotateSin)
+	, rotateCos(source.rotateCos)
+
+{
+}
+
 
 CutStructure::~CutStructure()
 {
@@ -117,6 +134,7 @@ CutStructure::~CutStructure()
 		delete pBounds;
 	}
 }
+
 
 void CutStructure::setOffsets(const PointT & root, const PointT & tip)
 {

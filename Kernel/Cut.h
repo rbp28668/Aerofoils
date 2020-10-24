@@ -64,12 +64,8 @@ public:
 	void addStructure(CStructure* pStructure);
 
 	// Add cutters
-	CPathCutter* addPathCutter(CWing* pWing);
-	EllipseCutter* addEllipseCutter(CEllipsePair* pep);
-	PointCutter* addPointCutter(CPointStructure* pps);
-	DXFObjectCutter* addDXFObjectCutter(DXFObject* pdxf);
-	GCodeSnippetCutter* addGCodeSnippetCutter(GCodeSnippet* pgcode);
-	HomeCutter* addHomePosition();
+	CutStructure* addCutter(CutStructure* pCutStructure);
+	CutStructure* insertAfter(const CutStructure* existing, CutStructure* newCut);
 
 	// plotter manipulation
 	int indexOf(CutStructure* cs);

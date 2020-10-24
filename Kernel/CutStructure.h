@@ -72,15 +72,17 @@ public:
 	};
 	
 	CutStructure();
+	explicit CutStructure(const CutStructure& source);
+
 	~CutStructure();
 
 	virtual void cut(COutputDevice *pdev, const CutStructure::Context& context) = 0;
 
 	virtual std::string getDescriptiveText() const = 0; // For UI
 	virtual std::string getType() const = 0; // for serialization, basic type identification etc.
-
 	virtual CStructure* getStructure() = 0;
 	virtual const CStructure* getStructure() const = 0;
+	virtual CutStructure* clone() const = 0;
 
 	void setOffsets(const PointT& root, const PointT& tip);
 	const PointT getRootOffsets();

@@ -32,12 +32,14 @@ public:
 
 	explicit EllipseCutter();
 	EllipseCutter(CEllipsePair * pep);
+	explicit EllipseCutter(const EllipseCutter& source);
 	~EllipseCutter();
 
 	virtual void cut(COutputDevice *pdev, const CutStructure::Context& context);
 
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;
+	virtual CutStructure* clone() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 

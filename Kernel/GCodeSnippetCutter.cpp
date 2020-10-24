@@ -39,6 +39,12 @@ GCodeSnippetCutter::GCodeSnippetCutter(GCodeSnippet* pgcode)
 	assert(pgcode);
 }
 
+GCodeSnippetCutter::GCodeSnippetCutter(const GCodeSnippetCutter& source)
+	: CutStructure(source)
+	, pSnippet(source.pSnippet)
+{
+}
+
 
 GCodeSnippetCutter::~GCodeSnippetCutter()
 {
@@ -71,6 +77,11 @@ std::string GCodeSnippetCutter::getDescriptiveText() const
 std::string GCodeSnippetCutter::getType() const
 {
 	return TYPE;
+}
+
+CutStructure* GCodeSnippetCutter::clone() const
+{
+	return new GCodeSnippetCutter(*this);
 }
 
 CStructure * GCodeSnippetCutter::getStructure()
