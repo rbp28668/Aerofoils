@@ -43,6 +43,12 @@ EllipseCutter::EllipseCutter(CEllipsePair * pep)
 	assert(pep);
 }
 
+EllipseCutter::EllipseCutter(const EllipseCutter& source)
+	: CutStructure(source)
+	, pEllipses(source.pEllipses)
+{
+}
+
 
 EllipseCutter::~EllipseCutter()
 {
@@ -142,6 +148,11 @@ std::string EllipseCutter::getDescriptiveText() const
 std::string EllipseCutter::getType() const
 {
 	return TYPE;
+}
+
+CutStructure* EllipseCutter::clone() const
+{
+	return new EllipseCutter(*this);
 }
 
 CStructure * EllipseCutter::getStructure()

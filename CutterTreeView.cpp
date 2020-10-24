@@ -82,7 +82,9 @@ CutterDoc * CutterTreeView::GetDocument()
 	return (CutterDoc*)CView::GetDocument();
 }
 
-
+// Creates a new Node indexed by HTREEITEM for that menu item in treeNodes.  treeNodes
+// can then be used to lookup the Node by the HTREEITEM and hence get the structure and information
+// about the object that tree item refers to.
 CutterTreeView::Node* CutterTreeView::newNode(HTREEITEM item, CStructure* object, Menus menu)
 {
 	assert(this);
@@ -232,10 +234,12 @@ void CutterTreeView::addStructureNode(CStructure * pItem, Menus menu)
 {
 	assert(this);
 	assert(pItem);
-	HTREEITEM item = GetTreeCtrl().InsertItem(pItem->getDescriptiveText().c_str(), hStructure);
-	newNode(item, pItem, menu);
-	GetTreeCtrl().SelectItem(item);
-	GetDocument()->RedrawNow();
+	if (pItem) {
+		HTREEITEM item = GetTreeCtrl().InsertItem(pItem->getDescriptiveText().c_str(), hStructure);
+		newNode(item, pItem, menu);
+		GetTreeCtrl().SelectItem(item);
+		GetDocument()->RedrawNow();
+	}
 }
 
 void CutterTreeView::deleteStructureNode()
@@ -262,10 +266,12 @@ void CutterTreeView::addCutNode(CutStructure * pItem, Menus menu)
 {
 	assert(this);
 	assert(pItem);
-	HTREEITEM item = GetTreeCtrl().InsertItem(pItem->getDescriptiveText().c_str(), hCutting);
-	newNode(item, pItem, menu);
-	GetTreeCtrl().SelectItem(item);
-	GetDocument()->RedrawNow();
+	if (pItem) {
+		HTREEITEM item = GetTreeCtrl().InsertItem(pItem->getDescriptiveText().c_str(), hCutting);
+		newNode(item, pItem, menu);
+		GetTreeCtrl().SelectItem(item);
+		GetDocument()->RedrawNow();
+	}
 }
 
 void CutterTreeView::deleteCutNode()
@@ -305,7 +311,7 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_POINT_NEWCUT, &CutterTreeView::OnPointNewcut)
 	ON_COMMAND(ID_STRUCTURE_NEWGCODE, &CutterTreeView::OnStructureNewgcode)
 	ON_COMMAND(ID_STRUCTURE_NEWDXF, &CutterTreeView::OnStructureNewdxf)
-	ON_COMMAND(ID_WINGCUT_D, &CutterTreeView::OnWingcutDelete)
+	ON_COMMAND(ID_WINGCUT_DELETE, &CutterTreeView::OnWingcutDelete)
 	ON_COMMAND(ID_ELLIPSECUT_DELETE, &CutterTreeView::OnEllipsecutDelete)
 	ON_COMMAND(ID_POINTCUT_DELETE, &CutterTreeView::OnPointcutDelete)
 	ON_COMMAND(ID_GCODECUT_DELETE, &CutterTreeView::OnGcodecutDelete)
@@ -320,6 +326,7 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_CUT_MOVETOTOP, &CutterTreeView::OnCutMovetotop)
 	ON_COMMAND(ID_CUT_MOVETOBOTTOM, &CutterTreeView::OnCutMovetobottom)
 	ON_COMMAND(ID_CUT_TRANSFORM, &CutterTreeView::OnCutTransform)
+	ON_COMMAND(ID_CUT_CLONE, &CutterTreeView::OnCutClone)
 	ON_COMMAND(ID_WING_PLOTFLAGS, &CutterTreeView::OnWingPlotflags)
 	ON_COMMAND(ID_POINT_NEWMOVE, &CutterTreeView::OnPointNewmove)
 	ON_COMMAND(ID_POINTCUT_MAKECUT, &CutterTreeView::OnPointcutMakecut)
@@ -337,6 +344,7 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_EDIT_MOVEDOWN, &CutterTreeView::OnCutMovedown)
 	ON_COMMAND(ID_EDIT_MOVETOTOP, &CutterTreeView::OnCutMovetotop)
 	ON_COMMAND(ID_EDIT_MOVETOBOTTOM, &CutterTreeView::OnCutMovetobottom)
+	ON_COMMAND(ID_EDIT_CLONE, &CutterTreeView::OnCutClone)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVEUP, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVEDOWN, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVETOTOP, &CutterTreeView::OnUpdateIsCutterNode)
@@ -855,12 +863,32 @@ void CutterTreeView::OnCutMovetobottom()
 }
 
 
+void CutterTreeView::OnCutClone()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		if (node->isCutter) {
+			// Create a clone
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			CutStructure* copy = pCut->clone();
 
+			// Put it in the cut structure
+			GetDocument()->insertCutterAfter(pCut, copy);
 
+			// Add it to the tree
+			std::string typeName = copy->getType();
+			Menus menu = menuLookup[typeName];
+			addCutNode(copy, menu);
 
-
-
-
+			// Tidy up try ordering etc.
+			labelCutterNodes();
+			sortCutterNodes();
+			GetDocument()->RedrawNow();
+		}
+	}
+}
 
 void CutterTreeView::OnWingCutTypeNormal()
 {
@@ -989,3 +1017,5 @@ void CutterTreeView::OnUpdateIsCutterNode(CCmdUI* pCmdUI)
 	}
 	pCmdUI->Enable(cutterSelected ? TRUE : FALSE);
 }
+
+

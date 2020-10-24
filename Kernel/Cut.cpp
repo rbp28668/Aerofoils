@@ -24,12 +24,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutStructure.h"
 #include "OutputDevice.h"
 #include "ObjectSerializer.h"
-#include "Cutpath.h"
-#include "EllipseCutter.h"
-#include "PointCutter.h"
-#include "DXFObjectCutter.h"
-#include "GCodeSnippetCutter.h"
-#include "HomeCutter.h"
 #include "Bounds.h"
 #include "BlockCorrectionOutputDevice.h"
 
@@ -107,59 +101,42 @@ void Cut::addStructure(CStructure * pStructure)
 	structures.push_back(pStructure);
 }
 
-CPathCutter * Cut::addPathCutter(CWing * pWing)
+CutStructure * Cut::addCutter(CutStructure* pCutStructure)
 {
 	assert(this);
-	assert(pWing);
-	CPathCutter* ppc = new CPathCutter(pWing);
-	cut_structures.push_back(ppc);
-	return ppc;
+	assert(pCutStructure);
+	cut_structures.push_back(pCutStructure);
+	return pCutStructure;
 }
 
-EllipseCutter * Cut::addEllipseCutter(CEllipsePair * pep)
-{
+// Inserts a new Cutter after an existing element.
+// existing must exist in the list of cutters - if it doesn't newCut will still be
+// inserted but at the end of the list.
+CutStructure* Cut::insertAfter(const CutStructure* existing, CutStructure* newCut) {
 	assert(this);
-	assert(pep);
-	EllipseCutter* pec = new EllipseCutter(pep);
-	cut_structures.push_back(pec);
-	return pec;
+	assert(existing);
+	assert(newCut);
+	CutIterator next = cut_structures.end();
+	for (CutIterator it = cut_structures.begin(); it != cut_structures.end(); ++it) {
+		if (*it == existing) {
+			next = it;
+			++next;  // as insert will insert before this.
+			break;
+		}
+	}
+	if (next == cut_structures.end()) {
+		cut_structures.push_back(newCut);
+	}
+	else {
+		cut_structures.insert(next, newCut); // before this one.
+	}
+
+	return newCut;
 }
 
-PointCutter * Cut::addPointCutter(CPointStructure * pps)
-{
-	assert(this);
-	assert(pps);
-	PointCutter* ppc = new PointCutter(pps);
-	cut_structures.push_back(ppc);
-	return ppc;
-}
 
-DXFObjectCutter * Cut::addDXFObjectCutter(DXFObject* pdxf)
-{
-	assert(this);
-	assert(pdxf);
-	DXFObjectCutter* pcut = new DXFObjectCutter(pdxf);
-	cut_structures.push_back(pcut);
-	return pcut;
-}
-
-GCodeSnippetCutter * Cut::addGCodeSnippetCutter(GCodeSnippet* pgcode)
-{
-	assert(this);
-	assert(pgcode);
-	GCodeSnippetCutter* pcut = new GCodeSnippetCutter(pgcode);
-	cut_structures.push_back(pcut);
-	return pcut;
-}
-
-HomeCutter * Cut::addHomePosition()
-{
-	assert(this);
-	HomeCutter* phc = new HomeCutter();
-	cut_structures.push_back(phc);
-	return phc;
-}
-
+// Provides the zero based index of the given CutStructure in the list of structures.
+//
 int Cut::indexOf(CutStructure* cs)
 {
 	// simple linear search.

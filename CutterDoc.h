@@ -85,6 +85,7 @@ public:
 	DXFObjectCutter* newDXFObjectCutter(DXFObject* pdxf);
 	GCodeSnippetCutter* newGCodeSnippetCutter(GCodeSnippet* pdxf);
 	HomeCutter* newHomePosition();
+	void insertCutterAfter(const CutStructure* existing, CutStructure* newCut);
 	inline void moveUp(CutStructure* cs) { cut.moveUp(cs); }
 	inline void moveDown(CutStructure* cs) { cut.moveDown(cs); }
 	inline void moveToTop(CutStructure* cs) { cut.moveToStart(cs); }

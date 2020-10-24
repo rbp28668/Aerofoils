@@ -357,6 +357,14 @@
 #define ID_GCODECUT_MOVETOBOTTOM        32936
 #define ID_HOMECUT_MOVETOTOP            32937
 #define ID_HOMECUT_MOVETOBOTTOM         32938
+#define ID_EDIT_CLONE32939              32939
+#define ID_WINGCUT_CLONE                32940
+#define ID_CUT_CLONE                    32941
+#define ID_ELLIPSECUT_CLONE             32942
+#define ID_POINTCUT_CLONE               32943
+#define ID_DXFCUT_CLONE                 32944
+#define ID_GCODECUT_CLONE               32945
+#define ID_HOMECUT_CLONE                32946
 
 // Next default values for new objects
 // 
@@ -364,7 +372,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        176
-#define _APS_NEXT_COMMAND_VALUE         32939
+#define _APS_NEXT_COMMAND_VALUE         32947
 #define _APS_NEXT_CONTROL_VALUE         1127
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

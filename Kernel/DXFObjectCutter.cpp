@@ -38,6 +38,12 @@ DXFObjectCutter::DXFObjectCutter(DXFObject* pdxf)
 	assert(pdxf);
 }
 
+DXFObjectCutter::DXFObjectCutter(const DXFObjectCutter& source)
+	: CutStructure(source)
+	, pDxfObject(source.pDxfObject)
+{
+}
+
 
 DXFObjectCutter::~DXFObjectCutter()
 {
@@ -56,6 +62,11 @@ std::string DXFObjectCutter::getDescriptiveText() const
 std::string DXFObjectCutter::getType() const
 {
 	return TYPE;
+}
+
+CutStructure* DXFObjectCutter::clone() const
+{
+	return new DXFObjectCutter(*this);
 }
 
 CStructure * DXFObjectCutter::getStructure()

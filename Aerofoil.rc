@@ -235,6 +235,7 @@ BEGIN
         MENUITEM "Move to Top",                 ID_CUT_MOVETOTOP
         MENUITEM "Move to Bottom",              ID_CUT_MOVETOBOTTOM
         MENUITEM SEPARATOR
+        MENUITEM "Clone",                       ID_CUT_CLONE
         MENUITEM "Delete",                      ID_WINGCUT_DELETE
     END
     POPUP "Ellipse Cut"
@@ -246,6 +247,7 @@ BEGIN
         MENUITEM "Move to Top",                 ID_CUT_MOVETOTOP
         MENUITEM "Move to Bottom",              ID_CUT_MOVETOBOTTOM
         MENUITEM SEPARATOR
+        MENUITEM "Clone",                       ID_CUT_CLONE
         MENUITEM "Delete",                      ID_ELLIPSECUT_DELETE
     END
     POPUP "Point Cut"
@@ -259,6 +261,7 @@ BEGIN
         MENUITEM "Move to Top",                 ID_CUT_MOVETOTOP
         MENUITEM "Move to Bottom",              ID_CUT_MOVETOBOTTOM
         MENUITEM SEPARATOR
+        MENUITEM "Clone",                       ID_CUT_CLONE
         MENUITEM "Delete",                      ID_POINTCUT_DELETE
     END
     POPUP "Dxf Cut"
@@ -270,6 +273,7 @@ BEGIN
         MENUITEM "Move to Top",                 ID_CUT_MOVETOTOP
         MENUITEM "Move to Bottom",              ID_CUT_MOVETOBOTTOM
         MENUITEM SEPARATOR
+        MENUITEM "Clone",                       ID_CUT_CLONE
         MENUITEM "Delete",                      ID_DXFCUT_DELETE
     END
     POPUP "GCodeCut"
@@ -279,6 +283,7 @@ BEGIN
         MENUITEM "Move to Top",                 ID_CUT_MOVETOTOP
         MENUITEM "Move to Bottom",              ID_CUT_MOVETOBOTTOM
         MENUITEM SEPARATOR
+        MENUITEM "Clone",                       ID_CUT_CLONE
         MENUITEM "Delete",                      ID_GCODECUT_DELETE
     END
     POPUP "Home Cut"
@@ -288,6 +293,7 @@ BEGIN
         MENUITEM "Move to Top",                 ID_CUT_MOVETOTOP
         MENUITEM "Move to Bottom",              ID_CUT_MOVETOBOTTOM
         MENUITEM SEPARATOR
+        MENUITEM "Clone",                       ID_CUT_CLONE
         MENUITEM "Delete",                      ID_HOMECUT_DELETE
     END
 END
@@ -315,6 +321,7 @@ BEGIN
         MENUITEM "Move Down\tCtrl-D",           ID_EDIT_MOVEDOWN
         MENUITEM "Move to Top\tCtrl-T",         ID_EDIT_MOVETOTOP
         MENUITEM "Move to Bottom\tCtrl-B",      ID_EDIT_MOVETOBOTTOM
+        MENUITEM "Clone",                       ID_EDIT_CLONE
     END
     POPUP "&View"
     BEGIN

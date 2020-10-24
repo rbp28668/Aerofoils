@@ -34,6 +34,7 @@ public:
 
 	explicit PointCutter();
 	PointCutter(CPointStructure* pps);
+	explicit PointCutter(const PointCutter& source);
 	~PointCutter();
 
 	bool isFast() const;
@@ -42,6 +43,7 @@ public:
 	virtual void cut(COutputDevice *pdev, const CutStructure::Context& context);
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;
+	virtual CutStructure* clone() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 

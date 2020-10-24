@@ -81,6 +81,14 @@ CPathCutter::CPathCutter()
 {
 }
 
+CPathCutter::CPathCutter(const CPathCutter& source)
+	: CutStructure(source)
+	, plot_flags(source.plot_flags)
+	, pWing(source.pWing)
+	, mode(source.mode)
+{
+}
+
 
 /**********************************************************/
 /** FIND_FORWARD_PointT                                   **/
@@ -752,6 +760,11 @@ string CPathCutter::getDescriptiveText() const
 std::string CPathCutter::getType() const
 {
 	return TYPE;
+}
+
+CutStructure* CPathCutter::clone() const
+{
+	return new CPathCutter(*this);
 }
 
 CStructure * CPathCutter::getStructure()

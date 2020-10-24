@@ -125,6 +125,7 @@ public:
 
 	CPathCutter(const CWing* pWing);
 	explicit CPathCutter(); // for serialization
+	explicit CPathCutter(const CPathCutter& source);
 
 	CPathCutter::Mode get_mode() const { return mode; }
 	void set_mode(CPathCutter::Mode mode) { this->mode = mode; }
@@ -134,6 +135,7 @@ public:
 	virtual void cut(COutputDevice* pdev, const CutStructure::Context& context);
 	virtual std::string getDescriptiveText() const;
 	virtual std::string getType() const;
+	virtual CutStructure* clone() const;
 	virtual CStructure* getStructure();
 	virtual const CStructure* getStructure() const;
 	virtual void serializeTo(CObjectSerializer& os);

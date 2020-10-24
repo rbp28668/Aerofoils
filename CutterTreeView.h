@@ -199,6 +199,7 @@ public:
 	afx_msg void OnWingCutAlignTrailingedge();
 	afx_msg void OnWingCutAlignNothing();
 	afx_msg void OnUpdateIsCutterNode(CCmdUI* pCmdUI);
+	afx_msg void OnCutClone();
 };
 
 
