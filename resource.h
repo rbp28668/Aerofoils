@@ -152,6 +152,8 @@
 #define IDC_EDIT_FEED_RATE              1093
 #define IDC_EDT_XTRAVEL                 1093
 #define IDC_EDT_SPACING                 1093
+#define IDC_EDIT_TOOL_OFFSET2           1093
+#define IDC_EDIT_TIP_TOOL_OFFSET        1093
 #define IDC_CHECK1                      1094
 #define IDC_CHK_INCLUDE_FEED            1094
 #define IDC_CHK_TOP_SURFACE             1094

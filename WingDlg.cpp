@@ -302,7 +302,7 @@ BOOL CWingDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	m_span = wingCopy.getSpan();
+	m_span = (float)wingCopy.getSpan();
 	m_LE = (float)wingCopy.getLE();
 	m_TE = (float)wingCopy.getTE();
 	m_fSkin = (float)wingCopy.getSkinThickness();
