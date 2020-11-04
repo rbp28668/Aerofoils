@@ -31,6 +31,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "WingCoreFlagsDlg.h"
 #include "TransformDialog.h"
 #include "GCodeEditDialog.h"
+#include "CutBoundsDisplay.h"
+#include "Kernel/Bounds.h"
 #include "Kernel/Wing.h"
 #include "Kernel/EllipsePair.h"
 #include "Kernel/PointStructure.h"
@@ -352,6 +354,9 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MOVETOBOTTOM, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CLONE, &CutterTreeView::OnUpdateIsCutterNode)
 	ON_COMMAND(ID_HOMECUT_DELETE, &CutterTreeView::OnHomecutDelete)
+	ON_COMMAND(ID_CUT_SHOWBOUNDS, &CutterTreeView::OnCutShowbounds)
+	ON_COMMAND(ID_CUT_INSERTSTARTLINE, &CutterTreeView::OnCutInsertstartline)
+	ON_COMMAND(ID_CUT_INSERTFINISHLINE, &CutterTreeView::OnCutInsertfinishline)
 END_MESSAGE_MAP()
 
 
@@ -1034,5 +1039,106 @@ void CutterTreeView::OnUpdateIsCutterNode(CCmdUI* pCmdUI)
 }
 
 
+void CutterTreeView::OnCutShowbounds()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			Bounds bounds;
+			pCut->cut(&bounds, GetDocument()->getContext());
+			CutBoundsDisplay display(&bounds);
+			display.DoModal();
+		}
+	}
+}
 
 
+
+
+void CutterTreeView::OnCutInsertstartline()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+			
+			// Get bounds including first and last lines.
+			Bounds bounds;
+			pCut->cut(&bounds, GetDocument()->getContext());
+
+			// Set geometry so that a virtual block with the same width as the effective span of the cut
+            // defines the nominal edges of the block.
+			CutterGeometry geometry;
+			geometry.setBlockLeft(0);
+			geometry.setBlockRight(bounds.depth());
+			geometry.setWidth(bounds.depth());
+
+			// Calculate line corresponding to the start of the cut.
+			Position<double> first;
+			first.x = bounds.firstRoot().fx;
+			first.y = bounds.firstRoot().fy;
+			first.u = bounds.firstTip().fx;
+			first.v = bounds.firstTip().fy;
+			geometry.blockToAxes(first, bounds.firstRoot().fz, bounds.firstTip().fz);
+
+			CPointStructure point;
+			point.setRoot(PointT(first.x, first.y, 0));
+			point.setTip(PointT(first.u, first.v, bounds.depth()));
+			point.setSpan(bounds.depth());
+			CPointStructure* pPoint = GetDocument()->newPoint(point);
+			pPoint->setLabel("[wing start]");
+			addStructureNode(pPoint, POINT);
+
+			PointCutter* cut = GetDocument()->newPointCutter(pPoint);
+			addCutNode(cut, POINT_CUT);
+		}
+	}
+}
+
+
+void CutterTreeView::OnCutInsertfinishline()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		if (node->isCutter) {
+			CutStructure* pCut = static_cast<CutStructure*>(node->pItem);
+
+			// Get bounds including first and last lines.
+			Bounds bounds;
+			pCut->cut(&bounds, GetDocument()->getContext());
+
+			// Set geometry so that a virtual block with the same width as the effective span of the cut
+			// defines the nominal edges of the block.
+			CutterGeometry geometry;
+			geometry.setBlockLeft(0);
+			geometry.setBlockRight(bounds.depth());
+			geometry.setWidth(bounds.depth());
+
+			// Calculate line corresponding to the start of the cut.
+			Position<double> last;
+			last.x = bounds.lastRoot().fx;
+			last.y = bounds.lastRoot().fy;
+			last.u = bounds.lastTip().fx;
+			last.v = bounds.lastTip().fy;
+			geometry.blockToAxes(last, bounds.lastRoot().fz, bounds.lastTip().fz);
+
+			CPointStructure point;
+			point.setRoot(PointT(last.x, last.y, 0));
+			point.setTip(PointT(last.u, last.v, bounds.depth()));
+			point.setSpan(bounds.depth());
+			CPointStructure* pPoint = GetDocument()->newPoint(point);
+			pPoint->setLabel("[wing finish]");
+			addStructureNode(pPoint, POINT);
+
+			PointCutter* cut = GetDocument()->newPointCutter(pPoint);
+			addCutNode(cut, POINT_CUT);
+		}
+	}
+}

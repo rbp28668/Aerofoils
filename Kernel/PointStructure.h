@@ -51,8 +51,13 @@ public:
 	void setRoot(PointT pt) {root = pt;}
 	void setTip(PointT pt) {tip = pt;}
 
+	void setLabel(const std::string& label) { this->label = label; }
+	void setLabel(const char* label) { this->label = label; }
+
+private:
 	PointT root;	// offsets;
 	PointT tip;		// offsets;
+	std::string label;
 
 };
 

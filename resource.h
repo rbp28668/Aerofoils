@@ -40,6 +40,7 @@
 #define IDR_DXF_FLOATING                167
 #define IDD_CUTTER_GEOMETRY             170
 #define IDD_CUT_OPTIMISE                172
+#define IDD_BOUNDS                      176
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -152,25 +153,36 @@
 #define IDC_EDIT_FEED_RATE              1093
 #define IDC_EDT_XTRAVEL                 1093
 #define IDC_EDT_SPACING                 1093
-#define IDC_EDIT_TOOL_OFFSET2           1093
 #define IDC_EDIT_TIP_TOOL_OFFSET        1093
+#define IDC_EDT_ROOT_MIN_X              1093
 #define IDC_CHECK1                      1094
 #define IDC_CHK_INCLUDE_FEED            1094
 #define IDC_CHK_TOP_SURFACE             1094
 #define IDC_CHK_PLOT_CUTOUTS            1094
 #define IDC_CHK_OPTIMISE_CUT            1094
+#define IDC_EDT_ROOT_MIN_Y              1094
 #define IDC_CHK_CENTRE                  1095
 #define IDC_CHK_USE_G1_FOR_MOVES        1095
+#define IDC_EDT_ROOT_MIN_Z              1095
 #define IDC_CHK_SEND_WIRE_CODES         1096
+#define IDC_EDT_ROOT_MAX_X              1096
 #define IDC_CHK_SEND_ENABLE_DISABLE     1097
+#define IDC_EDT_ROOT_MAX_Y              1097
 #define IDC_CHK_SEND_MIRROR             1098
+#define IDC_EDT_ROOT_MAX_Z              1098
 #define IDC_LST_CUTOUTS                 1099
 #define IDC_CHK_UNITS_PER_MIN           1099
+#define IDC_EDT_TIP_MIN_X               1099
 #define IDC_BTN_ADD_CUTOUT              1100
 #define IDC_CHK_SEND_WORKSHIFTS         1100
+#define IDC_EDT_TIP_MIN_Y               1100
 #define IDC_BTN_EDIT_CUTOUT             1101
+#define IDC_EDT_TIP_MIN_Z               1101
 #define IDC_BTN_DELETE_CUTOUT           1102
+#define IDC_EDT_TIP_MAX_X               1102
 #define IDC_EDT_YTRAVEL                 1103
+#define IDC_EDT_TIP_MAX_Y               1103
+#define IDC_EDT_TIP_MAX_Z               1104
 #define IDC_EDT_BLOCKLHS                1105
 #define IDC_EDT_BLOCKWIDTH              1106
 #define IDC_EDT_MOVE_FEED_RATE          1107
@@ -197,9 +209,19 @@
 #define IDC_EDT_ROOT_SWEEP              1126
 #define IDC_PLANFORM_CONTROL            1126
 #define IDC_EDT_ROOT_WASHOUT            1127
+#define IDC_EDT_FIRST_ROOT_X            1127
 #define IDC_EDT_ROOT_THICKNESS_MOD      1128
+#define IDC_EDT_FIRST_ROOT_Y            1128
 #define IDC_CMD_ROOT_SECTION_NAME       1129
+#define IDC_EDT_FIRST_TIP_X             1129
 #define IDC_ROOT_DISPLAY                1130
+#define IDC_EDT_FIRST_TIP_Y             1130
+#define IDC_EDT_FIRST_SPAN              1131
+#define IDC_EDT_LAST_ROOT_X             1132
+#define IDC_EDT_LAST_ROOT_Y             1133
+#define IDC_EDT_LAST_TIP_X              1134
+#define IDC_EDT_LAST_TIP_Y              1135
+#define IDC_EDT_LAST_SPAN               1136
 #define ID_WING_NEW                     32771
 #define ID_WING_NEW_SECTION             32772
 #define ID_WING_NEW_CORE                32773
@@ -368,15 +390,27 @@
 #define ID_GCODECUT_CLONE               32945
 #define ID_HOMECUT_CLONE                32946
 #define ID_EDIT_DELETE32947             32947
+#define ID_WINGCUT_SHOWBOUNDS           32948
+#define ID_CUT_SHOWBOUNDS               32949
+#define ID_WINGCUT_INSERTSTARTLINEBEFORE 32950
+#define ID_WINGCUT_INSERTFINISHLINEAFTER 32951
+#define ID_CUT_INSERTSTARTLINE          32952
+#define ID_CUT_INSERTFINISHLINE         32953
+#define ID_ELLIPSECUT_SHOWBOUNDS        32954
+#define ID_ELLIPSECUT_INSERTSTARTLINE   32955
+#define ID_ELLIPSECUT_INSERTFINISHLINE  32956
+#define ID_DXFCUT_SHOWBOUNDS            32957
+#define ID_DXFCUT_INSERTSTARTLINE       32958
+#define ID_DXFCUT_INSERTFINISHLINE      32959
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        176
-#define _APS_NEXT_COMMAND_VALUE         32948
-#define _APS_NEXT_CONTROL_VALUE         1127
+#define _APS_NEXT_RESOURCE_VALUE        178
+#define _APS_NEXT_COMMAND_VALUE         32960
+#define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

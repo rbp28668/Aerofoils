@@ -39,7 +39,8 @@ CEllipsePair::CEllipsePair()
 }
 
 CEllipsePair::CEllipsePair(const CEllipsePair& ep)
-: first(ep.first)
+: CStructure(ep)
+, first(ep.first)
 , second(ep.second)
 {
 }

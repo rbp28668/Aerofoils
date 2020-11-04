@@ -30,6 +30,13 @@ public:
 	Bounds();
 	~Bounds();
 
+	struct BoundsT {
+		NumericT minx, maxx, miny, maxy, minz, maxz;
+		BoundsT();
+		void add(NumericT x, NumericT y, NumericT z);
+		void reset();
+	};
+
 public:
 
 	virtual void MoveTo(int iStream, const PointT& pt);
@@ -41,22 +48,36 @@ public:
 
 	RectT getBounds() const;
 	RectT getPlanBounds() const;
-	NumericT width() const { return maxx - minx; }
-	NumericT height() const { return maxy - miny; }
-	NumericT depth() const { return maxz - minz; }
-	NumericT getMinx() const { return minx; }
-	NumericT getMaxx() const { return maxx; }
-	NumericT getMiny() const { return miny; }
-	NumericT getMaxy() const { return maxy; }
-	NumericT getMinz() const { return minz; }
-	NumericT getMaxz() const { return maxz; }
+	NumericT width() const { return overall.maxx - overall.minx; }
+	NumericT height() const { return overall.maxy - overall.miny; }
+	NumericT depth() const { return overall.maxz - overall.minz; }
+	NumericT getMinx() const { return overall.minx; }
+	NumericT getMaxx() const { return overall.maxx; }
+	NumericT getMiny() const { return overall.miny; }
+	NumericT getMaxy() const { return overall.maxy; }
+	NumericT getMinz() const { return overall.minz; }
+	NumericT getMaxz() const { return overall.maxz; }
+
+	const BoundsT& rootBounds() const { return root; }
+	const BoundsT& tipBounds() const { return tip; }
+
+	const PointT& firstRoot() const { return first[0]; }
+	const PointT& firstTip() const { return first[1]; }
+	const PointT& lastRoot() const { return last[0]; }
+	const PointT& lastTip() const { return last[1]; }
 
 	void reset();
 
 private:
-	NumericT minx, maxx, miny, maxy, minz, maxz;
+	BoundsT overall;
+	BoundsT root;
+	BoundsT tip;
+
 	PointT lastMove[2];
+	PointT first[2];
+	PointT last[2];
 	bool lastOpIsMove[2];
+	bool isFirstLine[2];
 
 };
 

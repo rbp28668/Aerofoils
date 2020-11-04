@@ -203,6 +203,9 @@ public:
 	afx_msg void OnHomecutDelete();
 	afx_msg void OnUpdateIsCutterNode(CCmdUI* pCmdUI);
 	
+	afx_msg void OnCutShowbounds();
+	afx_msg void OnCutInsertstartline();
+	afx_msg void OnCutInsertfinishline();
 };
 
 
