@@ -259,6 +259,7 @@
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="CNCConnectionDlg.cpp" />
     <ClCompile Include="CoordMap.cpp" />
+    <ClCompile Include="CutBoundsDisplay.cpp" />
     <ClCompile Include="CutOptimiseDlg.cpp" />
     <ClCompile Include="CutoutDialog.cpp" />
     <ClCompile Include="CutPlanformControl.cpp" />
@@ -319,6 +320,7 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CNCConnectionDlg.h" />
     <ClInclude Include="CoordMap.h" />
+    <ClInclude Include="CutBoundsDisplay.h" />
     <ClInclude Include="CutOptimiseDlg.h" />
     <ClInclude Include="CutoutDialog.h" />
     <ClInclude Include="CutPlanformControl.h" />

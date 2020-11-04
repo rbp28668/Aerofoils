@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "CutPlanformControl.h"
 #include "CoordMap.h"
+#include "Kernel/Bounds.h"
 #include "Kernel/PointT.h"
 #include "Kernel/RectT.h"
 #include "Kernel/OutputDevice.h"
@@ -25,7 +26,7 @@ BEGIN_MESSAGE_MAP(CutPlanformControl, CStatic)
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
-
+/*
 class PlanformBounds :
 	public COutputDevice
 {
@@ -113,7 +114,7 @@ void PlanformBounds::reset()
 	lastOpIsMove[0] = lastOpIsMove[1] = false;
 	lastMove[0] = lastMove[1] = PointT();
 }
-
+*/
 
 
 class PlanformDrawDevice : public COutputDevice
@@ -352,7 +353,7 @@ void CutPlanformControl::OnPaint()
     dc.FillRect(&r, &background);
 
 
-	PlanformBounds bounds;
+	Bounds bounds;
 	CutStructure::Context context;
 	for (auto it = cut->beginCutStructures(); it != cut->endCutStructures(); ++it) {
 		CutStructure* pStruct = (*it);
@@ -388,14 +389,19 @@ void CutPlanformControl::OnPaint()
 	background.GetLogBrush(&logbrush);
 	dc.SetBkColor(logbrush.lbColor);
 
-	// Draw block based on bounds
-	NumericT top_y = std::max(bounds.maxLeft(), bounds.maxRight());
-	NumericT bottom_y = std::min(bounds.minLeft(), bounds.minRight());
+	// Draw block based on bounds & geometry
+	NumericT top_y = bounds.getMaxx(); // std::max(bounds.maxLeft(), bounds.maxRight());
+	NumericT bottom_y = bounds.getMinx(); // std::min(bounds.minLeft(), bounds.minRight());
 	RectT block(geometry->getBlockLeft(), top_y, geometry->getBlockRight(), bottom_y);
 	RECT blockPhysical = map.toDevice(block);
 	CBrush whiteBrush;
 	whiteBrush.CreateSolidBrush(RGB(255,255,255));
 	dc.FillRect(&blockPhysical, &whiteBrush);
+	dc.FrameRect(&blockPhysical, &blackBrush);
+
+	// Overlay with bounding box of wing.  Don't fill
+	block.bottomRight.fx = geometry->getBlockLeft() + bounds.depth();
+	blockPhysical = map.toDevice(block);
 	dc.FrameRect(&blockPhysical, &blackBrush);
 
 	// Draw cut.  Don't show moves on the assumption they're just positioning.
@@ -407,20 +413,28 @@ void CutPlanformControl::OnPaint()
 	}
 
 
-
+	// Dimension overall width of the cutter at the top of the display.
 	PointT start(0,geometry->getXTravel() + 50); // 50 is half of top margin
 	PointT finish(geometry->getWidth(), geometry->getXTravel() + 50); // 50 is half of top margin
 	dimension(dc, map, start, finish);
 
-	NumericT topBlock = std::fmax(bounds.maxLeft(), bounds.maxRight());
+	// Dimension the width of the block
+	NumericT topBlock = bounds.getMaxx(); 
 	PointT blockStart(geometry->getBlockLeft(), topBlock + 50);
 	PointT blockEnd(geometry->getBlockRight(), topBlock + 50);
 	dimension(dc, map, blockStart, blockEnd);
 
+	// As above, but only to tip of cut
+	blockStart.fy = blockEnd.fy = topBlock + 25;
+	blockEnd.fx = geometry->getBlockLeft() + bounds.depth();
+	dimension(dc, map, blockStart, blockEnd);
+
+	// Dimension the carriage travel on LHS carriage.
 	PointT bottom(-carriageWidth/2, 0);
 	PointT top(-carriageWidth / 2, geometry->getXTravel());
 	dimension(dc, map, bottom, top);
 
+	// Dimension the length of block (chordwise) needed
 	bottom.fx = top.fx = geometry->getWidth() + carriageWidth / 2;
 	bottom.fy = 0;
 	top.fy = top_y;

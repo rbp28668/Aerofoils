@@ -38,7 +38,8 @@ CPointStructure::CPointStructure()
 }
 
 CPointStructure::CPointStructure(const CPointStructure& point)
-: root(point.root)
+: CStructure(point)
+, root(point.root)
 , tip(point.tip)
 {
 }
@@ -51,7 +52,7 @@ string CPointStructure::getDescriptiveText() const
 {
 	assert(this);
 	ostringstream os;
-	os << "Point (" << root.fx << "," << root.fy << "),(" 
+	os << "Point " << label << " (" << root.fx << "," << root.fy << "),(" 
 		<< tip.fx << "," << tip.fy << ")" << ends;
 	return os.str();
 }
@@ -70,6 +71,7 @@ void CPointStructure::serializeTo(CObjectSerializer& os)
 	os.write("rootY",root.fy);
 	os.write("tipX", tip.fx);
 	os.write("tipY", tip.fy);
+	os.write("label", label.c_str());
 	os.endSection();
 }
 
@@ -82,6 +84,12 @@ void CPointStructure::serializeFrom(CObjectSerializer& os)
 	os.read("rootY",root.fy);
 	os.read("tipX", tip.fx);
 	os.read("tipY", tip.fy);
+	if (os.ifExists("label")) {
+		os.read("label", label);
+	}
+	else {
+		label = "";
+	}
 	os.endReadSection();
 }
 

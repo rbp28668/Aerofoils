@@ -54,31 +54,65 @@ void Bounds::LineTo(int iStream, const PointT& pt)
 	assert(pt.fy != -std::numeric_limits<float>::infinity());
 	assert(pt.fz != -std::numeric_limits<float>::infinity());
 
-	if (pt.fx < minx) minx = pt.fx;
-	if (pt.fx > maxx) maxx = pt.fx;
-	if (pt.fy < miny) miny = pt.fy;
-	if (pt.fy > maxy) maxy = pt.fy;
-	if (pt.fz < minz) minz = pt.fz;
-	if (pt.fz > maxz) maxz = pt.fz;
+	overall.add(pt.fx, pt.fy, pt.fz);
+	if (iStream == 0) {
+		root.add(pt.fx, pt.fy, pt.fz);
+	}
+	else {
+		tip.add(pt.fx, pt.fy, pt.fz);
+	}
+
+	// Capture the first and last lines.
+	if (isFirstLine[iStream]) {
+		first[iStream] = pt;
+		isFirstLine[iStream] = false;
+	}
+	last[iStream] = pt;
 }
 
 RectT Bounds::getBounds() const
 {
-	RectT bounds(minx, maxy, maxx, miny);
+	RectT bounds(overall.minx, overall.maxy, overall.maxx, overall.miny);
 	return bounds;
 }
 
 RectT Bounds::getPlanBounds() const
 {
-	RectT bounds(minz, maxx, maxz, minx);
+	RectT bounds(overall.minz, overall.maxx, overall.maxz, overall.minx);
 	return bounds;
 }
 
 void Bounds::reset()
 {
-	minx = miny = minz = std::numeric_limits<NumericT>::max();
-	maxx = maxy = maxz = -std::numeric_limits<NumericT>::max();
+	overall.reset();
+	root.reset();
+	tip.reset();
 	lastOpIsMove[0] = lastOpIsMove[1] = false;
+	isFirstLine[0] = isFirstLine[1] = true;
+
 	lastMove[0] = lastMove[1] = PointT();
+	first[0] = first[1] = PointT();
+	last[0] = last[1] = PointT();
+
 }
 
+Bounds::BoundsT::BoundsT()
+{
+}
+
+void Bounds::BoundsT::add(NumericT x, NumericT y, NumericT z)
+{
+	if (x < minx) minx = x;
+	if (x > maxx) maxx = x;
+	if (y < miny) miny = y;
+	if (y > maxy) maxy = y;
+	if (z < minz) minz = z;
+	if (z > maxz) maxz = z;
+
+}
+
+void Bounds::BoundsT::reset()
+{
+	minx = miny = minz = std::numeric_limits<NumericT>::max();
+	maxx = maxy = maxz = -std::numeric_limits<NumericT>::max();
+}
