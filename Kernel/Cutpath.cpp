@@ -304,9 +304,9 @@ void CPathCutter::toPoint(NumericT ru, COutputDevice* pdev, Intercept* start, In
 /************************************************************/
 void CPathCutter::calc_skin(NumericT& r_skin, NumericT& t_skin, const CutStructure::Context& context) const
 {
-	r_skin = pWing->getSkinThickness() - context.toolOffset;
+	r_skin = pWing->getSkinThickness() - context.rootToolOffset;
 	r_skin /= pWing->getRootTransform()->getChord();
-	t_skin = pWing->getSkinThickness() - context.toolOffset;
+	t_skin = pWing->getSkinThickness() - context.tipToolOffset;
 	t_skin /= pWing->getTipTransform()->getChord();
 }
 
@@ -324,7 +324,7 @@ void CPathCutter::set_le_intercept(Intercepts& intercepts, const Frame* frame, c
 	/* Do LE first: LE intercept is on the lower surface and entirely
 	// determined by the root.
 	*/
-	NumericT position = pWing->getLE() - context.toolOffset;
+	NumericT position = pWing->getLE() - context.rootToolOffset;
 	if(position > 0.0f)
     {
 		NumericT rx = position / pWing->getRootTransform()->getChord();
@@ -357,10 +357,10 @@ void CPathCutter::set_te_intercept(Intercepts& intercepts, const Frame* frame, c
 	const CAerofoil *root = pWing->getRoot();
 	
 	/* TE has an upper and a lower intercept */
-	if((pWing->getTE() - context.toolOffset) > 0.0f)
+	if((pWing->getTE() - context.rootToolOffset) > 0.0f)
     {
 		NumericT root_chord = pWing->getRootTransform()->getChord();
-		rx=(root_chord - pWing->getTE() + context.toolOffset) / root_chord;
+		rx=(root_chord - pWing->getTE() + context.rootToolOffset) / root_chord;
 		
 		ru0 = root->FirstX(rx,frame->rootForward(),-1); /* upper surface */
 		ru1 = root->FirstX(rx,frame->rootForward(),1);  /* lower surface */
@@ -855,7 +855,7 @@ void CPathCutter::LeadingEdgeIntercept::process(CPathCutter* cutter, COutputDevi
 	const CTransform* rootTransform = wing->getRootTransform();
 	const CTransform* tipTransform = wing->getTipTransform();
 
-	NumericT tool_offset = context.toolOffset;
+	NumericT tool_offset = context.rootToolOffset;
 
 	PointT rtt, rbt, ttt, tbt;  /* root top tangent ... etc */
 	//ROTATE r_washout,t_washout;
@@ -1004,14 +1004,13 @@ void CPathCutter::TrailingEdgeIntercept::process(CPathCutter* cutter, COutputDev
 	const CAerofoil* tip = wing->getTip();
 	const CTransform* rootTransform = wing->getRootTransform();
 	const CTransform* tipTransform = wing->getTipTransform();
-	const NumericT tool_offset = context.toolOffset;
+	const NumericT tool_offset = context.rootToolOffset;
 
 	NumericT ru0, ru1;
 	NumericT tu0, tu1;
 	PointT rt, rb, tt, tb;      /* root top, root bottom, tip top, tip bottom */
 	PointT rtt, rbt, ttt, tbt;  /* root top tangent ... etc */
 	PointT rm, tm;            /* middle PointTs */
-	//  ROTATE r_washout,t_washout;
 	NumericT rx;
 
 	/* Get, & Scale the skin thickness to aerofoil space */
@@ -1114,9 +1113,9 @@ void CPathCutter::SparIntercept::process(CPathCutter* cutter, COutputDevice* out
 
 	/* Work out the spar dimensions */
 	NumericT root_height = pSpar->getRootHeight();
-	NumericT root_width = pSpar->getRootWidth() - 2 * context.toolOffset;
+	NumericT root_width = pSpar->getRootWidth() - 2 * context.rootToolOffset;
 	NumericT tip_height = pSpar->getTipHeight();
-	NumericT tip_width = pSpar->getTipWidth() - 2 * context.toolOffset;
+	NumericT tip_width = pSpar->getTipWidth() - 2 * context.tipToolOffset;
 	if (!pSpar->isSubmerged())
 	{
 		root_height -= wing->getSkinThickness();
@@ -1176,8 +1175,8 @@ void CPathCutter::SparIntercept::process(CPathCutter* cutter, COutputDevice* out
 		tip_height /= 2;
 
 		/* and allow for skin & tool clearance */
-		root_height -= (wing->getSkinThickness() - context.toolOffset) / rootTransform->getChord();
-		tip_height -= (wing->getSkinThickness() - context.toolOffset) / tipTransform->getChord();
+		root_height -= (wing->getSkinThickness() - context.rootToolOffset) / rootTransform->getChord();
+		tip_height -= (wing->getSkinThickness() - context.tipToolOffset) / tipTransform->getChord();
 	}
 
 
@@ -1331,7 +1330,7 @@ void CPathCutter::CutoutIntercept::process(CPathCutter* cutter, COutputDevice* o
 	/* Plot it.... */
 
 	/* So initially find the start point with the given ru & tu.  This is the same formula irrespective of whether
-	top or buottom surface.  Note r_skin & t_skin already have tool offset included*/
+	top or bottom surface.  Note r_skin & t_skin already have tool offset included*/
 	PointT rtan, ttan;
 	PointT rpos = root->Point(rootPosition(), rtan);
 	PointT tpos = tip->Point(tipPosition(), ttan);
@@ -1359,10 +1358,10 @@ void CPathCutter::CutoutIntercept::process(CPathCutter* cutter, COutputDevice* o
 
 
 	// Need to use radius rather than diameter also allowing for tool offset.  
-	double rw2 = (pCutout->getRootWidth() / 2 - context.toolOffset) / root_chord;
-	double rh2 = (pCutout->getRootHeight() / 2 - context.toolOffset) / root_chord;
-	double tw2 = (pCutout->getTipWidth() / 2 - context.toolOffset) / tip_chord;
-	double th2 = (pCutout->getTipHeight() / 2 - context.toolOffset) / tip_chord;
+	double rw2 = (pCutout->getRootWidth() / 2 - context.rootToolOffset) / root_chord;
+	double rh2 = (pCutout->getRootHeight() / 2 - context.rootToolOffset) / root_chord;
+	double tw2 = (pCutout->getTipWidth() / 2 - context.tipToolOffset) / tip_chord;
+	double th2 = (pCutout->getTipHeight() / 2 - context.tipToolOffset) / tip_chord;
 
 	for (double theta = 0; theta <= 2 * PI + DELTA; theta += DELTA) {
 

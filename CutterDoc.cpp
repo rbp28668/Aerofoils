@@ -433,9 +433,14 @@ void CutterDoc::OnFileGcode()
 void CutterDoc::OnCutterTooloffset()
 {
 	ToolOffsetDialog dlg;
-	dlg.toolOffset = context.toolOffset;
+	dlg.toolOffset = context.rootToolOffset;
+	dlg.tipToolOffset = context.tipToolOffset;
 	if (dlg.DoModal() == IDOK) {
-		context.toolOffset = dlg.toolOffset;
+		context.rootToolOffset = dlg.toolOffset;
+		context.tipToolOffset = dlg.tipToolOffset;
+		if (context.tipToolOffset == 0) {
+			context.tipToolOffset = context.rootToolOffset;
+		}
 		UpdateNow();
 		RedrawNow();
 	}

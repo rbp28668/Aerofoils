@@ -391,17 +391,20 @@ END
 // Dialog
 //
 
-IDD_TOOL_OFFSET DIALOGEX 0, 0, 307, 100
+IDD_TOOL_OFFSET DIALOGEX 0, 0, 315, 120
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Set Tool Offset"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,198,79,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,250,79,50,14
-    EDITTEXT        IDC_EDIT_TOOL_OFFSET,67,46,40,14,ES_AUTOHSCROLL
-    LTEXT           "Tool Offset",IDC_STATIC,18,49,37,8
-    LTEXT           "mm",IDC_STATIC,115,49,12,8
-    LTEXT           "Tool offset should be set to half the width of the kerf produced by the hot wire",IDC_STATIC,19,24,263,15
+    DEFPUSHBUTTON   "OK",IDOK,198,99,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,258,99,50,14
+    EDITTEXT        IDC_EDIT_TOOL_OFFSET,84,46,40,14,ES_AUTOHSCROLL
+    LTEXT           "Tool Offset",IDC_STATIC,21,49,37,8
+    LTEXT           "mm",IDC_STATIC,132,49,12,8
+    LTEXT           "Tool offset should be set to half the width of the kerf produced by the hot wire. Tip offset may be set separately to allow for increased meltback in a tapered wing.",IDC_STATIC,19,24,268,18
+    EDITTEXT        IDC_EDIT_TIP_TOOL_OFFSET,84,68,40,14,ES_AUTOHSCROLL
+    LTEXT           "Tip Tool Offset",IDC_STATIC,21,71,48,8
+    LTEXT           "mm",IDC_STATIC,132,71,12,8
 END
 
 IDD_FEED_RATE DIALOGEX 0, 0, 499, 254
@@ -903,9 +906,9 @@ BEGIN
     IDD_TOOL_OFFSET, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 300
+        RIGHTMARGIN, 308
         TOPMARGIN, 7
-        BOTTOMMARGIN, 93
+        BOTTOMMARGIN, 113
     END
 
     IDD_FEED_RATE, DIALOG

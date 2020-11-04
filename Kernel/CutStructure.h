@@ -61,11 +61,13 @@ protected:
 public:
 	class Context {
 	public:
-		double toolOffset;
+		//double toolOffset;
+		double rootToolOffset;
+		double tipToolOffset;
 		bool optimiseOutput;
 		double tolerance;
 
-		Context() : toolOffset(0.5), optimiseOutput(true), tolerance(0.005) {}
+		Context() : rootToolOffset(0.5), tipToolOffset(0.5), optimiseOutput(true), tolerance(0.005) {}
 		void serializeTo(CObjectSerializer& os) const;
 		void serializeFrom(CObjectSerializer& os);
 

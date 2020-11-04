@@ -22,4 +22,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	double toolOffset;
+	double tipToolOffset;
 };

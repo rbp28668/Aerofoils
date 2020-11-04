@@ -91,7 +91,7 @@ void CutStructure::updateBounds()
 		pb = new Bounds(); 
 	}
 	CutStructure::Context context;
-	context.toolOffset = 0;
+	context.rootToolOffset = context.tipToolOffset = 0;
 	cut(pb, context);
 	pBounds = pb;
 }
@@ -253,7 +253,8 @@ void CutStructure::Context::serializeTo(CObjectSerializer& os) const
 {
 	assert(this);
 	os.startSection("CutContext", this);
-	os.write("toolOffset", toolOffset);
+	os.write("rootToolOffset", rootToolOffset);
+	os.write("tipToolOffset", tipToolOffset);
 	os.write("optimiseOutput", optimiseOutput);
 	os.write("tolerance", tolerance);
 	os.endSection();
@@ -262,8 +263,16 @@ void CutStructure::Context::serializeTo(CObjectSerializer& os) const
 void CutStructure::Context::serializeFrom(CObjectSerializer& os)
 {
 	os.startReadSection("CutContext", this);
-	os.write("toolOffset", toolOffset);
-	os.write("optimiseOutput", optimiseOutput);
-	os.write("tolerance", tolerance);
+	if (os.ifExists("toolOffset")) {
+		double toolOffset = 0;
+		os.read("toolOffset", toolOffset);
+		rootToolOffset = tipToolOffset = toolOffset;
+	}
+	else {
+		os.read("rootToolOffset", rootToolOffset);
+		os.read("tipToolOffset", tipToolOffset);
+	}
+	os.read("optimiseOutput", optimiseOutput);
+	os.read("tolerance", tolerance);
 	os.endReadSection();
 }
