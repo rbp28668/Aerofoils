@@ -62,6 +62,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	CEllipseFlags* flags;
+public:
+	BOOL m_isExternal;
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -78,6 +78,7 @@ void CEllipsePair::serializeTo(CObjectSerializer& os)
 	CStructure::serializeTo(os);
 	first.serializeTo(os);
 	second.serializeTo(os);
+	flags.serializeTo(os);
 	os.endSection();
 }
 
@@ -88,5 +89,9 @@ void CEllipsePair::serializeFrom(CObjectSerializer& os)
 	CStructure::serializeFrom(os);
 	first.serializeFrom(os);
 	second.serializeFrom(os);
+	if (os.ifExists(CEllipseFlags::TYPE.c_str())) {
+		flags.serializeFrom(os);
+	}
+	
 	os.endReadSection();
 }

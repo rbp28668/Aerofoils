@@ -26,6 +26,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "CutterDoc.h"
 #include "resource.h"
 #include "EllipsePairDlg.h"
+#include "EllipseFlagsDlg.h"
 #include "PlotPointDlg.h"
 #include "WingDlg.h"
 #include "WingCoreFlagsDlg.h"
@@ -357,6 +358,7 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_CUT_SHOWBOUNDS, &CutterTreeView::OnCutShowbounds)
 	ON_COMMAND(ID_CUT_INSERTSTARTLINE, &CutterTreeView::OnCutInsertstartline)
 	ON_COMMAND(ID_CUT_INSERTFINISHLINE, &CutterTreeView::OnCutInsertfinishline)
+	ON_COMMAND(ID_ELLIPSE_PLOTFLAGS, &CutterTreeView::OnEllipsePlotflags)
 END_MESSAGE_MAP()
 
 
@@ -572,6 +574,22 @@ void CutterTreeView::OnEllipseEdit()
 		assert(node->itemHandle == item);
 		CEllipsePair* pEllipses = static_cast<CEllipsePair*>(node->pItem);
 		CEllipsePairDlg dlg(pEllipses, GetParent());
+		if (dlg.DoModal() == IDOK) {
+			GetTreeCtrl().SetItemText(item, pEllipses->getDescriptiveText().c_str());
+			GetDocument()->RedrawNow();
+		}
+	}
+}
+
+
+void CutterTreeView::OnEllipsePlotflags()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		CEllipsePair* pEllipses = static_cast<CEllipsePair*>(node->pItem);
+		CEllipseFlagsDlg dlg(pEllipses->getPlotFlags(), GetParent());
 		if (dlg.DoModal() == IDOK) {
 			GetTreeCtrl().SetItemText(item, pEllipses->getDescriptiveText().c_str());
 			GetDocument()->RedrawNow();
@@ -1142,3 +1160,5 @@ void CutterTreeView::OnCutInsertfinishline()
 		}
 	}
 }
+
+

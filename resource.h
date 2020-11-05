@@ -70,6 +70,8 @@
 #define IDC_CHK_PLOT_MARKERS            1020
 #define IDC_LBL_ROOT_SECTION_NAME       1020
 #define IDC_CHK_PLOT_SECTION            1021
+#define IDC_CHK_PLOT_MARKERS2           1021
+#define IDC_CHK_IS_EXTERNAL             1021
 #define IDC_CHK_PLOT_SKIN               1022
 #define IDC_CHK_PLOT_SPARS              1023
 #define IDC_CHK_SUBMERGED               1024
@@ -402,14 +404,15 @@
 #define ID_DXFCUT_SHOWBOUNDS            32957
 #define ID_DXFCUT_INSERTSTARTLINE       32958
 #define ID_DXFCUT_INSERTFINISHLINE      32959
+#define ID_ELLIPSE_PLOTFLAGS            32960
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        178
-#define _APS_NEXT_COMMAND_VALUE         32960
+#define _APS_NEXT_RESOURCE_VALUE        179
+#define _APS_NEXT_COMMAND_VALUE         32961
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

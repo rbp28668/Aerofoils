@@ -25,17 +25,27 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+#include <string>
 #include "Kernel.h"
+
+class CObjectSerializer;
 
 class CEllipseFlags  
 {
 public:
+	static const std::string TYPE;
+
+	bool plot_upper;    // true if should plot/cut upper section
+	bool plot_lower;    // true if should plot/cut lower section
+	bool plot_markers;  // true if should plot axis markers (plot only)
+	bool is_external;   // true if this is an external surface (so that cut can allow for meltback).
+
 	CEllipseFlags();
 	~CEllipseFlags();
 
-	bool plot_upper;
-	bool plot_lower;
-	bool plot_markers;
+	void serializeTo(CObjectSerializer& os);
+	void serializeFrom(CObjectSerializer& os);
+
 };
 
 #endif // !defined(AFX_ELLIPSEFLAGS_H__3CB6E433_CC06_11D6_9565_000000000000__INCLUDED_)

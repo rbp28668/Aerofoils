@@ -19,7 +19,11 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <string>
 #include "EllipseFlags.h"
+#include "ObjectSerializer.h"
+
+const std::string CEllipseFlags::TYPE("ellipseFlags");
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -29,6 +33,7 @@ CEllipseFlags::CEllipseFlags()
 : plot_upper(true)
 , plot_lower(true)
 , plot_markers(true)
+, is_external(true)
 {
 
 }
@@ -36,4 +41,24 @@ CEllipseFlags::CEllipseFlags()
 CEllipseFlags::~CEllipseFlags()
 {
 
+}
+
+void CEllipseFlags::serializeTo(CObjectSerializer& os)
+{
+	os.startSection(TYPE.c_str(), this);
+	os.write("upper", plot_upper);
+	os.write("lower", plot_lower);
+	os.write("markers", plot_markers);
+	os.write("external", is_external);
+	os.endSection();
+}
+
+void CEllipseFlags::serializeFrom(CObjectSerializer& os)
+{
+	os.startReadSection(TYPE.c_str(), this);
+	os.read("upper", plot_upper);
+	os.read("lower", plot_lower);
+	os.read("markers", plot_markers);
+	os.read("external", is_external);
+	os.endReadSection();
 }

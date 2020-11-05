@@ -81,4 +81,5 @@ void CEllipse::serializeFrom(CObjectSerializer& os)
 	os.read("b", b);
 	os.read("centreX", centre_x);
 	os.read("centreY", centre_y);
+	os.endReadSection();
 }
