@@ -206,6 +206,7 @@ public:
 	afx_msg void OnCutShowbounds();
 	afx_msg void OnCutInsertstartline();
 	afx_msg void OnCutInsertfinishline();
+	afx_msg void OnEllipsePlotflags();
 };
 
 
