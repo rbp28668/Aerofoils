@@ -27,6 +27,10 @@ class EllipseCutter :
 {
 	CEllipsePair* pEllipses;
 
+	void cut_optimised(COutputDevice* pdev, const CutStructure::Context& context);
+	void cut_simple(COutputDevice* pdev, const CutStructure::Context& context);
+	void cut_segment(COutputDevice* pdev, double startRadians, double finishRadians, double a0, double b0, double a1, double b1, double span0, double span1, double offset0, double offset1, double resolution);
+
 public:
 	static const std::string TYPE;
 
