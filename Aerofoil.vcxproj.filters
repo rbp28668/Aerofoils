@@ -156,6 +156,9 @@
     <ClCompile Include="CutBoundsDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GRBLParametersDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Aerofoil.rc">
@@ -308,6 +311,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutBoundsDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GRBLParametersDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

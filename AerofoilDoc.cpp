@@ -43,12 +43,13 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "PlotPointUIProxy.h"
 #include "DXFUIProxy.h"
 #include "PlotOrderDlg.h"
-
 #include "BackgroundGridDlg.hpp"
+#include "GRBLParametersDialog.h"
 
 #include "kernel\drivers\DXFOutputDevice.h"
 #include "kernel\drivers\LaserJet.h"
 #include "kernel\drivers\Postscript.h"
+#include "Kernel\GRBLOutputDevice.h"
 #include "Kernel\GCodeOutputFile.h"
 
 #include "kernel\plotfoil.h" // CPathPlotter
@@ -109,6 +110,7 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_COMMAND(ID_FILE_SETGRID, OnFileSetgrid)
 	ON_COMMAND(ID_FILE_CREATECUTTERDOCUMENT, OnFileCreatecutterdocument)
 	ON_COMMAND(ID_DXF_NEW, &CAerofoilDoc::OnDxfNew)
+	ON_COMMAND(ID_FILE_GRBL, &CAerofoilDoc::OnFileGrbl)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -706,6 +708,38 @@ void CAerofoilDoc::OnFilePostscript()
 	}
 }
 
+void CAerofoilDoc::OnFileGrbl()
+{
+	assert(this);
+
+	CFileDialog fileDlg(FALSE,
+		".GCODE",
+		NULL,
+		OFN_HIDEREADONLY,
+		"GCode Files (.GCODE)|*.GCODE||"
+	);
+
+	OPENFILENAME& ofn = fileDlg.GetOFN();
+	ofn.lpstrTitle = "Select GRBL GCode Output File";
+
+	if (fileDlg.DoModal() == IDOK)
+	{
+		GRBLOutputDevice dev(LPCTSTR(fileDlg.GetPathName()));
+
+		GRBLParametersDialog paramsDlg;
+		paramsDlg.dynamicLaserPower = dev.isDynamicLaserPower() ? TRUE : FALSE;
+		paramsDlg.feedRate = dev.getFeedRate();
+		paramsDlg.laserPower = dev.getLaserPower();
+		if (paramsDlg.DoModal() == IDOK) {
+			dev.setFeedRate(paramsDlg.feedRate);
+			dev.setLaserPower(paramsDlg.laserPower);
+			dev.setDynamicLaserPower(paramsDlg.dynamicLaserPower);
+			getPlot().plot(dev);
+		}
+
+	}
+}
+
 
 void CAerofoilDoc::OnEditPosition() 
 {
@@ -826,4 +860,6 @@ void CAerofoilDoc::OnFileCreatecutterdocument()
 		cutterDoc->addStructure(copy);
 	}
 }
+
+
 

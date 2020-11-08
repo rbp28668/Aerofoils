@@ -41,6 +41,7 @@
 #define IDD_CUTTER_GEOMETRY             170
 #define IDD_CUT_OPTIMISE                172
 #define IDD_BOUNDS                      176
+#define IDD_GRBL_PARAMETERS             179
 #define IDC_EDT_POSITION                1000
 #define IDC_EDT_SPAN                    1001
 #define IDC_EDT_LE                      1002
@@ -157,15 +158,19 @@
 #define IDC_EDT_SPACING                 1093
 #define IDC_EDIT_TIP_TOOL_OFFSET        1093
 #define IDC_EDT_ROOT_MIN_X              1093
+#define IDC_EDT_FEED_RATE               1093
 #define IDC_CHECK1                      1094
 #define IDC_CHK_INCLUDE_FEED            1094
 #define IDC_CHK_TOP_SURFACE             1094
 #define IDC_CHK_PLOT_CUTOUTS            1094
 #define IDC_CHK_OPTIMISE_CUT            1094
 #define IDC_EDT_ROOT_MIN_Y              1094
+#define IDC_CHK_DYNAMIC_LASER           1094
 #define IDC_CHK_CENTRE                  1095
 #define IDC_CHK_USE_G1_FOR_MOVES        1095
 #define IDC_EDT_ROOT_MIN_Z              1095
+#define IDC_EDT_FEED_RATE2              1095
+#define IDC_EDT_LASER_POWER             1095
 #define IDC_CHK_SEND_WIRE_CODES         1096
 #define IDC_EDT_ROOT_MAX_X              1096
 #define IDC_CHK_SEND_ENABLE_DISABLE     1097
@@ -405,14 +410,15 @@
 #define ID_DXFCUT_INSERTSTARTLINE       32958
 #define ID_DXFCUT_INSERTFINISHLINE      32959
 #define ID_ELLIPSE_PLOTFLAGS            32960
+#define ID_FILE_GRBL                    32961
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        179
-#define _APS_NEXT_COMMAND_VALUE         32961
+#define _APS_NEXT_RESOURCE_VALUE        181
+#define _APS_NEXT_COMMAND_VALUE         32962
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

@@ -275,6 +275,7 @@
     <ClCompile Include="EllipseUIProxy.cpp" />
     <ClCompile Include="FeedRateDialog.cpp" />
     <ClCompile Include="GCodeEditDialog.cpp" />
+    <ClCompile Include="GRBLParametersDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PaperSizeDlg.cpp" />
     <ClCompile Include="PlotFlagsDlg.cpp" />
@@ -336,6 +337,7 @@
     <ClInclude Include="EllipseUIProxy.h" />
     <ClInclude Include="FeedRateDialog.h" />
     <ClInclude Include="GCodeEditDialog.h" />
+    <ClInclude Include="GRBLParametersDialog.h" />
     <ClInclude Include="Kernel\ParametricCurve2D.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="PaperSizeDlg.h" />

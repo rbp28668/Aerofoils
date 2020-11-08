@@ -68,6 +68,7 @@ BEGIN
         MENUITEM "&DXF Output",                 ID_FILE_DXF
         MENUITEM "Pos&tscript Output",          ID_FILE_POSTSCRIPT
         MENUITEM "&LaserJet Output",            ID_FILE_LASERJET
+        MENUITEM "GRBL GCode Output",           ID_FILE_GRBL
         MENUITEM SEPARATOR
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -961,6 +962,21 @@ BEGIN
     LTEXT           "Span",IDC_STATIC,275,174,17,8
 END
 
+IDD_GRBL_PARAMETERS DIALOGEX 0, 0, 199, 111
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "GRBL Parameters"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,85,90,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,142,90,50,14
+    CONTROL         "Use dynamic laster power (M4)",IDC_CHK_DYNAMIC_LASER,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,65,115,10
+    LTEXT           "Feed Rate (mm per minute)",IDC_STATIC,17,22,88,8
+    LTEXT           "Laser Power (0..1000)",IDC_STATIC,17,41,73,8
+    EDITTEXT        IDC_EDT_FEED_RATE,127,18,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDT_LASER_POWER,127,37,40,14,ES_AUTOHSCROLL | ES_NUMBER
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1171,6 +1187,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 224
     END
+
+    IDD_GRBL_PARAMETERS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 192
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 104
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1246,6 +1270,11 @@ BEGIN
 END
 
 IDD_ELLIPSE_FLAGS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_GRBL_PARAMETERS AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
