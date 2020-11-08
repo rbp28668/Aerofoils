@@ -28,8 +28,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "Kernel.h"
 
 class PointT;
-class PointT3D;
-class CPlotStructure;
 
 class COutputDevice  
 {
@@ -76,7 +74,7 @@ public:
 	virtual PointT position(int iStream) = 0;
 
 protected:
-	enum {MoveToCode, LineToCode, LabelCode, HomeCode, FlushCode};
+	enum class MoveT {MoveToCode, LineToCode, LabelCode, HomeCode, FlushCode};
 	bool _isCNC;
 
 };

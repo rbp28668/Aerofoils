@@ -153,6 +153,7 @@ protected:
 public:
 	afx_msg void OnFileCreatecutterdocument();
 	afx_msg void OnDxfNew();
+	afx_msg void OnFileGrbl();
 };
 
 /////////////////////////////////////////////////////////////////////////////

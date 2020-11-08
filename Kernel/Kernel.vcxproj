@@ -267,6 +267,7 @@
     <ClCompile Include="GCodeProgram.cpp" />
     <ClCompile Include="GCodeSnippet.cpp" />
     <ClCompile Include="GCodeSnippetCutter.cpp" />
+    <ClCompile Include="GRBLOutputDevice.cpp" />
     <ClCompile Include="HomeCutter.cpp" />
     <ClCompile Include="KernelError.cpp" />
     <ClCompile Include="ObjectSerializer.cpp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="GCodeProgram.h" />
     <ClInclude Include="GCodeSnippet.h" />
     <ClInclude Include="GCodeSnippetCutter.h" />
+    <ClInclude Include="GRBLOutputDevice.h" />
     <ClInclude Include="HomeCutter.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="KernelError.h" />
