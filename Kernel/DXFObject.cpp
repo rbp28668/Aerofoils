@@ -107,6 +107,6 @@ void DXFObject::cutAll(StructureOutput * pOutput, COutputDevice * pdev)
 	for (std::vector<DXFItem*>::iterator iter = items.begin();
 		iter != items.end();
 		++iter) {
-		(*iter)->cut(pOutput, pdev);
+		(*iter)->cut(pOutput, pdev, DXFParser::noOpTransform());
 	}
 }

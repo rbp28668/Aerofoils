@@ -26,6 +26,7 @@ DXF Reference: https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-refer
 #include <vector> 
 #include <map> 
 #include <set>
+#include <list>
 #include <cmath>
 #include <algorithm>
 #include "trim.h"
@@ -34,14 +35,62 @@ DXF Reference: https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-refer
 #include "OutputDevice.h"
 #include "ObjectSerializer.h"
 
-DXFParser::DXFParser() {
-	//ofs = new std::ofstream("E:/TEMP/dump.tmp");
+const double pi = 3.14159265358979323846264338;
+
+DXFParser::DXFParser() 
+#ifdef DXF_DEBUG
+	: ofs(0)
+#endif
+{
+#if DXF_DEBUG
+	ofs = new std::ofstream("dump.tmp");
+#endif
 }
 
 DXFParser::~DXFParser() {
-	//ofs->close();
-	//delete ofs;
+#if DXF_DEBUG
+	ofs->close();
+	delete ofs;
+#endif
 }
+
+
+// ===========================================================================
+// Context for DXF Parser
+// ===========================================================================
+class DXFParserContext {
+	typedef std::map<std::string, DXFItem*> ItemMap;
+	ItemMap itemLookup;
+
+public:
+	void registerItem(const std::string& name, DXFItem* item);
+	DXFItem* lookupItem(const std::string& name);
+
+};
+
+// ===========================================================================
+// DXFTransform determines how to draw rotated/scaled/translated items such
+// as blocks.
+// ===========================================================================
+class DXFTransform {
+	Coordinates base;
+	Coordinates location;
+	Coordinates scale;
+	double cosRotation; 
+	double sinRotation;
+	const DXFTransform* downstream;
+
+public:
+	DXFTransform();
+	void setBase(Coordinates base) { this->base = base; }
+	void setPosition(Coordinates location, Coordinates scale, double rotation);
+	void setDownstream(const DXFTransform* downstream) { this->downstream = downstream; }
+	void transform(PointT& pt) const;
+};
+
+// ===========================================================================
+// Entity classes
+// ===========================================================================
 
 class Arc : public DXFItem {
 	Coordinates centre;
@@ -49,9 +98,9 @@ class Arc : public DXFItem {
 	double startAngle;
 	double endAngle;
 	public: Arc(): r(0), startAngle(0), endAngle(2 * pi) {}
-	virtual void add(int code, const std::string& value);
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
-	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 
@@ -61,9 +110,9 @@ class Circle : public DXFItem {
 	Coordinates centre;
 	double r;
 	public: Circle() : r(0) {}
-	virtual void add(int code, const std::string& value);
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
-	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -75,9 +124,9 @@ class Ellipse : public DXFItem {
 	double start;
 	double end;
 	public: Ellipse() : ratio(1), start(0), end(360) {}
-	virtual void add(int code, const std::string& value);
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
-	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -86,9 +135,9 @@ class Line : public DXFItem {
 	Coordinates start;
 	Coordinates end;
 public:
-	virtual void add(int code, const std::string& value);
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
-	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -102,9 +151,9 @@ class LWPolyLine : public DXFItem {
 	bool hasY;			// if y coordinate set
 public:
 	LWPolyLine() : vertexCount(0),isClosed(false), hasX(false), hasY(false) {}
-	virtual void add(int code, const std::string& value);
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
-	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
@@ -112,23 +161,116 @@ public:
 class Point : public DXFItem {
 	Coordinates point;
 public:
-	virtual void add(int code, const std::string& value);
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
-	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev);
+	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
 };
 
+class Block : public DXFItem {
+	std::string name;
+	Coordinates base;
+	int flags;
+	std::list<DXFItem*> items;
+public:
+	virtual ~Block();
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
+	virtual DXFItem* clone();
+	virtual void cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform);
+	virtual void serializeTo(CObjectSerializer& os);
+	virtual void serializeFrom(CObjectSerializer& os);
 
+	const std::string& getName() const { return name; }
+	void addItem(DXFItem* item);
+	void cutItem(StructureOutput* pOutput, COutputDevice* pdev, DXFTransform* transform);
+};
+
+class Insert : public DXFItem {
+	std::string name;
+	Coordinates insertionPoint;
+	Coordinates scaleFactors;
+	double rotationAngle;
+	int columnCount;
+	int rowCount;
+	double columnSpacing;
+	double rowSpacing;
+	Block* blockRef;
+
+public:
+	Insert();
+	virtual ~Insert();
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
+	virtual DXFItem* clone();
+	virtual void cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform);
+	virtual void serializeTo(CObjectSerializer& os);
+	virtual void serializeFrom(CObjectSerializer& os);
+
+	void setBlockRef(Block* block);
+};
+
+
+// ===========================================================================
+// ===========================================================================
+DXFTransform::DXFTransform() 
+: base(0,0)
+, location(0,0)
+, scale(1,1)
+, cosRotation(1) 
+, sinRotation(0)
+, downstream(0)
+{
+
+}
+void DXFTransform::setPosition(Coordinates location, Coordinates scale, double rotation) {
+	this->location = location;
+	this->scale = scale;
+	cosRotation = cos(rotation * pi / 180);
+	sinRotation = sin(rotation * pi / 180);
+}
+
+void DXFTransform::transform(PointT& pt) const {
+	// Convert to relative from block base
+	double x = pt.fx - base.x;
+	double y = pt.fy - base.y;
+
+	// Scale around the base
+	x *= scale.x;
+	y *= scale.y;
+
+	// Add any rotation
+	double rx = x * cosRotation - y * sinRotation;
+	double ry = x * sinRotation + y * cosRotation;
+
+	// Translate to get proper location.
+	pt.fx = location.x + rx;
+	pt.fy = location.y + ry;
+
+	// Allow chaining in case blocks are in blocks.
+	if (downstream) {
+		downstream->transform(pt);
+	}
+	return;
+}
+
+
+// ===========================================================================
+// Object factories to deserialise the various DXF items.
+// ===========================================================================
 static CObjectFactory<Arc> arcFactory("dxfArc");
 static CObjectFactory<Circle> circleFactory("dxfCircle");
 static CObjectFactory<Ellipse> ellipseFactory("dxfEllipse");
 static CObjectFactory<Line> lineFactory("dxfLine");
 static CObjectFactory<LWPolyLine> lWPolyLineFactory("dxfLWPolyLine");
 static CObjectFactory<Point> pointFactory("dxfPoint");
+static CObjectFactory<Block> blockFactory("dxfBlock");
+static CObjectFactory<Insert> insertFactory("dxfInsert");
 
+// ===========================================================================
+// Entity class definitions
+// ===========================================================================
 
-void DXFItem::add(int code, const std::string& value) {
+void DXFItem::add(int code, const std::string& value, DXFParserContext* context) {
 	switch (code) {
 	case 8: layer = value; break;
 	}
@@ -143,9 +285,11 @@ void DXFItem::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
 //  ARC
-void Arc::add(int code, const std::string& value) {
-	DXFItem::add(code, value);
+
+void Arc::add(int code, const std::string& value, DXFParserContext* context) {
+	DXFItem::add(code, value, context);
 	switch (code) {
 	case 10: centre.x = std::stod(value);	break;
 	case 20: centre.y = std::stod(value);	break;
@@ -157,7 +301,7 @@ void Arc::add(int code, const std::string& value) {
 
 DXFItem* Arc::clone() { return new Arc(*this); }
 
-void Arc::cut(StructureOutput * pOutput, COutputDevice * pdev){
+void Arc::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform){
 
 	double circumference = 2 * pi * r; // of the circle overlaying the arc
 	int steps = int(ceil(circumference)); // use 1mm lines (arbitrary)
@@ -175,6 +319,7 @@ void Arc::cut(StructureOutput * pOutput, COutputDevice * pdev){
 	double x = centre.x + r* cos(startRadians);
 	double y = centre.y + r* sin(startRadians);
 	PointT pt(x, y);
+	transform->transform(pt);
 	pOutput->move(pdev, pt, pt);
 
 	for (double theta = startRadians + dt; theta < endRadians; theta += dt) {
@@ -182,11 +327,13 @@ void Arc::cut(StructureOutput * pOutput, COutputDevice * pdev){
 		y = centre.y + r* sin(theta);
 		pt.fx = x;
 		pt.fy = y;
+		transform->transform(pt);
 		pOutput->line(pdev, pt, pt);
 	}
 
 	pt.fx = centre.x + r* cos(endRadians);
 	pt.fy = centre.y + r* sin(endRadians);
+	transform->transform(pt);
 	pOutput->line(pdev, pt, pt);
 
 }
@@ -215,10 +362,11 @@ void Arc::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
 // CIRCLE
 
-void Circle::add(int code, const std::string& value) {
-	DXFItem::add(code,value);
+void Circle::add(int code, const std::string& value, DXFParserContext* context) {
+	DXFItem::add(code,value, context);
 	switch (code) {
 	case 10: centre.x = std::stod(value);	break;
 	case 20: centre.y = std::stod(value);	break;
@@ -228,7 +376,7 @@ void Circle::add(int code, const std::string& value) {
 
 DXFItem* Circle::clone() { return new Circle(*this); }
 
-void Circle::cut(StructureOutput * pOutput, COutputDevice * pdev) {
+void Circle::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform) {
 
 	double circumference = 2 * pi * r;
 	int steps = int(ceil(circumference)); // use 1mm lines (arbitrary)
@@ -238,6 +386,7 @@ void Circle::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 	double x = centre.x + r;
 	double y = centre.y;
 	PointT pt(x, y);
+	transform->transform(pt);
 	pOutput->move(pdev, pt, pt);
 
 	for (double theta = dt; theta < 2 * pi; theta += dt) {
@@ -245,11 +394,13 @@ void Circle::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 		y = centre.y + r* sin(theta);
 		pt.fx = x;
 		pt.fy = y;
+		transform->transform(pt);
 		pOutput->line(pdev, pt, pt);
 	}
 
 	pt.fx = centre.x + r;
 	pt.fy = centre.y;
+	transform->transform(pt);
 	pOutput->line(pdev, pt, pt);
 }
 
@@ -273,10 +424,11 @@ void Circle::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
 // ELLIPSE
 
-void Ellipse::add(int code, const std::string& value) {
-	DXFItem::add(code,value);
+void Ellipse::add(int code, const std::string& value, DXFParserContext* context) {
+	DXFItem::add(code,value, context);
 	switch (code) {
 	case 10: centre.x = std::stod(value);	break;
 	case 20: centre.y = std::stod(value);	break;
@@ -290,7 +442,7 @@ void Ellipse::add(int code, const std::string& value) {
 
 DXFItem* Ellipse::clone() { return new Ellipse(*this); }
 
-void Ellipse::cut(StructureOutput * pOutput, COutputDevice * pdev) {
+void Ellipse::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform) {
 	double dx = masterAxis.x; // major axis a relative value.
 	double dy = masterAxis.y;
 	double majorRadius = sqrt(dx*dx + dy*dy);
@@ -324,6 +476,7 @@ void Ellipse::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 	double ry = centre.y + y*cr + x*sr;
 
 	PointT pt(rx, ry);
+	transform->transform(pt);
 	pOutput->move(pdev, pt, pt);
 
 	for (double theta = startRadians + dt; theta < endRadians; theta += dt) {
@@ -333,6 +486,7 @@ void Ellipse::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 		ry = centre.y + y*cr + x*sr;
 		pt.fx = rx;
 		pt.fy = ry;
+		transform->transform(pt);
 		pOutput->line(pdev, pt, pt);
 	}
 
@@ -343,6 +497,7 @@ void Ellipse::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 	pt.fx = rx;
 	pt.fy = ry;
 
+	transform->transform(pt);
 	pOutput->line(pdev, pt, pt);
 }
 
@@ -374,10 +529,11 @@ void Ellipse::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
 // LINE
 
-void Line::add(int code, const std::string& value) {
-	DXFItem::add(code, value);
+void Line::add(int code, const std::string& value, DXFParserContext* context) {
+	DXFItem::add(code, value, context);
 	switch (code) {
 	case 10: start.x = std::stod(value);	break;
 	case 20: start.y = std::stod(value);	break;
@@ -388,9 +544,11 @@ void Line::add(int code, const std::string& value) {
 
 DXFItem* Line::clone() { return new Line(*this); }
 
-void Line::cut(StructureOutput * pOutput, COutputDevice * pdev) {
+void Line::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform) {
 	PointT startPoint(start.x, start.y);
 	PointT endPoint(end.x, end.y);
+	transform->transform(startPoint);
+	transform->transform(endPoint);
 	pOutput->move(pdev, startPoint, startPoint);
 	pOutput->line(pdev, endPoint, endPoint);
 }
@@ -418,10 +576,11 @@ void Line::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
 // LWPOLYLINE
 
-void LWPolyLine::add(int code, const std::string& value) {
-	DXFItem::add(code,value);
+void LWPolyLine::add(int code, const std::string& value, DXFParserContext* context) {
+	DXFItem::add(code,value, context);
 	int flags;
 
 	switch (code) {
@@ -456,7 +615,7 @@ void LWPolyLine::add(int code, const std::string& value) {
 
 DXFItem* LWPolyLine::clone() { return new LWPolyLine(*this); }
 
-void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev) {
+void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform) {
 
 	bool isFirst = true;
 	for (std::vector<Coordinates>::iterator iter = vertices.begin();
@@ -464,6 +623,7 @@ void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 		++iter) {
 
 		PointT p(iter->x, iter->y);
+		transform->transform(p);
 		if (isFirst) {
 			pOutput->move(pdev, p, p);
 			isFirst = false;
@@ -474,6 +634,7 @@ void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev) {
 
 	if (isClosed) {
 		PointT p(vertices.front().x, vertices.front().y);
+		transform->transform(p);
 		pOutput->line(pdev, p, p);
 	}
 
@@ -514,10 +675,11 @@ void LWPolyLine::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
 // POINT
 
-void Point::add(int code, const std::string& value) {
-	DXFItem::add(code, value);
+void Point::add(int code, const std::string& value, DXFParserContext* context) {
+	DXFItem::add(code, value, context);
 	switch (code) {
 	case 10: point.x = std::stod(value);	break;
 	case 20: point.y = std::stod(value);	break;
@@ -526,18 +688,11 @@ void Point::add(int code, const std::string& value) {
 
 DXFItem* Point::clone() { return new Point(*this); }
 
-void Point::cut(StructureOutput * pOutput, COutputDevice * pdev) {
+void Point::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform) {
 	PointT pt(point.x, point.y);
+	transform->transform(pt);
 	pOutput->line(pdev, pt, pt);
 }
-
-class DXFItemFactory {
-	typedef std::map<std::string, DXFItem*> PrototypeMap;
-	PrototypeMap prototypes;
-public:
-	DXFItemFactory();
-	DXFItem* create(const std::string& type);
-};
 
 
 void Point::serializeTo(CObjectSerializer & os) {
@@ -557,12 +712,240 @@ void Point::serializeFrom(CObjectSerializer & os) {
 }
 
 
+// ===========================================================================
+// BLOCK
+
+Block::~Block()
+{
+	for (auto iter = items.begin(); iter != items.end(); ++iter) {
+		delete (*iter);
+	}
+	items.clear();
+}
+
+void Block::add(int code, const std::string& value, DXFParserContext* context)
+{
+	DXFItem::add(code, value, context);
+	switch (code) {
+	case 2: name = value;	break;
+	case 10: base.x = std::stod(value);	break;
+	case 20: base.y = std::stod(value);	break;
+	//case 30: base.z = std::stod(value); break;
+	case 70: flags = std::stoi(value);	break;
+	}
+
+	return;
+}
+
+DXFItem* Block::clone()
+{
+	assert(this);
+	assert(items.empty()); // only do shallow clone for factory.
+	return new Block(*this);
+}
+
+void Block::cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform)
+{
+	// Blocks don't actually cut anything by themselves.
+	//- cutItem does the cutting when called from an Insert
+}
+
+void Block::serializeTo(CObjectSerializer& os)
+{
+	os.startSection("dxfBlock", this);
+	DXFItem::serializeTo(os);
+	os.write("x", base.x);
+	os.write("y", base.y);
+	os.startCollection("items", (int)items.size());
+	for (auto iter = items.begin(); iter != items.end(); ++iter) {
+		(*iter)->serializeTo(os);
+	}
+	os.endCollection();
+	os.endSection();
+}
+
+void Block::serializeFrom(CObjectSerializer& os)
+{
+	os.startReadSection("dxfBlock", this);
+	DXFItem::serializeFrom(os);
+	os.read("x", base.x);
+	os.read("y", base.y);
+	int itemCount = os.startReadCollection("items");
+	for (int i = 0; i < itemCount; ++i) {
+		DXFItem* pItem = static_cast<DXFItem*>(os.createSubtype());
+		pItem->serializeFrom(os);
+		addItem(pItem);
+	}
+	os.endReadCollection();
+	os.endReadSection();
+
+}
+
+void Block::addItem(DXFItem* item)
+{
+	assert(this);
+	assert(item);
+	items.push_back(item);
+}
+
+void Block::cutItem(StructureOutput* pOutput, COutputDevice* pdev, DXFTransform* transform)
+{
+	transform->setBase(base);
+	for (auto iter = items.begin(); iter != items.end(); ++iter) {
+		(*iter)->cut(pOutput, pdev, transform); 
+	}
+}
+
+// ===========================================================================
+// INSERT
+
+Insert::Insert()
+	: blockRef(0)
+	, scaleFactors(1,1)
+	, rotationAngle(0)
+	, columnCount(1)
+	, rowCount(1)
+	, columnSpacing(0)
+	, rowSpacing(0)
+{
+}
+
+Insert::~Insert()
+{
+	blockRef = 0;
+}
+
+void Insert::add(int code, const std::string& value, DXFParserContext* context)
+{
+	DXFItem::add(code, value, context);
+	switch (code) {
+	case 2: {
+		name = value;
+		blockRef = static_cast<Block*>(context->lookupItem(name));
+		assert(blockRef);
+	}
+	break;
+
+	case 10: insertionPoint.x = std::stod(value);	break;
+	case 20: insertionPoint.y = std::stod(value);	break;
+	//case 30: insertionPoint.z = std::stod(value); break;
+	case 41: scaleFactors.x = std::stod(value);	break;
+	case 42: scaleFactors.y = std::stod(value);	break;
+    //case 43: scaleFactors.z = std::stod(value); break;
+	
+	case 44: columnSpacing = std::stod(value);	break;
+	case 45: rowSpacing = std::stod(value);	break;
+
+	case 50: rotationAngle = std::stod(value);	break;
+
+	case 70: columnCount = std::stoi(value);	break;
+	case 71: rowCount = std::stoi(value);	break;
+	}
+}
+
+DXFItem* Insert::clone()
+{
+	return new Insert(*this);
+}
+
+void Insert::cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform)
+{
+	assert(this);
+	assert(blockRef);
+	for (int ic = 0; ic < columnCount; ++ic) {
+		for (int ir = 0; ir < rowCount; ++ir) {
+			Coordinates here = insertionPoint;
+			here.x += ic * columnSpacing;
+			here.y += ir * rowSpacing;
+			DXFTransform t;
+			t.setPosition(here, scaleFactors, rotationAngle);
+			t.setDownstream(transform);
+			blockRef->cutItem(pOutput, pdev, &t);
+		}
+	}
+}
+
+void Insert::serializeTo(CObjectSerializer& os)
+{
+	os.startSection("dxfInsert", this);
+	DXFItem::serializeTo(os);
+	os.write("name", name.c_str());
+	os.write("x", insertionPoint.x);
+	os.write("y", insertionPoint.y);
+	os.write("scalex", scaleFactors.x);
+	os.write("scaley", scaleFactors.y);
+	os.write("rotation", rotationAngle);
+	os.write("columnCount", columnCount);
+	os.write("rowCount", rowCount);
+	os.write("columnSpacing", columnSpacing);
+	os.write("rowSpacing", rowSpacing);
+	os.writeReference("blockRef", blockRef);
+	os.endSection();
+}
+
+void Insert::serializeFrom(CObjectSerializer& os)
+{
+	os.startReadSection("dxfInsert", this);
+	DXFItem::serializeFrom(os);
+	os.read("name", name);
+	os.read("x", insertionPoint.x);
+	os.read("y", insertionPoint.y);
+	os.read("scalex", scaleFactors.x);
+	os.read("scaley", scaleFactors.y);
+	os.read("rotation", rotationAngle);
+	os.read("columnCount", columnCount);
+	os.read("rowCount", rowCount);
+	os.read("columnSpacing", columnSpacing);
+	os.read("rowSpacing", rowSpacing);
+	blockRef = static_cast<Block*>(os.readReference("blockRef"));
+	os.endReadSection();
+}
+
+void Insert::setBlockRef(Block* block)
+{
+	assert(this);
+	assert(block);
+	blockRef = block;
+}
+
+// ===========================================================================
+// DXFParserContext implementation
+// ===========================================================================
+
+
+void DXFParserContext::registerItem(const std::string& name, DXFItem* item) {
+	itemLookup.insert(std::make_pair(name, item));
+}
+DXFItem* DXFParserContext::lookupItem(const std::string& name) {
+	auto iter = itemLookup.find(name);
+	if (iter != itemLookup.end()) {
+		return iter->second;
+	}
+	assert(false);
+	return 0;
+}
+
+
+//================================================================================
+// DXFItemFactory
+// By using a set of prototype objects this knows how to create a DXFItem object given
+// the name of an object.
+//================================================================================
+class DXFItemFactory {
+	typedef std::map<std::string, DXFItem*> PrototypeMap;
+	PrototypeMap prototypes;
+public:
+	DXFItemFactory();
+	DXFItem* create(const std::string& type);
+};
+
 static Arc arcPrototype;
 static Circle circlePrototype;
 static Ellipse ellipsePrototype;
 static Line linePrototype;
 static LWPolyLine lwPolyLinePrototype;
 static Point pointPrototype;
+static Insert insertPrototype;
 
 DXFItemFactory::DXFItemFactory() {
 	prototypes.insert(std::make_pair("ARC",&arcPrototype));
@@ -571,6 +954,7 @@ DXFItemFactory::DXFItemFactory() {
 	prototypes.insert(std::make_pair("LINE", &linePrototype));
 	prototypes.insert(std::make_pair("LWPOLYLINE", &lwPolyLinePrototype));
 	prototypes.insert(std::make_pair("POINT", &pointPrototype));
+	prototypes.insert(std::make_pair("INSERT", &insertPrototype));
 }
 
 DXFItem* DXFItemFactory::create(const std::string& type) {
@@ -580,29 +964,9 @@ DXFItem* DXFItemFactory::create(const std::string& type) {
 
 static DXFItemFactory factory;
 
-class DXFSectionList {
-	std::set<std::string> sections;
-public:
-	DXFSectionList();
-	bool isRequiredSection(const std::string& name) {
-		return sections.find(name) !=sections.end();
-	}
-};
-
-/*
-/* DXFSectionList determines whether a section should be processed. */
-DXFSectionList::DXFSectionList() {
-	// Uncomment the sections we want to process
-	//sections.insert("HEADER");
-	//sections.insert("CLASSES");
-    //sections.insert("TABLES");
-	//sections.insert("BLOCKS");
-	sections.insert("ENTITIES"); 
-	//sections.insert("OBJECTS");
-}
-
-static DXFSectionList sectionsToProcess;
-
+// ===========================================================================
+// Helper function to read a code & value.
+// ===========================================================================
 static DXFParser::CodeT readCodes(std::istream& is) {
 	std::string code;
 	std::string value;
@@ -613,51 +977,185 @@ static DXFParser::CodeT readCodes(std::istream& is) {
 	return make_pair(code, value);
 }
 
+
+//================================================================================
+// SectionReader
+// SectionReader and its derived types know to to read the section of a DXF file.
+// Use IgnoreReader for any sections we don't care about.
+//================================================================================
+
+
+class SectionReader {
+public:
+	virtual void read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext) = 0;
+};
+
+class IgnoreReader : public SectionReader{
+	virtual void read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext);
+};
+
+class EntityReader : public SectionReader {
+	virtual void read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext);
+};
+
+class BlockReader : public SectionReader {
+	virtual void read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext);
+};
+
+void IgnoreReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext) {
+	DXFParser::CodeT codes = readCodes(is);
+	while (codes.second != "ENDSEC") {
+		codes = readCodes(is);
+	}
+}
+
+void EntityReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext) {
+	std::string currentSection;
+	std::string currentObj;
+	DXFItem* pCurrentObj = 0;
+	DXFParser::CodeT codes = readCodes(is);
+	while (codes.second != "ENDSEC") {
+		if (codes.first == "0") {
+			currentObj = codes.second; // e.g. ARC, POINT, LINE, LWPOLYLINE
+			pCurrentObj = factory.create(currentObj);
+			if (pCurrentObj) {
+				pReceiver->add(pCurrentObj);
+			}
+		}
+
+		// do something with code in section / object
+		if (pCurrentObj) {
+			pCurrentObj->add(std::stoi(codes.first), codes.second, pContext);
+		}
+
+		// Read another code/value pair
+		codes = readCodes(is);
+	}
+
+}
+
+void BlockReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext) {
+
+	Block* pBlock = 0;					// current block (if any)
+	DXFItem* pCurrentObj = 0;			// current item in block
+
+	DXFParser::CodeT codes = readCodes(is);
+	while (codes.second != "ENDSEC") {
+		if (codes.first == "0") {
+			std::string typeTag = codes.second; // BLOCK, ENDBLK or contents
+			if (typeTag == "BLOCK") {
+				pBlock = new Block();
+				pCurrentObj = 0; // so read block info
+			}
+			else if (typeTag == "ENDBLK") {
+				assert(pBlock);
+				if (pBlock) {
+					pContext->registerItem(pBlock->getName(), pBlock);
+					pReceiver->add(pBlock);
+				}
+				pBlock = 0;
+			}
+			else { // it's content such as ARC, LINE, LWPOLYLINE etc
+				pCurrentObj = factory.create(typeTag);
+				if (pCurrentObj) {
+					pBlock->addItem(pCurrentObj);
+				}
+			}
+		}
+		else {
+			if (pCurrentObj) {
+				pCurrentObj->add(std::stoi(codes.first), codes.second, pContext);
+			} else if (pBlock) {
+				pBlock->add(std::stoi(codes.first), codes.second, pContext);
+			}
+		}
+		// Read another code/value pair
+		codes = readCodes(is);
+	}
+}
+
+// ===========================================================================
+// DXFSectionList determines whether & how a section should be processed.
+// By keeping a map of readers by section name it can find the appropriate
+// reader for a given section name
+// ===========================================================================
+
+static IgnoreReader ignoreReader;
+static EntityReader entityReader;
+static BlockReader blockReader;
+
+class DXFSectionList {
+	typedef std::map<std::string, SectionReader*> SectionMap;
+	SectionMap sections;
+
+public:
+	DXFSectionList();
+	bool isRequiredSection(const std::string& name) {
+		return sections.find(name) != sections.end();
+	}
+	SectionReader* getReader(const std::string& name);
+};
+
+// Given the name of a section, get the appropriate reader for that section
+// If not found, return the ignore reader which just hoovers up and discards
+// that section.
+SectionReader* DXFSectionList::getReader(const std::string& name)
+{
+	SectionReader* reader = &ignoreReader;
+	SectionMap::iterator iter = sections.find(name);
+	if (iter != sections.end()) {
+		reader = iter->second;
+	}
+	return reader;
+}
+
+DXFSectionList::DXFSectionList() {
+	// Uncomment the sections we want to process
+	//sections.insert("HEADER");
+	//sections.insert("CLASSES");
+	//sections.insert("TABLES");
+	sections.insert(std::make_pair("BLOCKS",&blockReader));
+	sections.insert(std::make_pair("ENTITIES",&entityReader));
+	//sections.insert("OBJECTS");
+}
+
+
+static DXFSectionList sectionsToProcess;
+
+
+
+
+// ===========================================================================
+// Core DXF Parser, albeit most of the heavy lifting is done by the classes above.
+// ===========================================================================
+
 void DXFParser::readDxf(std::istream& is, DXFItemReceiver* pReceiver) {
 	assert(this);
 	assert(pReceiver);
 
-	std::string currentSection; 
-	std::string currentObj; 
-	DXFItem* pCurrentObj = 0;
-	CodeT codes = readCodes(is);
+	DXFParserContext context;
 
+	std::string currentSection; 
+	SectionReader* sectionReader;
+
+	CodeT codes = readCodes(is);
 	while (codes.second != "EOF") {
 		// Looking for a section 
 		if (codes.first == "0" && codes.second == "SECTION") { 
-			codes = readCodes(is);
-			currentSection = codes.second;
-			if (sectionsToProcess.isRequiredSection(currentSection)) {
-				codes = readCodes(is);
-				while (codes.second != "ENDSEC") {
-					 if (codes.first == "0") {
-						 currentObj = codes.second;
-						 pCurrentObj = factory.create(currentObj);
-						 if (pCurrentObj) {
-							 pReceiver->add(pCurrentObj);
-						 }
-					 }
-
-					// do something with code in section / object
-					//(*ofs) << currentSection
-					//<< " : " << currentObj << " --> " << codes.first << "=" <<
-					//codes.second << std::endl;
-					if (pCurrentObj) {
-						pCurrentObj->add(std::stoi(codes.first), codes.second);
-					}
-
-					// Read another code/value pair
-					codes = readCodes(is);
-				}
-			} else { // not interested so just hoover it up.
-				codes = readCodes(is);
-				while (codes.second != "ENDSEC") {
-					codes = readCodes(is);
-				}
-			}
+			codes = readCodes(is);					//section name
+			currentSection = codes.second;			// e.g. HEADER, BLOCKS, ENTITIES
+			sectionReader = sectionsToProcess.getReader(currentSection);
+			sectionReader->read(is, pReceiver, &context);
 		} else { // no section, just keep going
-					codes = readCodes(is);
+			codes = readCodes(is);
 		}
 	} // while not EOF
+}
+
+const static DXFTransform noOpTransform;
+
+const DXFTransform* DXFParser::noOpTransform()
+{
+	return &::noOpTransform;
 }
 
