@@ -207,6 +207,7 @@ public:
 	afx_msg void OnCutInsertstartline();
 	afx_msg void OnCutInsertfinishline();
 	afx_msg void OnEllipsePlotflags();
+	afx_msg void OnDxfExplode();
 };
 
 

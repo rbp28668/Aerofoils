@@ -359,6 +359,7 @@ BEGIN_MESSAGE_MAP(CutterTreeView, CTreeView)
 	ON_COMMAND(ID_CUT_INSERTSTARTLINE, &CutterTreeView::OnCutInsertstartline)
 	ON_COMMAND(ID_CUT_INSERTFINISHLINE, &CutterTreeView::OnCutInsertfinishline)
 	ON_COMMAND(ID_ELLIPSE_PLOTFLAGS, &CutterTreeView::OnEllipsePlotflags)
+	ON_COMMAND(ID_DXF_EXPLODE, &CutterTreeView::OnDxfExplode)
 END_MESSAGE_MAP()
 
 
@@ -716,7 +717,7 @@ void CutterTreeView::OnDxfNewcut()
 		DXFObject* pdxf = static_cast<DXFObject*>(node->pItem);
 
 		DXFObjectCutter* cut = GetDocument()->newDXFObjectCutter(pdxf);
-		addCutNode(cut, GCODE_CUT);
+		addCutNode(cut, DXF_CUT);
 	}
 }
 
@@ -1102,7 +1103,9 @@ void CutterTreeView::OnCutInsertstartline()
 			first.y = bounds.firstRoot().fy;
 			first.u = bounds.firstTip().fx;
 			first.v = bounds.firstTip().fy;
-			geometry.blockToAxes(first, bounds.firstRoot().fz, bounds.firstTip().fz);
+			if (bounds.depth() > 0) {
+				geometry.blockToAxes(first, bounds.firstRoot().fz, bounds.firstTip().fz);
+			}
 
 			CPointStructure point;
 			point.setRoot(PointT(first.x, first.y, 0));
@@ -1145,7 +1148,9 @@ void CutterTreeView::OnCutInsertfinishline()
 			last.y = bounds.lastRoot().fy;
 			last.u = bounds.lastTip().fx;
 			last.v = bounds.lastTip().fy;
-			geometry.blockToAxes(last, bounds.lastRoot().fz, bounds.lastTip().fz);
+			if (bounds.depth() > 0) {
+				geometry.blockToAxes(last, bounds.lastRoot().fz, bounds.lastTip().fz);
+			}
 
 			CPointStructure point;
 			point.setRoot(PointT(last.x, last.y, 0));
@@ -1161,4 +1166,23 @@ void CutterTreeView::OnCutInsertfinishline()
 	}
 }
 
+
+
+
+void CutterTreeView::OnDxfExplode()
+{
+	HTREEITEM item = GetTreeCtrl().GetSelectedItem();
+	if (item) {
+		Node* node = getNode(item);
+		assert(node->itemHandle == item);
+		DXFObject* pdxf = static_cast<DXFObject*>(node->pItem);
+
+		while (pdxf->itemCount() > 1) {
+			DXFObject* pItem = pdxf->extractFirstItem();
+			GetDocument()->addStructure(pItem);
+		}
+
+		GetDocument()->RedrawNow();
+	}
+}
 

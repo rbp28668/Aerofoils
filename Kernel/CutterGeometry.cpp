@@ -48,24 +48,30 @@ void CutterGeometry::blockToAxes(Position<double>& pos, double zl, double zr) {
 	double v = pos.v;
 
 	// Default is that root and tip are on the edges of the block so
-	// default translation factors to allow this.
-	double wl = this->wl;
-	double wr = this->wr;
-	double wl1 = this->wl1;
-	double wr1 = this->wr1;
-	double wd = wr - wl;
+// default translation factors to allow this.
+	double wl;
+	double wr;
+	double wr1;
+	double wd;
 
-	// But maybe not so if explictly moved or a cut is rotated.
-	// If so, recalculate factors to allow for given z locations
-	// Note zl and zr treated relative to left of nominal block position.
-	if (zl != 0 || zr != 0) {
+	if (zl == 0 && zr == 0) {
+		// Default is that root and tip are on the edges of the block so
+		// default translation factors to allow this.
+		wl = this->wl;
+		wr = this->wr;
+		wl1 = this->wl1;
+		wr1 = this->wr1;
+		wd = wr - wl;
+	} else {
+		// But maybe not so if explictly moved or a cut is rotated.
+		// If so, recalculate factors to allow for given z locations
+		// Note zl and zr treated relative to left of nominal block position.
 		wl = getBlockLeft() + zl;
 		wr = getBlockLeft() + zr;
 
 		wl1 = getWidth() - wl;
 		wr1 = getWidth() - wr;
 		wd = wr - wl;
-
 	}
 
 	pos.x = (x * wr - u * wl) / wd;

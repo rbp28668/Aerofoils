@@ -212,6 +212,7 @@ BEGIN
     POPUP "DXF"
     BEGIN
         MENUITEM "New Cut",                     ID_DXF_NEWCUT
+        MENUITEM "Explode",                     ID_DXF_EXPLODE
         MENUITEM "Delete",                      ID_DXF_DELETE
     END
     POPUP "Wing Cut"

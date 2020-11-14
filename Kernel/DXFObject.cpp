@@ -57,12 +57,16 @@ void DXFObject::serializeTo(CObjectSerializer & os)
 {
 	os.startSection(TYPE.c_str(), this);
 
-	os.startCollection("dxfItems", (int)items.size());
+	os.startCollection("dxfShared", (int)sharedItems.size());
+	for (auto iter = sharedItems.begin(); iter != sharedItems.end(); ++iter) {
+		(*iter)->serializeTo(os);
+	}
+	os.endCollection();
 
+	os.startCollection("dxfItems", (int)items.size());
 	for (auto iter = items.begin(); iter != items.end(); ++iter) {
 		(*iter)->serializeTo(os);
 	}
-
 	os.endCollection();
 
 	os.endSection();
@@ -73,7 +77,16 @@ void DXFObject::serializeFrom(CObjectSerializer & os)
 {
 	os.startReadSection(TYPE.c_str(), this);
 
-	int count = os.startReadCollection("dxfItems");
+	int count = os.startReadCollection("dxfShared");
+	for (int i = 0; i < count; ++i)
+	{
+		DXFItem* item = static_cast<DXFItem*>(os.createSubtype());
+		item->serializeFrom(os);
+		addSharedItem(item);
+	}
+	os.endReadCollection();
+
+	count = os.startReadCollection("dxfItems");
 	for (int i = 0; i<count; ++i)
 	{
 		DXFItem* item = static_cast<DXFItem*>(os.createSubtype());

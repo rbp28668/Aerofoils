@@ -42,7 +42,9 @@ CutBoundsDisplay::CutBoundsDisplay(const Bounds* bounds, CWnd* pParent /*=nullpt
 	first.y = bounds->firstRoot().fy;
 	first.u = bounds->firstTip().fx;
 	first.v = bounds->firstTip().fy;
-	geometry.blockToAxes(first, bounds->firstRoot().fz, bounds->firstTip().fz);
+	if (bounds->depth() > 0) {
+		geometry.blockToAxes(first, bounds->firstRoot().fz, bounds->firstTip().fz);
+	}
 
 	firstRootX = first.x;
 	firstRootY = first.y;
@@ -56,7 +58,9 @@ CutBoundsDisplay::CutBoundsDisplay(const Bounds* bounds, CWnd* pParent /*=nullpt
 	last.y = bounds->lastRoot().fy;
 	last.u = bounds->lastTip().fx;
 	last.v = bounds->lastTip().fy;
-	geometry.blockToAxes(last, bounds->lastRoot().fz, bounds->lastTip().fz);
+	if (bounds->depth() > 0) {
+		geometry.blockToAxes(last, bounds->lastRoot().fz, bounds->lastTip().fz);
+	}
 
 	lastRootX = last.x;
 	lastRootY = last.y;
