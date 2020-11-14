@@ -482,7 +482,7 @@ void CutterTreeView::OnStructureNewpoint()
 void CutterTreeView::OnStructureNewgcode()
 {
 	GCodeEditDialog dlg;
-	if (dlg.DoModal()) {
+	if (dlg.DoModal() == IDOK) {
 		GCodeSnippet* pSnippet = GetDocument()->newGcodeSnippet(dlg.programText);
 		addStructureNode(pSnippet, GCODE);
 	}
