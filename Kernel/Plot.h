@@ -62,13 +62,14 @@ public:
 	CWing* addWing(const char* rootSection, NumericT rootThickness, const char* tipSection, NumericT tipThickness);
 	CEllipsePair* addEllipsePair(const CEllipsePair& pair);
 	CPointStructure* addPointStructure(const CPointStructure& point);
-	DXFObject* addDxfStructure(const char* importPath);
+	DXFObject* addDxfStructure(DXFObject* pdxf);
 
 	// Add plotters
 	CPathPlotter* addPathPlotter(CWing* pWing);
 	CEllipsePlotter* addEllipsePlotter(CEllipsePair* pep);
 	CPointPlotter* addPointPlotter(CPointStructure* pps);
 	DXFPlotter* addDxfPlotter(DXFObject* pdxf);
+	DXFPlotter* findDxfPlotterFor(DXFObject* pdxf);
 
 	// plotter manipulation
 	void deletePlotStructure(CPlotStructure* toDelete);
@@ -99,16 +100,17 @@ private:
 	public:
 		CClosest(NumericT x, NumericT y);
 
-		virtual void MoveTo(int iStream, const PointT& pt) {};
+		virtual void MoveTo(int iStream, const PointT& pt);
 		virtual void LineTo(int iStream, const PointT& pt);
 		virtual void Label(int iStream, const char* psz) {};
 		virtual void Home() {};
 		virtual void Flush() {};
 		virtual PointT position(int iStream) { return PointT(); }
 
-		NumericT getMinDist() const {return d2min;}
+		NumericT getMinDist() const {return minDist;}
 	private:
-		NumericT d2min;		// square of min distance from plot to test point
+		PointT lastPoint[2];
+		NumericT minDist;		// min distance from plot to test point
 		NumericT xpos, ypos;	// position of test point
 
 	};

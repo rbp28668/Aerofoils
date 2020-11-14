@@ -42,19 +42,34 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 CPlot::CClosest::CClosest(NumericT x, NumericT y)
 : xpos(x)
 , ypos(y)
+, minDist(std::numeric_limits<NumericT>::max())
 {
-	d2min = std::numeric_limits<NumericT>::max();
+}
+
+void CPlot::CClosest::MoveTo(int iStream, const PointT& pt)
+{
+	assert(this);
+	assert(iStream == 0 || iStream == 1);
+	lastPoint[iStream] = pt;
 }
 
 void CPlot::CClosest::LineTo(int iStream, const PointT& pt)
 {
-	NumericT dx = pt.fx - xpos;
-	NumericT dy = pt.fy - ypos;
 
-	NumericT d2 = dx * dx + dy * dy;
+	// See https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+	PointT p0 = lastPoint[iStream];
+	PointT p1 = pt;
 
-	if(d2 < d2min)
-		d2min = d2;
+	NumericT dx = p1.fx - p0.fx;
+	NumericT dy = p1.fy - p0.fy;
+
+	NumericT dist = abs(dy * xpos - dx * ypos + p1.fx * p0.fy - p1.fy * p0.fx) /
+		sqrt(dx * dx + dy * dy);
+
+	if(dist < minDist)
+		minDist = dist;
+
+	lastPoint[iStream] = pt;
 }
 
 
@@ -134,9 +149,8 @@ CPointStructure* CPlot::addPointStructure(const CPointStructure& point)
 	return pp;
 }
 
-DXFObject* CPlot::addDxfStructure(const char* importPath)
+DXFObject* CPlot::addDxfStructure(DXFObject* pdxf)
 {
-	DXFObject* pdxf = new DXFObject(importPath);
 	structures.push_back(pdxf);
 	return pdxf;
 
@@ -175,6 +189,16 @@ DXFPlotter* CPlot::addDxfPlotter(DXFObject* pdxf)
 	DXFPlotter* plot = new DXFPlotter(pdxf);
 	plot_structures.push_back(plot);
 	return plot;
+}
+
+DXFPlotter* CPlot::findDxfPlotterFor(DXFObject* pdxf)
+{
+	for (auto iter = plot_structures.begin(); iter != plot_structures.end(); ++iter) {
+		if ((*iter)->getStructure() == pdxf) {
+			return static_cast<DXFPlotter*>(*iter);
+		}
+	}
+	return nullptr;
 }
 
 void CPlot::deletePlotStructure(CPlotStructure* toDelete)

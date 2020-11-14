@@ -107,6 +107,7 @@ BEGIN
     POPUP "DXF"
     BEGIN
         MENUITEM "&New",                        ID_DXF_NEW
+        MENUITEM "&Explode",                    ID_DXF_EXPLODE
     END
     POPUP "&View"
     BEGIN

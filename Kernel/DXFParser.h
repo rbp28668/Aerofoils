@@ -57,6 +57,7 @@ public:
 class DXFItemReceiver {
 public:
 	virtual void add(DXFItem* item) = 0;
+	virtual void addSharedItem(DXFItem* item) = 0;
 };
 
 // Basic DFX parser that will read
@@ -66,7 +67,7 @@ public:
 // LINE,
 // LWPOLYLINE
 // POINT.
-// Note that it ignores headers and blocks and assumes mm.
+// BLOCK & INSERT
 class DXFParser
 {
 #if DXF_DEBUG

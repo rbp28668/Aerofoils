@@ -1051,7 +1051,7 @@ void BlockReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserCo
 				assert(pBlock);
 				if (pBlock) {
 					pContext->registerItem(pBlock->getName(), pBlock);
-					pReceiver->add(pBlock);
+					pReceiver->addSharedItem(pBlock);
 				}
 				pBlock = 0;
 			}

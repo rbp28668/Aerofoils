@@ -154,6 +154,8 @@ public:
 	afx_msg void OnFileCreatecutterdocument();
 	afx_msg void OnDxfNew();
 	afx_msg void OnFileGrbl();
+	afx_msg void OnDxfExplode();
+	afx_msg void OnUpdateDxfSelected(CCmdUI* pCmdUI);
 };
 
 /////////////////////////////////////////////////////////////////////////////

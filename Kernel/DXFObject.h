@@ -17,7 +17,8 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include <vector>
+#include <list>
+#include <memory>
 #include "Structure.h"
 #include "DXFParser.h"
 
@@ -32,7 +33,9 @@ class StructureOutput;
 class DXFObject :
 	public CStructure, DXFItemReceiver
 {
-	std::vector<DXFItem*> items;
+	std::list<DXFItem*> items;
+	typedef std::shared_ptr<DXFItem> SharedItemT;
+	std::list<SharedItemT> sharedItems;
 
 public:
 	static const std::string TYPE;
@@ -49,7 +52,11 @@ public:
 
 	// DXFItemReceiver 
 	virtual void add(DXFItem* item);
+	virtual void addSharedItem(DXFItem* item);
 
 	void cutAll(StructureOutput* pOutput, COutputDevice* pdev);
+
+	size_t itemCount() const { return items.size(); }
+	DXFObject* extractFirstItem();
 };
 

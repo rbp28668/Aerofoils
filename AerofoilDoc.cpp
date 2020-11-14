@@ -111,6 +111,8 @@ BEGIN_MESSAGE_MAP(CAerofoilDoc, CDocument)
 	ON_COMMAND(ID_FILE_CREATECUTTERDOCUMENT, OnFileCreatecutterdocument)
 	ON_COMMAND(ID_DXF_NEW, &CAerofoilDoc::OnDxfNew)
 	ON_COMMAND(ID_FILE_GRBL, &CAerofoilDoc::OnFileGrbl)
+	ON_COMMAND(ID_DXF_EXPLODE, &CAerofoilDoc::OnDxfExplode)
+	ON_UPDATE_COMMAND_UI(ID_DXF_EXPLODE, &CAerofoilDoc::OnUpdateDxfSelected)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -265,7 +267,7 @@ void CAerofoilDoc::addPointStructure(CPointStructure* pps)
 
 void CAerofoilDoc::addDxfObject(DXFObject* pdxf)
 {
-	DXFPlotter* pdp = plot.addDxfPlotter(currentDxf);
+	DXFPlotter* pdp = plot.addDxfPlotter(pdxf);
 	pdp->setUIProxy(new DXFUIProxy());
 	// DXF objects quite often offset - i.e. drawing location rather
 	// than centred on 0,0 and then tranformed. So we need to bring it back.
@@ -542,9 +544,39 @@ void CAerofoilDoc::OnDxfNew()
 	if (dlg.DoModal() == IDOK)
 	{
 		CString path = dlg.GetPathName();
-		currentDxf = plot.addDxfStructure(path.GetBuffer());
+		DXFObject* pdxf = new DXFObject(path.GetBuffer());
+		currentDxf = plot.addDxfStructure(pdxf);
 		addDxfObject(currentDxf);
 	}
+}
+
+
+
+void CAerofoilDoc::OnDxfExplode()
+{
+	if (currentDxf != 0) {
+
+		DXFPlotter* plotter = plot.findDxfPlotterFor(currentDxf);
+
+		while (currentDxf->itemCount() > 1) {
+			DXFObject* first = currentDxf->extractFirstItem();
+			plot.addDxfStructure(first);
+			DXFPlotter* pdp = plot.addDxfPlotter(first);
+			pdp->setUIProxy(new DXFUIProxy());
+			pdp->setPosition(plotter->getX(), plotter->getY());
+		}
+
+		RedrawNow();
+
+	}
+}
+
+
+
+
+void CAerofoilDoc::OnUpdateDxfSelected(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(currentDxf != 0);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -860,6 +892,5 @@ void CAerofoilDoc::OnFileCreatecutterdocument()
 		cutterDoc->addStructure(copy);
 	}
 }
-
 
 
