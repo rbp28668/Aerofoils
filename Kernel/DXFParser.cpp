@@ -54,6 +54,8 @@ DXFParser::~DXFParser() {
 #endif
 }
 
+class Vertex;
+class Polyline;
 
 // ===========================================================================
 // Context for DXF Parser
@@ -61,10 +63,16 @@ DXFParser::~DXFParser() {
 class DXFParserContext {
 	typedef std::map<std::string, DXFItem*> ItemMap;
 	ItemMap itemLookup;
-
+	DXFItem* currentItem;
+	Polyline* currentPolyline;
 public:
+	DXFParserContext();
 	void registerItem(const std::string& name, DXFItem* item);
 	DXFItem* lookupItem(const std::string& name);
+	void startItem(DXFItem* item);
+	void addVertex(Vertex* vertex);
+	void startPolyline(Polyline* polyline);
+
 
 };
 
@@ -208,6 +216,56 @@ public:
 
 	void setBlockRef(Block* block);
 };
+
+class Vertex : public DXFItem {
+	Coordinates location;
+	int flags;
+public:
+	bool isFitVertex() const { return (flags & 8) != 0; }
+	bool isControlPoint() const { return (flags & 8) != 0; }
+
+	Vertex();
+	virtual ~Vertex();
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
+	virtual DXFItem* clone();
+	virtual bool onStart(DXFParserContext* context);
+	virtual void cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform);
+	virtual void serializeTo(CObjectSerializer& os);
+	virtual void serializeFrom(CObjectSerializer& os);
+
+	const Coordinates& getLocation() const { return location; }
+};
+
+class Polyline : public DXFItem {
+	enum LineType {
+		unsmoothed = 0,
+		quadraticBSpline = 5,
+		cubicBSpline = 6,
+		bezier = 8
+	};
+
+	std::list<Vertex*> vertices;
+	int flags;
+
+	LineType lineType;
+
+	bool isClosed() { return (flags & 1) != 0; }
+	bool isCurveFit() { return (flags & 2) != 0; }
+	bool isSplineFit() { return (flags & 4) != 0; }
+
+public:
+	Polyline();
+	virtual ~Polyline();
+	virtual void add(int code, const std::string& value, DXFParserContext* context);
+	virtual DXFItem* clone();
+	virtual bool onStart(DXFParserContext* context);
+	virtual void cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform);
+	virtual void serializeTo(CObjectSerializer& os);
+	virtual void serializeFrom(CObjectSerializer& os);
+
+	void addVertex(Vertex* vertex);
+};
+
 
 
 // ===========================================================================
@@ -909,9 +967,178 @@ void Insert::setBlockRef(Block* block)
 }
 
 // ===========================================================================
+// VERTEX
+
+
+Vertex::Vertex()
+	: flags(0)
+{
+}
+
+Vertex::~Vertex()
+{
+}
+
+void Vertex::add(int code, const std::string& value, DXFParserContext* context)
+{
+	DXFItem::add(code, value, context);
+	switch (code) {
+	case 10: location.x = atof(value.c_str()); break;
+	case 20: location.y = atof(value.c_str()); break;
+		//case 30: location.z = atoi(value.c_str()); break;
+	case 70: flags = atoi(value.c_str()); break;
+	}
+}
+
+DXFItem* Vertex::clone()
+{
+	return new Vertex(*this);
+}
+
+bool Vertex::onStart(DXFParserContext* context)
+{
+	context->addVertex(this);
+	return false; // don't store directly
+}
+
+void Vertex::cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform)
+{
+}
+
+void Vertex::serializeTo(CObjectSerializer& os)
+{
+	os.startSection("dxfVertex", this);
+	DXFItem::serializeTo(os);
+	os.write("flags", flags);
+	os.write("x", location.x);
+	os.write("y", location.y);
+	os.endSection();
+}
+
+void Vertex::serializeFrom(CObjectSerializer& os)
+{
+	os.startReadSection("dxfVertex", this);
+	DXFItem::serializeFrom(os);
+	os.read("flags", flags);
+	os.read("x", location.x);
+	os.read("y", location.y);
+	os.endReadSection();
+}
+
+// ===========================================================================
+// POLYLINE
+
+
+Polyline::Polyline()
+	: flags(0)
+{
+}
+
+Polyline::~Polyline()
+{
+	for (auto iter = vertices.begin(); iter != vertices.end(); ++iter) {
+		delete(*iter);
+	}
+}
+
+void Polyline::add(int code, const std::string& value, DXFParserContext* context)
+{
+	DXFItem::add(code, value, context);
+	switch (code) {
+	case 70: flags = atoi(value.c_str()); break;
+	}
+}
+
+DXFItem* Polyline::clone()
+{
+	assert(this);
+	assert(vertices.empty());
+	return new Polyline(*this);
+}
+
+bool Polyline::onStart(DXFParserContext* context)
+{
+	context->startPolyline(this);
+	return true;
+}
+
+// Use any fit vertices to draw an approximation. Ignore control points
+void Polyline::cut(StructureOutput* pOutput, COutputDevice* pdev, const DXFTransform* transform)
+{
+	bool isFirst = true;
+	PointT firstPoint;
+	for(auto iter = vertices.begin();iter != vertices.end(); ++iter){
+		Vertex* v = *iter;
+		if (v->isFitVertex()) {
+			PointT pt(v->getLocation().x, v->getLocation().y);
+			transform->transform(pt);
+			if (isFirst) {
+				pOutput->move(pdev, pt, pt);
+				firstPoint = pt;
+				isFirst = false;
+			}
+			else {
+				pOutput->line(pdev, pt, pt);
+			}
+		}
+	}
+	if (isClosed() && !isFirst) {
+		pOutput->line(pdev, firstPoint, firstPoint);
+	}
+}
+
+void Polyline::serializeTo(CObjectSerializer& os)
+{
+	os.startSection("dxfPolyLine", this);
+	DXFItem::serializeTo(os);
+	os.write("flags", flags);
+	os.write("lineType", lineType);
+	os.startCollection("vertices", (int)vertices.size());
+	for (auto iter = vertices.begin(); iter != vertices.end(); ++iter) {
+		(*iter)->serializeTo(os);
+	}
+	os.endCollection();
+	os.endSection();
+}
+
+
+void Polyline::serializeFrom(CObjectSerializer& os)
+{
+	os.startReadSection("dxfPolyLine", this);
+	DXFItem::serializeFrom(os);
+	os.read("flags", flags);
+	int lt;
+	os.read("lineType", lt);
+	lineType = static_cast<LineType>(lt);
+	int count = os.startReadCollection("vertices");
+	for (int i = 0; i < count; ++i) {
+		Vertex* v = static_cast<Vertex*>(os.createSubtype());
+		v->serializeFrom(os);
+		addVertex(v);
+	}
+	os.endReadCollection();
+	os.endReadSection();
+
+}
+
+void Polyline::addVertex(Vertex* vertex)
+{
+	assert(this);
+	assert(vertex);
+	vertices.push_back(vertex);
+}
+
+
+// ===========================================================================
 // DXFParserContext implementation
 // ===========================================================================
 
+
+DXFParserContext::DXFParserContext()
+	: currentItem(0)
+	, currentPolyline(0)
+{
+}
 
 void DXFParserContext::registerItem(const std::string& name, DXFItem* item) {
 	itemLookup.insert(std::make_pair(name, item));
@@ -923,6 +1150,25 @@ DXFItem* DXFParserContext::lookupItem(const std::string& name) {
 	}
 	assert(false);
 	return 0;
+}
+
+void DXFParserContext::startItem(DXFItem* item)
+{
+	currentItem = item;
+}
+
+void DXFParserContext::addVertex(Vertex* vertex)
+{
+	if (currentPolyline) {
+		currentPolyline->addVertex(vertex);
+	}
+}
+
+void DXFParserContext::startPolyline(Polyline* polyline)
+{
+	assert(this);
+	assert(polyline);
+	currentPolyline = polyline;
 }
 
 
@@ -946,6 +1192,8 @@ static Line linePrototype;
 static LWPolyLine lwPolyLinePrototype;
 static Point pointPrototype;
 static Insert insertPrototype;
+static Polyline polyLinePrototype;
+static Vertex vertexPrototype;
 
 DXFItemFactory::DXFItemFactory() {
 	prototypes.insert(std::make_pair("ARC",&arcPrototype));
@@ -955,6 +1203,8 @@ DXFItemFactory::DXFItemFactory() {
 	prototypes.insert(std::make_pair("LWPOLYLINE", &lwPolyLinePrototype));
 	prototypes.insert(std::make_pair("POINT", &pointPrototype));
 	prototypes.insert(std::make_pair("INSERT", &insertPrototype));
+	prototypes.insert(std::make_pair("POLYLINE", &polyLinePrototype));
+	prototypes.insert(std::make_pair("VERTEX", &vertexPrototype));
 }
 
 DXFItem* DXFItemFactory::create(const std::string& type) {
@@ -1019,7 +1269,10 @@ void EntityReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserC
 			currentObj = codes.second; // e.g. ARC, POINT, LINE, LWPOLYLINE
 			pCurrentObj = factory.create(currentObj);
 			if (pCurrentObj) {
-				pReceiver->add(pCurrentObj);
+				if (pCurrentObj->onStart(pContext)) {
+					pReceiver->add(pCurrentObj);
+				}
+				
 			}
 		}
 
@@ -1158,4 +1411,5 @@ const DXFTransform* DXFParser::noOpTransform()
 {
 	return &::noOpTransform;
 }
+
 

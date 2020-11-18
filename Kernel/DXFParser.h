@@ -47,6 +47,7 @@ public:
 	virtual ~DXFItem() {}
 	virtual void add(int code, const std::string& value, DXFParserContext* context) = 0;
 	virtual DXFItem* clone() = 0;
+	virtual bool onStart(DXFParserContext* context) { return true; } // return false to not store this item directly
 	virtual void cut(StructureOutput * pCut, COutputDevice * pdev, const DXFTransform* transform) = 0;
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);

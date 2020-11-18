@@ -503,6 +503,7 @@ void CutterTreeView::OnStructureNewdxf()
 
 	if (dlg.DoModal() == IDOK)
 	{
+		CWaitCursor waitCursor;
 		CString path = dlg.GetPathName();
 		DXFObject* pdxf = GetDocument()->newDxfObject(path);
 		addStructureNode(pdxf, DXF);

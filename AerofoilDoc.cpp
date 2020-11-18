@@ -543,6 +543,7 @@ void CAerofoilDoc::OnDxfNew()
 
 	if (dlg.DoModal() == IDOK)
 	{
+		CWaitCursor waitCursor;
 		CString path = dlg.GetPathName();
 		DXFObject* pdxf = new DXFObject(path.GetBuffer());
 		currentDxf = plot.addDxfStructure(pdxf);
