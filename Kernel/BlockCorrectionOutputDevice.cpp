@@ -31,18 +31,20 @@ void BlockCorrectionOutputDevice::capture(int iStream, const PointT& pt) {
 }
 
 void BlockCorrectionOutputDevice::transformCaptured() {
-	Position<double> axes;
-	axes.x = left.fx;
-	axes.y = left.fy;
-	axes.u = right.fx;
-	axes.v = right.fy;
-	geometry.blockToAxes(axes, left.fz - bounds.getMinz(), right.fz - bounds.getMinz());
-	left.fx = axes.x;
-	left.fy = axes.y;
-	left.fz = 0;
-	right.fx = axes.u;
-	right.fy = axes.v;
-	right.fz = bounds.depth();
+	if (geometry.getWidth() > 0) { // maybe zero if bounds of block is zero e.g."flat" DXF drawings
+		Position<double> axes;
+		axes.x = left.fx;
+		axes.y = left.fy;
+		axes.u = right.fx;
+		axes.v = right.fy;
+		geometry.blockToAxes(axes, left.fz - bounds.getMinz(), right.fz - bounds.getMinz());
+		left.fx = axes.x;
+		left.fy = axes.y;
+		left.fz = 0;
+		right.fx = axes.u;
+		right.fy = axes.v;
+		right.fz = bounds.depth();
+	}
 }
 
 void BlockCorrectionOutputDevice::MoveTo(int iStream, const PointT& pt)

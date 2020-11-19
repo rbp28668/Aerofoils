@@ -32,7 +32,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "Kernel/Kernel.h"
 #include "kernel/PlotStructure.h"
 
-#define CLICK_DISTANCE 5
+#define CLICK_DISTANCE 10
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

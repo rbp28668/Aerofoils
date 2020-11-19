@@ -1,0 +1,107 @@
+NEW BLOCK
+5->"20"			Handle
+330->"1F"		Soft pointer to owner object
+100->"AcDbEntity"       Subclass marker
+8->"0"                  Layer name
+100->"AcDbBlockBegin"   Subclass marker
+2->"*Model_Space"       Block name
+70->"0"                 Block type flags
+10->"0.0"               X base point
+20->"0.0"               Y base point
+30->"0.0"               Z base point
+3->"*Model_Space"       Block name
+1->""                   XREF Path name
+END BLOCK
+
+NEW BLOCK
+5->"1C"			Handle
+330->"1B"		Owner
+100->"AcDbEntity"	Sublclass
+67->"1"			??
+8->"0"			Layer
+100->"AcDbBlockBegin"	Subclass
+2->"*Paper_Space"	Block name
+70->"0" 		Flags
+10->"0.0"		X
+20->"0.0"		Y
+30->"0.0"		Z
+3->"*Paper_Space"	Name
+1->""			XREF
+END BLOCK
+
+NEW BLOCK
+5->"16E"
+102->"{ACAD_XDICTIONARY"
+360->"16F"
+102->"}"
+330->"16D"
+100->"AcDbEntity"
+8->"0"
+100->"AcDbBlockBegin"
+2->"Albert"		Name
+70->"0"			Flags
+10->"1.951223603115606" X base
+20->"5.456260869252344" Y base
+30->"0.0"		Z base
+3->"Albert"		Name
+1->""			XREF path
+0->"LWPOLYLINE"         <---  !!!!
+5->"171"		Handle
+102->"{ACAD_XDICTIONARY"
+360->"172"
+102->"}"
+330->"16D"
+100->"AcDbEntity"
+8->"0"				Layer
+6->"Continuous"			Linetype name
+62->"7"				Colour number
+370->"0"			Line weight enum
+100->"AcDbPolyline"		Group code for LWPOLYLINE
+90->"4"				4 vertices
+70->"129"			Polyline flags
+43->"0.0"			constant width
+10->"0.7557329197662428"	X
+20->"6.560204968741621"		Y
+10->"3.146714286464969"		X
+20->"6.560204968741621"		Y
+10->"3.146714286464969"		X
+20->"4.352316769763068"		Y
+10->"0.7557329197662428"	X
+20->"4.352316769763068"		Y
+0 ->"LWPOLYLINE"                <--- !!!
+5->"174"			Entity Handle
+102->"{ACAD_XDICTIONARY"
+360->"175"			Hard owner handle
+102->"}"
+330->"16D"			Soft pointer handler
+100->"AcDbEntity"
+8->"0"				Layer
+6->"Continuous"			Linetype name
+62->"7"				Colour number
+370->"0"			Line weight enum
+100->"AcDbPolyline"
+90->"4"
+70->"129"
+43->"0.0"
+10->"1.488105590646934"
+20->"5.935534161225737"
+10->"2.554354037958527"
+20->"5.935534161225737"
+10->"2.554354037958527"
+20->"4.998527949951912"
+10->"1.488105590646934"
+20->"4.998527949951912"
+END BLOCK
+
+
+Note, block is then referenced by an INSERT:
+0 INSERT
+5 178
+330 1F
+100 AcDbEntity
+8 0
+100 AcDbBlockReference
+2 Albert
+10 1.558111801242238
+20 4.007670807453416
+30 0.0

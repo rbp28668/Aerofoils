@@ -411,6 +411,8 @@
 #define ID_DXFCUT_INSERTFINISHLINE      32959
 #define ID_ELLIPSE_PLOTFLAGS            32960
 #define ID_FILE_GRBL                    32961
+#define ID_DXF_EXPLODE                  32962
+#define ID_DXF_EXPLODE32963             32963
 
 // Next default values for new objects
 // 
@@ -418,7 +420,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        181
-#define _APS_NEXT_COMMAND_VALUE         32962
+#define _APS_NEXT_COMMAND_VALUE         32964
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

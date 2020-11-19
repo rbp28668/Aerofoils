@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+#include "DXFUIProxy.h"
+#include "AerofoilDoc.h"
+#include "Kernel/DXFPlotter.h"
 #include "kernel/ObjectSerializer.h"
 #include "resource.h"
 //#include "kernel/DXFPlotter.h"
@@ -56,4 +58,7 @@ bool DXFUIProxy::Edit(CPlotStructure* toEdit)
 
 void DXFUIProxy::SetSelectedStructure(CAerofoilDoc* pDoc, CPlotStructure* sel)
 {
+	DXFPlotter* ps = static_cast<DXFPlotter*>(sel);
+	pDoc->selectDxfObject(ps->getDxfObject());
+
 }
