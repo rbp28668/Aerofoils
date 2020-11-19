@@ -65,6 +65,7 @@ class DXFParserContext {
 	ItemMap itemLookup;
 	DXFItem* currentItem;
 	Polyline* currentPolyline;
+	double unitsMultiplier;
 public:
 	DXFParserContext();
 	void registerItem(const std::string& name, DXFItem* item);
@@ -72,7 +73,8 @@ public:
 	void startItem(DXFItem* item);
 	void addVertex(Vertex* vertex);
 	void startPolyline(Polyline* polyline);
-
+	void setInches(bool inches);
+	double getUnitsScale() const { return unitsMultiplier; }
 
 };
 
@@ -349,9 +351,9 @@ void DXFItem::serializeFrom(CObjectSerializer & os) {
 void Arc::add(int code, const std::string& value, DXFParserContext* context) {
 	DXFItem::add(code, value, context);
 	switch (code) {
-	case 10: centre.x = std::stod(value);	break;
-	case 20: centre.y = std::stod(value);	break;
-	case 40: r = std::stod(value);	break;
+	case 10: centre.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: centre.y = std::stod(value) * context->getUnitsScale();	break;
+	case 40: r = std::stod(value) * context->getUnitsScale();	break;
 	case 50: startAngle = std::stod(value); break;
 	case 51: endAngle = std::stod(value); break;
 	}
@@ -426,9 +428,9 @@ void Arc::serializeFrom(CObjectSerializer & os) {
 void Circle::add(int code, const std::string& value, DXFParserContext* context) {
 	DXFItem::add(code,value, context);
 	switch (code) {
-	case 10: centre.x = std::stod(value);	break;
-	case 20: centre.y = std::stod(value);	break;
-	case 40: r = std::stod(value);	break;
+	case 10: centre.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: centre.y = std::stod(value) * context->getUnitsScale();	break;
+	case 40: r = std::stod(value) * context->getUnitsScale();	break;
 	}
 }
 
@@ -488,10 +490,10 @@ void Circle::serializeFrom(CObjectSerializer & os) {
 void Ellipse::add(int code, const std::string& value, DXFParserContext* context) {
 	DXFItem::add(code,value, context);
 	switch (code) {
-	case 10: centre.x = std::stod(value);	break;
-	case 20: centre.y = std::stod(value);	break;
-	case 11: masterAxis.x = std::stod(value); break;
-	case 21: masterAxis.y = std::stod(value);	break;
+	case 10: centre.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: centre.y = std::stod(value) * context->getUnitsScale();	break;
+	case 11: masterAxis.x = std::stod(value) * context->getUnitsScale(); break;
+	case 21: masterAxis.y = std::stod(value) * context->getUnitsScale();	break;
 	case 40: ratio = std::stod(value);	break;
 	case 41: start = std::stod(value);	break;
 	case 42: end = std::stod(value);	break;
@@ -593,10 +595,10 @@ void Ellipse::serializeFrom(CObjectSerializer & os) {
 void Line::add(int code, const std::string& value, DXFParserContext* context) {
 	DXFItem::add(code, value, context);
 	switch (code) {
-	case 10: start.x = std::stod(value);	break;
-	case 20: start.y = std::stod(value);	break;
-	case 11: end.x = std::stod(value);	break;
-	case 21: end.y = std::stod(value);	break;
+	case 10: start.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: start.y = std::stod(value) * context->getUnitsScale();	break;
+	case 11: end.x = std::stod(value) * context->getUnitsScale();	break;
+	case 21: end.y = std::stod(value) * context->getUnitsScale();	break;
 	}
 }
 
@@ -651,7 +653,7 @@ void LWPolyLine::add(int code, const std::string& value, DXFParserContext* conte
 		vertices.reserve(vertexCount);
 		break;
 	case 10:
-		p.x = std::stod(value);
+		p.x = std::stod(value) * context->getUnitsScale();
 		hasX = true;
 		if (hasX && hasY) {
 			vertices.push_back(p);
@@ -660,7 +662,7 @@ void LWPolyLine::add(int code, const std::string& value, DXFParserContext* conte
 		}
 		break;
 	case 20:
-		p.y = std::stod(value);
+		p.y = std::stod(value) * context->getUnitsScale();
 		hasY = true;
 		if (hasX && hasY) {
 			vertices.push_back(p);
@@ -739,8 +741,8 @@ void LWPolyLine::serializeFrom(CObjectSerializer & os) {
 void Point::add(int code, const std::string& value, DXFParserContext* context) {
 	DXFItem::add(code, value, context);
 	switch (code) {
-	case 10: point.x = std::stod(value);	break;
-	case 20: point.y = std::stod(value);	break;
+	case 10: point.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: point.y = std::stod(value) * context->getUnitsScale();	break;
 	}
 }
 
@@ -786,8 +788,8 @@ void Block::add(int code, const std::string& value, DXFParserContext* context)
 	DXFItem::add(code, value, context);
 	switch (code) {
 	case 2: name = value;	break;
-	case 10: base.x = std::stod(value);	break;
-	case 20: base.y = std::stod(value);	break;
+	case 10: base.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: base.y = std::stod(value) * context->getUnitsScale();	break;
 	//case 30: base.z = std::stod(value); break;
 	case 70: flags = std::stoi(value);	break;
 	}
@@ -884,15 +886,15 @@ void Insert::add(int code, const std::string& value, DXFParserContext* context)
 	}
 	break;
 
-	case 10: insertionPoint.x = std::stod(value);	break;
-	case 20: insertionPoint.y = std::stod(value);	break;
+	case 10: insertionPoint.x = std::stod(value) * context->getUnitsScale();	break;
+	case 20: insertionPoint.y = std::stod(value) * context->getUnitsScale();	break;
 	//case 30: insertionPoint.z = std::stod(value); break;
 	case 41: scaleFactors.x = std::stod(value);	break;
 	case 42: scaleFactors.y = std::stod(value);	break;
     //case 43: scaleFactors.z = std::stod(value); break;
 	
-	case 44: columnSpacing = std::stod(value);	break;
-	case 45: rowSpacing = std::stod(value);	break;
+	case 44: columnSpacing = std::stod(value) * context->getUnitsScale();	break;
+	case 45: rowSpacing = std::stod(value) * context->getUnitsScale();	break;
 
 	case 50: rotationAngle = std::stod(value);	break;
 
@@ -983,9 +985,9 @@ void Vertex::add(int code, const std::string& value, DXFParserContext* context)
 {
 	DXFItem::add(code, value, context);
 	switch (code) {
-	case 10: location.x = atof(value.c_str()); break;
-	case 20: location.y = atof(value.c_str()); break;
-		//case 30: location.z = atoi(value.c_str()); break;
+	case 10: location.x = std::stod(value.c_str()) * context->getUnitsScale(); break;
+	case 20: location.y = std::stod(value.c_str()) * context->getUnitsScale(); break;
+		//case 30: location.z = std::stod(value.c_str()); break;
 	case 70: flags = atoi(value.c_str()); break;
 	}
 }
@@ -1031,6 +1033,7 @@ void Vertex::serializeFrom(CObjectSerializer& os)
 
 Polyline::Polyline()
 	: flags(0)
+	, lineType(LineType::unsmoothed)
 {
 }
 
@@ -1137,6 +1140,7 @@ void Polyline::addVertex(Vertex* vertex)
 DXFParserContext::DXFParserContext()
 	: currentItem(0)
 	, currentPolyline(0)
+	, unitsMultiplier(1)
 {
 }
 
@@ -1169,6 +1173,11 @@ void DXFParserContext::startPolyline(Polyline* polyline)
 	assert(this);
 	assert(polyline);
 	currentPolyline = polyline;
+}
+
+void DXFParserContext::setInches(bool inches)
+{
+	unitsMultiplier = (inches) ? 25.4 : 1.0;
 }
 
 
@@ -1252,6 +1261,12 @@ class BlockReader : public SectionReader {
 	virtual void read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext);
 };
 
+class HeaderReader : public SectionReader {
+	virtual void read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext);
+};
+
+
+
 void IgnoreReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext) {
 	DXFParser::CodeT codes = readCodes(is);
 	while (codes.second != "ENDSEC") {
@@ -1327,6 +1342,23 @@ void BlockReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserCo
 	}
 }
 
+void HeaderReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserContext* pContext) {
+	DXFParser::CodeT codes = readCodes(is);
+	while (codes.second != "ENDSEC") {
+		codes = readCodes(is);
+
+		if(std::stoi(codes.first) == 9) {
+
+			// $MEASUREMENT 70 Sets drawing units : 0 = English; 1 = Metric
+			if (codes.second == "$MEASUREMENT") {
+				codes = readCodes(is);
+				bool isInches = (std::stoi(codes.second) == 0);
+				pContext->setInches(isInches);
+			}
+		}
+	}
+}
+
 // ===========================================================================
 // DXFSectionList determines whether & how a section should be processed.
 // By keeping a map of readers by section name it can find the appropriate
@@ -1336,6 +1368,7 @@ void BlockReader::read(std::istream& is, DXFItemReceiver* pReceiver, DXFParserCo
 static IgnoreReader ignoreReader;
 static EntityReader entityReader;
 static BlockReader blockReader;
+static HeaderReader headerReader;
 
 class DXFSectionList {
 	typedef std::map<std::string, SectionReader*> SectionMap;
@@ -1364,7 +1397,8 @@ SectionReader* DXFSectionList::getReader(const std::string& name)
 
 DXFSectionList::DXFSectionList() {
 	// Uncomment the sections we want to process
-	//sections.insert("HEADER");
+	sections.insert(std::make_pair("HEADER",&headerReader))
+		;
 	//sections.insert("CLASSES");
 	//sections.insert("TABLES");
 	sections.insert(std::make_pair("BLOCKS",&blockReader));
@@ -1403,6 +1437,7 @@ void DXFParser::readDxf(std::istream& is, DXFItemReceiver* pReceiver) {
 			codes = readCodes(is);
 		}
 	} // while not EOF
+
 }
 
 const static DXFTransform noOpTransform;
