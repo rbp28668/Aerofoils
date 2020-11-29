@@ -51,6 +51,9 @@ public:
 	virtual void cut(StructureOutput * pCut, COutputDevice * pdev, const DXFTransform* transform) = 0;
 	virtual void serializeTo(CObjectSerializer & os);
 	virtual void serializeFrom(CObjectSerializer & os);
+
+	bool isConstruction() const;
+	static bool itemIsConstruction(const DXFItem* item) { return item->isConstruction(); }
 };
 
 // Abstract class to be implemented by anything that uses the parser to 

@@ -344,6 +344,11 @@ void DXFItem::serializeFrom(CObjectSerializer & os) {
 	os.read("layer", layer);
 }
 
+bool DXFItem::isConstruction() const
+{
+	return layer == "$CONSTRUCTION";
+}
+
 
 // ===========================================================================
 //  ARC

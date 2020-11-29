@@ -25,10 +25,12 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 const std::string DXFObject::TYPE("dxfObject");
 static CObjectFactory<DXFObject> factory(DXFObject::TYPE.c_str());
 
+static bool isConstruction(const std::unique_ptr<DXFItem>& value) { return value->isConstruction(); }
 
 DXFObject::DXFObject()
 {
 }
+
 
 DXFObject::DXFObject(const char * pszPath)
 {
@@ -36,19 +38,14 @@ DXFObject::DXFObject(const char * pszPath)
 	std::ifstream ifs(pszPath);
 	parser.readDxf(ifs,this);
 	ifs.close();
+
+	//items.remove_if(DXFItem::itemIsConstruction);
+	items.remove_if(isConstruction);
 }
 
 DXFObject::~DXFObject()
 {
-	for (auto iter = items.begin(); iter != items.end(); ++iter) {
-		delete (*iter);
-		*iter = 0;
-	}
 	items.clear();
-
-	//for (auto iter = sharedItems.begin(); iter != sharedItems.end(); ++iter) {
-	//	iter->reset();
-	//}
 	sharedItems.clear();  // Should destroy the shared ptrs.
 
 }
@@ -113,7 +110,7 @@ void DXFObject::add(DXFItem * item)
 {
 	assert(this);
 	assert(item);
-	items.push_back(item);
+	items.push_back(std::unique_ptr<DXFItem>(item));
 }
 
 void DXFObject::addSharedItem(DXFItem* item)
@@ -134,13 +131,15 @@ DXFObject* DXFObject::extractFirstItem()
 	assert(this);
 	assert(items.size() > 1);
 
-	DXFItem* first = items.front();
-	items.pop_front();
-
+	std::unique_ptr<DXFItem>& first = items.front();
+	
 	DXFObject* copy = new DXFObject();
 	copy->span = span;
-	copy->add(first);
+	copy->items.push_back(std::move(first));
 	copy->sharedItems = sharedItems;
+
+	items.pop_front(); // need to do this after the value moved to new list otherwise destroys it.
 
 	return copy;
 }
+
