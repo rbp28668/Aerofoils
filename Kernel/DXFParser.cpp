@@ -153,14 +153,22 @@ public:
 };
 
 class LWPolyLine : public DXFItem {
+
+	struct Vertex {
+		double x;
+		double y;
+		double bulge;
+		Vertex(double x = 0, double y = 0, double bulge = 0) : x(x), y(y), bulge(bulge) {}
+	};
+
 	int vertexCount;
 	bool isClosed;
-	std::vector<Coordinates> vertices;
-	Coordinates p;		// build coords in multiple calls here
-	bool hasX;			// if x coordinate set
-	bool hasY;			// if y coordinate set
+	std::vector<Vertex> vertices;
+
+	void drawBulge(StructureOutput* pOutput, COutputDevice* pdev, const PointT& previous, const PointT& p, double bulge);
+
 public:
-	LWPolyLine() : vertexCount(0),isClosed(false), hasX(false), hasY(false) {}
+	LWPolyLine() : vertexCount(0),isClosed(false) {}
 	virtual void add(int code, const std::string& value, DXFParserContext* context);
 	virtual DXFItem* clone();
 	virtual void cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform);
@@ -644,6 +652,80 @@ void Line::serializeFrom(CObjectSerializer & os) {
 // ===========================================================================
 // LWPOLYLINE
 
+// see http://www.lee-mac.com/bulgeconversion.html
+// also https://ezdxf.readthedocs.io/en/stable/tutorials/lwpolyline.html
+void LWPolyLine::drawBulge(StructureOutput* pOutput, COutputDevice* pdev, const PointT& previous, const PointT& p, double bulge)
+{
+	assert(this);
+	assert(bulge != 0); // infinite radius if so.
+
+	// See lee-mac version2 for d,s and r
+	double dx = p.fx - previous.fx;
+	double dy = p.fy - previous.fy;
+	double dist = sqrt(dx *dx  + dy * dy);
+	double d = dist / 2;
+	double s = bulge * d;
+	double r = (d * (bulge * bulge + 1)) / (2 * bulge);
+
+	// Unit normal vector from midpoint between 2 points to centre.
+	double unx = -dy / dist;
+	double uny = dx / dist;
+
+	// Centre point c.  Note if bulge is -ve then r and s are also -ve.
+	// This ensures bulge in correct direction but need to make r +ve later.
+	double cx = (p.fx + previous.fx) / 2 + unx * (r - s);
+	double cy = (p.fy + previous.fy) / 2 + uny * (r - s);
+
+	// Angles from c to start and finish points.
+	double startAngle = atan2(previous.fy - cy, previous.fx - cx);
+	double finishAngle = atan2(p.fy - cy, p.fx - cx);
+
+	r = abs(r); // would have been -ve if bulge -ve.
+
+	// Arc algorithm...
+	double circumference = 2 * pi * r; // of the circle overlaying the arc
+	int steps = int(ceil(circumference)); // use 1mm lines (arbitrary)
+	steps = std::max(steps, 16);  // and a minimum of 16 steps however short the lines.
+	double dt = 2 * pi / steps;   // delta theta for a single step
+
+
+	if(bulge < 0){
+		if (startAngle < finishAngle) {
+			startAngle += 2 * pi;
+		}
+		for (double theta = startAngle - dt; theta > finishAngle; theta -= dt) {
+			PointT pt(cx + r * cos(theta), cy + r * sin(theta));
+			pOutput->line(pdev, pt, pt);
+		}
+	}
+	else {
+		// sweep of angle may go through 360 degrees so...
+		if (startAngle > finishAngle) {
+			finishAngle += 2 * pi;
+		}
+		for (double theta = startAngle + dt; theta < finishAngle; theta += dt) {
+			PointT pt(cx + r * cos(theta), cy + r * sin(theta));
+			pOutput->line(pdev, pt, pt);
+		}
+	}
+
+
+	PointT pt(cx + r * cos(finishAngle), cy + r * sin(finishAngle));
+	pOutput->line(pdev, pt, pt);
+	
+	/* Debug - draw a cross at centre point of arc
+	PointT t(cx - 1, cy);
+	pOutput->move(pdev, t, t);
+	t.fx = cx + 1;
+	pOutput->line(pdev, t, t);
+	t.fx = cx; t.fy = cy - 1;
+	pOutput->move(pdev, t, t);
+	t.fy = cy + 1;
+	pOutput->line(pdev, t, t);
+	pOutput->move(pdev, pt, pt);
+	*/
+}
+
 void LWPolyLine::add(int code, const std::string& value, DXFParserContext* context) {
 	DXFItem::add(code,value, context);
 	int flags;
@@ -657,23 +739,17 @@ void LWPolyLine::add(int code, const std::string& value, DXFParserContext* conte
 		vertexCount = std::stoi(value);
 		vertices.reserve(vertexCount);
 		break;
-	case 10:
+	case 10: {
+		Vertex p;
 		p.x = std::stod(value) * context->getUnitsScale();
-		hasX = true;
-		if (hasX && hasY) {
-			vertices.push_back(p);
-			hasX = hasY = false;
-			p.x = p.y = 0;
+		vertices.push_back(p);
 		}
 		break;
 	case 20:
-		p.y = std::stod(value) * context->getUnitsScale();
-		hasY = true;
-		if (hasX && hasY) {
-			vertices.push_back(p);
-			hasX = hasY = false;
-			p.x = p.y = 0;
-		}
+		vertices.back().y = std::stod(value) * context->getUnitsScale();
+		break;
+	case 42:
+		vertices.back().bulge = std::stod(value);
 		break;
 	}
 }
@@ -683,9 +759,9 @@ DXFItem* LWPolyLine::clone() { return new LWPolyLine(*this); }
 void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFTransform* transform) {
 
 	bool isFirst = true;
-	for (std::vector<Coordinates>::iterator iter = vertices.begin();
-		iter != vertices.end();
-		++iter) {
+	double bulge = 0;
+	PointT previous;
+	for (auto iter = vertices.begin(); iter != vertices.end(); ++iter) {
 
 		PointT p(iter->x, iter->y);
 		transform->transform(p);
@@ -693,14 +769,26 @@ void LWPolyLine::cut(StructureOutput * pOutput, COutputDevice * pdev, const DXFT
 			pOutput->move(pdev, p, p);
 			isFirst = false;
 		} else {
-			pOutput->line(pdev, p, p);
+			if (bulge == 0.0) {
+				pOutput->line(pdev, p, p);
+			}
+			else {
+				drawBulge(pOutput, pdev,previous, p, bulge);
+			}
 		}
+		bulge = iter->bulge;
+		previous = p;
 	}
 
 	if (isClosed) {
 		PointT p(vertices.front().x, vertices.front().y);
 		transform->transform(p);
-		pOutput->line(pdev, p, p);
+		if (bulge == 0.0) {
+			pOutput->line(pdev, p, p);
+		}
+		else {
+			drawBulge(pOutput, pdev, previous, p, bulge);
+		}
 	}
 
 }
@@ -711,11 +799,12 @@ void LWPolyLine::serializeTo(CObjectSerializer & os) {
 	DXFItem::serializeTo(os);
 	os.write("closed", isClosed);
 	os.startCollection("vertices", (int)vertices.size());
-	for (std::vector<Coordinates>::iterator iter = vertices.begin();
-		iter != vertices.end();
-		++iter) {
+	for (auto iter = vertices.begin(); iter != vertices.end(); ++iter) {
 		os.write("x", iter->x);
 		os.write("y", iter->y);
+		if (iter->bulge != 0) {
+			os.write("bulge", iter->bulge);
+		}
 	}
 	os.endCollection();
 	os.endSection();
@@ -730,10 +819,13 @@ void LWPolyLine::serializeFrom(CObjectSerializer & os) {
 	int vertexCount = os.startReadCollection("vertices");
 	vertices.resize(vertexCount);
 	for(int i=0; i<vertexCount; ++i){
-		Coordinates c;
-		os.read("x", c.x);
-		os.read("y", c.y);
-		vertices[i] = c;
+		Vertex v;
+		os.read("x", v.x);
+		os.read("y", v.y);
+		if (os.ifExists("bulge")) {
+			os.read("bulge", v.bulge);
+		}
+		vertices[i] = v;
 	}
 	os.endReadCollection();
 	os.endReadSection();
