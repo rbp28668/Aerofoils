@@ -33,7 +33,7 @@ class StructureOutput;
 class DXFObject :
 	public CStructure, DXFItemReceiver
 {
-	std::list<DXFItem*> items;
+	std::list<std::unique_ptr<DXFItem>> items;
 	typedef std::shared_ptr<DXFItem> SharedItemT;
 	std::list<SharedItemT> sharedItems;
 
